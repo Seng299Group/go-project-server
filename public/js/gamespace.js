@@ -340,6 +340,7 @@ class GameSpace {
         var tokens = [];
 
         return __getArmyCoordsDFS(player, x, y, visited, tokens);
+    }
 
     //  isArmyDestroyed
     //
