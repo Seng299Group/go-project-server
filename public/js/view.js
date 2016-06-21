@@ -29,7 +29,7 @@ function makeLine(x1, y1, x2, y2, color, stroke) {
 }
 
 /**
- * Makes and returns a new SVG rectange object. 
+ * Makes and returns a new SVG rectangle object. 
  * 
  * @param x {number} the x position of the rectangle.
  * @param y {number} the y position of the rectangle.
@@ -94,78 +94,122 @@ function makeSVG(w, h) {
 
 
 
+/********************************** Drawing ***********************************/
+// HTML Div
+var canvas = $("#canvas");
+var W = 600, H = 600;
+canvas.css("height", H);
+canvas.css("width", W);
+
+// HTML SVG object
+var svg = $(makeSVG(W, H));
+
+// Measurements for drawing purposes
+var scale, radius, offset;
+
+
+
 /**
- * This function takes a GameSpace object and renders the board
- * on the HTML page.
+ * This function initializes all that are needed for drawing.
+ * 1. Calculates necessary variables from the size of the board.
+ * 2. Puts the svg object inside the canvas div
  * 
- * Precondition: The HTML page must include a div element with "canvas" as its id.
+ * @param {type} board - a GameSpace instance
+ */
+function init(board) {
+    // 1. Variables
+    scale = W / board.size;
+    radius = (scale / 2) - 1;
+    offset = scale / 2;
+
+    // 2. append the svg object to the canvas div.
+    canvas.append(svg);
+}
+
+/**
+ * This function draws any given board state i.e. a GameSpace object.
+ * This function:
+ * 1. Extracts the board state from the GameSpace object.
+ * 2. Clears the svg object. This is done to prevent duplicate sub-svg objects
+ *      (i.e. lines and previously placed stones)
+ * 3. Draw lines
+ * 4. Draw stones
  * 
  * @param {object} board - A GameSpace object
  */
 function draw(board) {
 
-    // Extracting the array representation of the board
+    // 1. Extracting the board representation
     board = board.board.board;
-    // console.log(board);
 
-    // The canvas element
-    var canvas = $("#canvas");
-    var W = 600, H = 600;
-    canvas.css("height", H);
-    canvas.css("width", W);
+    // 2. Clearing SVG
+    svg.html("");
 
-    // Creating the svg element
-    var svg = $(makeSVG(W, H));
-
-    // Draw related variables
-    var scale = W / board.length;
-    var radius = (scale / 2) - 1;
-    var offset = scale / 2;
-
-    // Lines
+    // 3. Drawing lines
     for (var i = 0; i < board.length; i++) {
-
         var line_v = makeLine((scale * i) + offset, offset, (scale * i) + offset, H - offset, "black", "black");
         var line_h = makeLine(offset, (i * scale) + offset, W - offset, (i * scale) + offset, "black", "black");
         svg.append(line_v);
         svg.append(line_h);
     }
 
-    // Stones
+    // 4. Drawing stones
     for (var col in board) {
         for (var row in board[col]) {
-
             if (board[col][row] === 1) {
-                // black stones
+                // black stone
                 var circ = makeCircle((row * scale) + offset, (col * scale) + offset, radius, "black", "black");
                 svg.append(circ);
 
             } else if (board[col][row] === 2) {
-                // white stones
+                // white stone
                 var circ = makeCircle((row * scale) + offset, (col * scale) + offset, radius, "white", "black");
                 svg.append(circ);
             }
-
         }
     }
-
-    // append the svg object to the canvas object.
-    canvas.append(svg);
-
 }
+/******************************* End of drawing *******************************/
 
 
 
 
-// Testing
+
+/********************************** Testing ***********************************/
+// The board
 var myBoard = new GameSpace(9);
+var player = 1;
 
-myBoard.placeToken(1, 2, 5);
-myBoard.placeToken(2, 4, 5);
-myBoard.placeToken(1, 3, 4);
-myBoard.placeToken(2, 3, 6);
-myBoard.placeToken(1, 4, 3);
-myBoard.placeToken(2, 2, 3);
+// Initializing view variables for the given board
+init(myBoard);
 
+// Drawing the board
 draw(myBoard);
+
+// onClick event on the board
+$("#canvas").click(function (e) {
+
+    // Calculating the board coordinates from clicked coordinates
+    var x = Math.floor((e.pageX - $(this).offset().left) / (offset * 2));
+    var y = Math.floor((e.pageY - $(this).offset().top) / (offset * 2));
+
+    // console.log(posX + " " + posY);
+
+    // Placing the token on the board
+    myBoard.placeToken(player, x, y);
+
+    // Draw board
+    draw(myBoard);
+
+    // Swapping players
+    if (player === 1) {
+        player = 2;
+    } else if (player === 2) {
+        player = 1;
+    }
+
+});
+
+
+
 
