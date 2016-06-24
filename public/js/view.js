@@ -94,7 +94,7 @@ class View {
 	draw() {
 
 		// 1. Extracting the board representation
-		var boardArray = this.__board.getBoard().getBoard();
+		var boardArray = this.__board.getBoard().getGrid();
 		
 		// 2. Clearing SVG
 		this.__svg.empty();
