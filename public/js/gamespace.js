@@ -174,7 +174,7 @@ class GameSpace {
         }
 
         //Mark as Visited
-        visited.set(x, y, 1);
+        visited.set(1, x, y);
 
         //If This space is unoccupied
         //Then Return 1 Liberty
@@ -194,7 +194,7 @@ class GameSpace {
             liberties += this.__countArmyLibertiesDFS(player, x+1, y, visited);
         }
         if (y + 1 < this.size) {
-            liberties += this.__countArmyLibertiesDFS(player, x+1, y, visited);
+            liberties += this.__countArmyLibertiesDFS(player, x, y+1, visited);
         }
 
         //Return the Liberties of all adjacent, non-visted spaces
@@ -209,6 +209,8 @@ class GameSpace {
     //      Return the TOTAL number of liberties the army including (x,y) has
     __countArmyLiberties (player, x, y) {
         var visited = new GameBoard(this.size);
+
+        visited.print();
 
         return this.__countArmyLibertiesDFS(player, x, y, visited);
     }
@@ -366,14 +368,15 @@ class GameSpace {
         }
     }
 
-    //  destroyArmy
+    //  captureArmy
     //
-    //      Destroys the army that the token at (x,y) is included in.
+    //      Captures the army that the token at (x,y) is included in, removing
+    //      all tokens from the board.
     //
     //      Params:
     //          x - the x-coordinate of a token in the army being destroyed
     //          y - the y-coordinate
-    __destroyArmy (x, y) {
+    __captureArmy (x, y) {
 
     }
 
@@ -417,9 +420,14 @@ class GameSpace {
 var a = new GameSpace(9);
 a.getBoard();
 a.getBoard().print();
-a.placeToken(2,2,5);
-a.placeToken(2,4,5);
-a.placeToken(2,3,4);
-a.placeToken(2,3,6);
-a.placeToken(2,4,3);
-a.placeToken(2,2,3);
+a.placeToken(1,3,1);
+a.placeToken(1,3,2);
+a.placeToken(1,5,1);
+a.placeToken(1,5,2);
+a.placeToken(1,4,3);
+// a.placeToken(2,4,1);
+// a.placeToken(2,4,2);
+// a.placeToken(2,2,3);
+// a.placeToken(2,3,3);
+// a.placeToken(2,5,3);
+// a.placeToken(2,4,4);
