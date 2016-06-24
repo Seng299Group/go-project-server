@@ -1,215 +1,148 @@
+'use strict'
 
-/********************************* SVG Factory ********************************/
-/* Source: SEng 299 Lab 4 */
+class View {
+	
+	/* List of Variables
+	*
+	* __board 		- a GameSpace instance. Use setBoard()
+	* __controller	- a GameController instance. Use setController()
+	*
+	* __canvas		- HTML div with 'canvas' as id
+	* __W			- width of the canvas
+	* __H			- height of the canvas
+	* __svg			- A SVG object under the canvas object.
+	* 
+	* __scale		- A scaling factor. (Pixel between lines on the board)
+	* __radius		- The radius of the stone. (Unit: px)
+	* __offset		- Offset to account for borders of the board. (Unit: px)
+	*
+	*/
+	
+	
+	
+	/**
+	* Sets the board for the instance.
+	*
+	* @param {object} board - A GameSpace object.
+	*/
+	setBoard(board){
+		this.__board = board;
+	}
+	
+	/**
+	* Returns the board of the instance.
+	*
+	* @returns {object} - A GameSpace object.
+	*/
+	getBoard(){
+		return this.__board;
+	}
+	
+	/**
+	* Sets the controller for this instance.
+	* 
+	* @param {object} controller - A GameController object.
+	*/
+	setController(controller){
+		this.__controller = controller;
+	}
+	
+	/**
+	* Returns the controller of the instance.
+	* 
+	* @returns {object} - A GameController object.
+	*/
+	getController(){
+		return this.__controller;
+	}
+	
+	
+		
+	/**
+	 * This function initializes the View.
+	 * 
+	 * Precondition: the setBoard() method must be called before calling
+	 * 		this method.
+	 */
+	init(){
+		// HTML Div
+		this.__canvas = $("#canvas");
+		this.__W = 600;
+		this.__H = 600;
+		this.__canvas.css("height", this.__H);
+		this.__canvas.css("width",this.__W);
 
+		// HTML SVG object
+		this.__svg = $(makeSVG(this.__W, this.__H));
 
-//  Namespace for SVG elements
-var SVGNameSpace = "http://www.w3.org/2000/svg";
+		// Drawing variables
+		this.__scale =this.__W / this.__board.size;
+		this.__radius = (this.__scale / 2) - 1;
+		this.__offset = this.__scale / 2;
+		this.__canvas.append(this.__svg);
+	}
+	
+	/**
+	 * This function draws the board.
+	 * This function:
+	 * 1. Extracts the board state from the GameSpace object.
+	 * 2. Clears the svg object. This is done to prevent duplicate sub-svg objects
+	 *      (i.e. lines and previously placed stones)
+	 * 3. Draw lines
+	 * 4. Draw stones
+	 */
+	draw() {
 
-/**
- * Makes a new SVG line object and returns it. 
- *
- * @param x1 {number} 
- * @param y1 {number}
- * @param x2 {number}
- * @param y2 {number}
- * @param color {string} the color of the line
- * @param stroke {number} the thickness of the line.
- * @returns {object}
- */
-function makeLine(x1, y1, x2, y2, color, stroke) {
-    var line = document.createElementNS(SVGNameSpace, "line");
-    line.setAttribute("x1", x1);
-    line.setAttribute("y1", y1);
-    line.setAttribute("x2", x2);
-    line.setAttribute("y2", y2);
-    line.style.stroke = color || "#000000";
-    line.style.strokeWidth = stroke || 2;
-    return line;
+		// 1. Extracting the board representation
+		var boardArray = this.__board.getBoard().getBoard();
+		
+		// 2. Clearing SVG
+		this.__svg.empty();
+
+		// 3. Drawing lines
+		for (var i = 0; i < boardArray.length; i++) {
+			var line_v = makeLine((this.__scale * i) + this.__offset, this.__offset, (this.__scale * i) + this.__offset, this.__H - this.__offset, "black", "black");
+			var line_h = makeLine(this.__offset, (i * this.__scale) + this.__offset,this.__W - this.__offset, (i * this.__scale) + this.__offset, "black", "black");
+			this.__svg.append(line_v);
+			this.__svg.append(line_h);
+		}
+
+		// 4. Drawing stones
+		for (var col in boardArray) {
+			for (var row in boardArray[col]) {
+				if (boardArray[col][row] === 1) {
+					// black stone
+					var circ = makeCircle((row * this.__scale) + this.__offset, (col * this.__scale) + this.__offset, this.__radius, "black", "black");
+					this.__svg.append(circ);
+
+				} else if (boardArray[col][row] === 2) {
+					// white stone
+					var circ = makeCircle((row * this.__scale) + this.__offset, (col * this.__scale) + this.__offset, this.__radius, "white", "black");
+					this.__svg.append(circ);
+				}
+			}
+		}
+	}
+	
+	/**
+	* This method should be called when the view is click.
+	* The click event should be handled from here.
+	* Currently:
+	* 1. Places a stone
+	* 2. Draws the board
+	* 3. Swaps player's turn
+	*/
+	onBoardClick(x, y){
+		// Converting to board coordinate
+		var posx = Math.floor(x / (this.__offset * 2));
+        var posy = Math.floor(y / (this.__offset * 2));
+		// Placing the stone
+		this.__board.placeToken(this.__controller.getPlayerTurn(), posx, posy);
+		
+		// Drawing the board
+		this.draw();
+		
+		// Swapping turns
+		this.__controller.swapTurn();
+	}
 }
-
-/**
- * Makes and returns a new SVG rectangle object. 
- * 
- * @param x {number} the x position of the rectangle.
- * @param y {number} the y position of the rectangle.
- * @param w {number} the width of the rectangle.
- * @param h {number} the height of the rectangle.
- * @param c {string} the color of the rectangle. 
- * 
- * @return {object} 
- */
-function makeRectangle(x, y, w, h, c) {
-    var rect = document.createElementNS(SVGNameSpace, "rect");
-    rect.setAttribute("x", x);
-    rect.setAttribute("y", y);
-    rect.setAttribute("width", w);
-    rect.setAttribute("height", h);
-    rect.style.fill = c;
-    return rect;
-}
-
-/**
- * Makes and returns a new SVG circle object. 
- * 
- * @param x {number} the x position of the circle.
- * @param y {number} the y position of the circle.
- * @param r {number} the radius 
- * @param c {number} the color 
- * @param stroke {number} the thickness of the line.
- * 
- * @return {object} 
- */
-function makeCircle(x, y, r, c, stroke) {
-    var circ = document.createElementNS(SVGNameSpace, "circle");
-    circ.setAttribute("cx", x);
-    circ.setAttribute("cy", y);
-    circ.setAttribute("r", r);
-    circ.style.fill = c;
-    circ.style.stroke = stroke;
-    circ.style.strokeWidth = 3;
-    return circ;
-}
-
-/**
- * Makes an SVG element. 
- * 
- * @param w {number} the width
- * @param h {number} the height 
- * 
- * @return {object} 
- */
-function makeSVG(w, h) {
-    var s = document.createElementNS(SVGNameSpace, "svg");
-    s.setAttribute("width", w);
-    s.setAttribute("height", w);
-    s.setAttribute('xmlns', SVGNameSpace);
-    s.setAttribute('xmlns:xlink', "http://www.w3.org/1999/xlink");
-    return s;
-}
-
-/***************************** End of SVG Factory *****************************/
-
-
-
-
-
-/********************************** Drawing ***********************************/
-// HTML Div
-var canvas = $("#canvas");
-var W = 600, H = 600;
-canvas.css("height", H);
-canvas.css("width", W);
-
-// HTML SVG object
-var svg = $(makeSVG(W, H));
-
-// Measurements for drawing purposes
-var scale, radius, offset;
-
-
-
-/**
- * This function initializes all that are needed for drawing.
- * 1. Calculates necessary variables from the size of the board.
- * 2. Puts the svg object inside the canvas div
- * 
- * @param {type} board - a GameSpace instance
- */
-function init(board) {
-    // 1. Variables
-    scale = W / board.size;
-    radius = (scale / 2) - 1;
-    offset = scale / 2;
-
-    // 2. append the svg object to the canvas div.
-    canvas.append(svg);
-}
-
-/**
- * This function draws any given board state i.e. a GameSpace object.
- * This function:
- * 1. Extracts the board state from the GameSpace object.
- * 2. Clears the svg object. This is done to prevent duplicate sub-svg objects
- *      (i.e. lines and previously placed stones)
- * 3. Draw lines
- * 4. Draw stones
- * 
- * @param {object} board - A GameSpace object
- */
-function draw(board) {
-
-    // 1. Extracting the board representation
-    board = board.board.board;
-
-    // 2. Clearing SVG
-    svg.html("");
-
-    // 3. Drawing lines
-    for (var i = 0; i < board.length; i++) {
-        var line_v = makeLine((scale * i) + offset, offset, (scale * i) + offset, H - offset, "black", "black");
-        var line_h = makeLine(offset, (i * scale) + offset, W - offset, (i * scale) + offset, "black", "black");
-        svg.append(line_v);
-        svg.append(line_h);
-    }
-
-    // 4. Drawing stones
-    for (var col in board) {
-        for (var row in board[col]) {
-            if (board[col][row] === 1) {
-                // black stone
-                var circ = makeCircle((row * scale) + offset, (col * scale) + offset, radius, "black", "black");
-                svg.append(circ);
-
-            } else if (board[col][row] === 2) {
-                // white stone
-                var circ = makeCircle((row * scale) + offset, (col * scale) + offset, radius, "white", "black");
-                svg.append(circ);
-            }
-        }
-    }
-}
-/******************************* End of drawing *******************************/
-
-
-
-
-
-/********************************** Testing ***********************************/
-// The board
-var myBoard = new GameSpace(9);
-var player = 1;
-
-// Initializing view variables for the given board
-init(myBoard);
-
-// Drawing the board
-draw(myBoard);
-
-// onClick event on the board
-$("#canvas").click(function (e) {
-
-    // Calculating the board coordinates from clicked coordinates
-    var x = Math.floor((e.pageX - $(this).offset().left) / (offset * 2));
-    var y = Math.floor((e.pageY - $(this).offset().top) / (offset * 2));
-
-    // console.log(posX + " " + posY);
-
-    // Placing the token on the board
-    myBoard.placeToken(player, x, y);
-
-    // Draw board
-    draw(myBoard);
-
-    // Swapping players
-    if (player === 1) {
-        player = 2;
-    } else if (player === 2) {
-        player = 1;
-    }
-
-});
-
-
-
-

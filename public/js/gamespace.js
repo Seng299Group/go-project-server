@@ -408,12 +408,12 @@ class GameSpace {
 
 // Testing Code
 
-var a = new GameSpace(9);
-a.getBoard();
-a.getBoard().print();
-a.placeToken(2,2,5);
-a.placeToken(2,4,5);
-a.placeToken(2,3,4);
-a.placeToken(2,3,6);
-a.placeToken(2,4,3);
-a.placeToken(2,2,3);
+// var a = new GameSpace(9);
+// a.getBoard();
+// a.getBoard().print();
+// a.placeToken(2,2,5);
+// a.placeToken(2,4,5);
+// a.placeToken(2,3,4);
+// a.placeToken(2,3,6);
+// a.placeToken(2,4,3);
+// a.placeToken(2,2,3);
