@@ -34,7 +34,7 @@ class GameBoard {
 
     /*
     Attributes:
-        board - an array of arrays of size [n][n]
+        grid - an array of arrays of size [n][n]
         size - the length of the boards axis
     */
 
@@ -44,7 +44,7 @@ class GameBoard {
     constructor (size) {
 
         var i,j;
-        var board = [];
+        var grid = [];
 
         //Initialize each space to 0
         for (i=0; i<size; i++) {
@@ -55,10 +55,10 @@ class GameBoard {
                 row.push(0);
             }
 
-            board.push(row);
+            grid.push(row);
         }
 
-        this.board = board;
+        this.grid = grid;
         this.size = size;
 
     }
@@ -69,13 +69,13 @@ class GameBoard {
     //          y - y coordinate
     //      Returns 0, 1, or 2
     get (x, y) {
-        return this.board[y][x];
+        return this.grid[y][x];
     }
 
     // getBoard
     //      Returns The entire board array
-    getBoard () {
-        return this.board;
+    getGrid () {
+        return this.grid;
     }
 
     //  get
@@ -84,7 +84,7 @@ class GameBoard {
     //          x - x coordinate
     //          y - y coordinate
     set (val, x, y) {
-        this.board[y][x] = val;
+        this.grid[y][x] = val;
     }
 
     //  clone
@@ -113,9 +113,9 @@ class GameBoard {
         var string = "   |";
         var i;
 
-        console.log(this.board);
+        console.log(this.grid);
 
-        this.board.forEach(function (column, index) {
+        this.grid.forEach(function (column, index) {
             string += "-" + index + "-|";
         });
 
@@ -129,7 +129,7 @@ class GameBoard {
         var string = "-" + row + "-|";
         var i;
 
-        this.board[row].forEach(function (space) {
+        this.grid[row].forEach(function (space) {
             string += " " + space + " |";
         });
 
@@ -143,7 +143,7 @@ class GameBoard {
         var that = this;
 
         console.log(this.__getRowHeader());
-        this.board.forEach(function (row, index, board) {
+        this.grid.forEach(function (row, index, grid) {
             console.log(that.__getRowString(index));
         })
     }
@@ -167,7 +167,7 @@ class GameBoard {
 
             for (j=0; j<b1.size; j++) {
 
-                if (b1.board[i][j] !== b2.board[i][j]) {
+                if (b1.get(i, j) !== b2.get(i, j)) {
                     return false;
                 }
             }

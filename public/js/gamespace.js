@@ -35,6 +35,12 @@ class GameSpace {
         return this.board;
     }
 
+    //  getBoard
+    //      Returns the GameBoard object's grid attribute
+    getGrid () {
+        return this.board.getGrid();
+    }
+
     //  evaluateMove
     //
     //      This function evalutates the change in the board made by placing
