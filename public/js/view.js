@@ -125,24 +125,21 @@ class View {
 	}
 	
 	/**
-	* This method should be called when the view is click.
+	* This method should be called when the view is clicked.
 	* The click event should be handled from here.
 	* Currently:
 	* 1. Places a stone
 	* 2. Draws the board
-	* 3. Swaps player's turn
 	*/
 	onBoardClick(x, y){
 		// Converting to board coordinate
 		var posx = Math.floor(x / (this.__offset * 2));
         var posy = Math.floor(y / (this.__offset * 2));
+		
 		// Placing the stone
-		this.__board.placeToken(this.__controller.getPlayerTurn(), posx, posy);
+		this.__controller.placeToken(this.__controller.getPlayerTurn(), posx, posy);
 		
 		// Drawing the board
 		this.draw();
-		
-		// Swapping turns
-		this.__controller.swapTurn();
 	}
 }

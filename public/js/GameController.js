@@ -24,24 +24,8 @@ class GameController {
 		return this.__playerTurn;
 	}
 	
-	
-	
-	setBoard(board){
-		this.__board = board;
-	}
-	
-	setView(view){
-		this.__view = view;
-	}
-	
-	
 	/**
-	* Swap turn.
-	* Here for demo.
-	* Part of the hotseat class.
-	* Todo:
-	* - move to appropriate class
-	* - document
+	* This method swaps the player's turn.
 	*/
 	swapTurn(){
 		//Swapping players
@@ -52,6 +36,12 @@ class GameController {
 		}
 	}
 	
+	setBoard(board){
+		this.__board = board;
+	}
 	
+	setView(view){
+		this.__view = view;
+	}
 	
 }
