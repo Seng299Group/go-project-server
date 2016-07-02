@@ -22,7 +22,7 @@
         <script>
 
             // Model - The board
-            var myBoard = new GameSpace(9);
+            var myGameSpace = new GameSpace(9);
             var player = 1;
 
             // Controller - Game controller
@@ -31,12 +31,12 @@
             // View
             var view = new View();
 
-            view.setBoard(myBoard);
+            view.setGameSpace(myGameSpace);
             view.setController(gameController);
             view.init();
             view.draw(); // Draws the empty board
 
-            gameController.setBoard(myBoard);
+            gameController.setGameSpace(myGameSpace);
             gameController.setView(view);
 
             $("#canvas").click(function (e) {

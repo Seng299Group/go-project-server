@@ -4,7 +4,7 @@ class View {
 	
 	/* List of Variables
 	*
-	* __board 		- a GameSpace instance. Use setBoard()
+	* __gameSpace 		- a GameSpace instance. Use setGameSpace()
 	* __controller	- a GameController instance. Use setController()
 	*
 	* __canvas		- HTML div with 'canvas' as id
@@ -21,21 +21,12 @@ class View {
 	
 	
 	/**
-	* Sets the board for the instance.
+	* Sets the GameSpace for the view instance.
 	*
-	* @param {object} board - A GameSpace object.
+	* @param {object} gameSpace - A GameSpace object.
 	*/
-	setBoard(board){
-		this.__board = board;
-	}
-	
-	/**
-	* Returns the board of the instance.
-	*
-	* @returns {object} - A GameSpace object.
-	*/
-	getBoard(){
-		return this.__board;
+	setGameSpace(gameSpace){
+		this.__gameSpace = gameSpace;
 	}
 	
 	/**
@@ -47,21 +38,12 @@ class View {
 		this.__controller = controller;
 	}
 	
-	/**
-	* Returns the controller of the instance.
-	* 
-	* @returns {object} - A GameController object.
-	*/
-	getController(){
-		return this.__controller;
-	}
-	
 	
 		
 	/**
 	 * This function initializes the View.
 	 * 
-	 * Precondition: the setBoard() method must be called before calling
+	 * Precondition: the setGameSpace() method must be called before calling
 	 * 		this method.
 	 */
 	init(){
@@ -76,14 +58,14 @@ class View {
 		this.__svg = $(makeSVG(this.__W, this.__H));
 
 		// Drawing variables
-		this.__scale =this.__W / this.__board.size;
+		this.__scale =this.__W / this.__gameSpace.size;
 		this.__radius = (this.__scale / 2) - 1;
 		this.__offset = this.__scale / 2;
 		this.__canvas.append(this.__svg);
 	}
 	
 	/**
-	 * This function draws the board.
+	 * This function draws the board on screen.
 	 * This function:
 	 * 1. Extracts the board state from the GameSpace object.
 	 * 2. Clears the svg object. This is done to prevent duplicate sub-svg objects
@@ -94,7 +76,7 @@ class View {
 	draw() {
 
 		// 1. Extracting the board representation
-		var boardArray = this.__board.getBoard().getGrid();
+		var boardArray = this.__gameSpace.getBoard().getGrid();
 		
 		// 2. Clearing SVG
 		this.__svg.empty();

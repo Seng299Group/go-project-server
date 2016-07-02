@@ -3,7 +3,7 @@
 class HotSeatGameController extends GameController {
 	
 	/* Inherited Variables:
-	* __board, __view, and __playerTurn
+	* __gameSpace, __view, and __playerTurn
 	* See GameController for details
 	* 
 	*/
@@ -21,7 +21,7 @@ class HotSeatGameController extends GameController {
 	*/
 	placeToken(player, x, y){
 		
-		var validMove = this.__board.placeToken(player, x, y);
+		var validMove = this.__gameSpace.placeToken(player, x, y);
 		
 		if (validMove){
 			this.swapTurn();

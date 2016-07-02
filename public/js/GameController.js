@@ -4,7 +4,7 @@ class GameController {
 	
 	/** List of variables
 	* 
-	* __board 		- A GameSpace instance. Use setBoard()
+	* __gameSpace	- A GameSpace instance. Use setGameSpace()
 	* __view		- A view instance. Use setView()
 	* 
 	* __playerTurn	- indicates the turn of the player. Use getPlayerTurn()
@@ -36,8 +36,8 @@ class GameController {
 		}
 	}
 	
-	setBoard(board){
-		this.__board = board;
+	setGameSpace(gameSpace){
+		this.__gameSpace = gameSpace;
 	}
 	
 	setView(view){
