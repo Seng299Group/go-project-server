@@ -37,8 +37,6 @@ class View {
 	setController(controller){
 		this.__controller = controller;
 	}
-	
-	
 		
 	/**
 	 * This function initializes the View.

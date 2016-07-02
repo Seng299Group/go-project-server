@@ -13,6 +13,7 @@ class GameSpace {
         board - the game board
         size - the size of the game board
         history - an array of previous turns using <GameBoard> objects
+		__lastMove - Object containing the last x, y, c, and pass
         p1Captured - The number of armies Player 1 has captured
         p2Captured - The number of armies Player 2 has captured
     */
@@ -40,24 +41,25 @@ class GameSpace {
     getGrid () {
         return this.board.getGrid();
     }
-
-    //  evaluateMove
-    //
-    //      This function evalutates the change in the board made by placing
-    //      a token, including destroying armies.  Used to check if a move
-    //      reverts the board, and to update the gameboard.
-    //
+	
+	/*
+	* @returns {object} - the __lastMove variable.
+	*/
+	getLastMove(){
+		return this.__lastMove;
+	}
+	
+    //  opposingPlayer
     //      Params:
-    //          player - the player placing a token
-    //          x - the x-coordinate where the player is placing a token
-    //          y - the y-coordinate
-    //          gameboard - a gameboard. If omitted, uses current state of this
-    //              gamespace's board
-    __evaluateMove (player, x, y, gameboard) {
-
-        var thisBoard = gameboard || this.board;
-
-
+    //          player - 1 or 2, whoever's turn it is
+    //      Returns 1 or 2, the opposing player's number
+    __opposingPlayer (player) {
+        if (player === 1) {
+            return 2;
+        }
+        else {
+            return 1;
+        }
     }
 
     // placeToken
@@ -73,361 +75,118 @@ class GameSpace {
     //          False if the move was illegal and not applied
     placeToken (player, x, y) {
 
+        var captured;
+
         if (this.checkLegal(player, x, y)) {
             console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
+			this.__lastMove = {"x":y, "y":x, "c":player, "pass":false}; // temporary fix: x=y and y=x
             this.history.push(this.board);
             this.board = this.board.clone();
-            this.board.set(player, x, y);
+            this.board.evaluateMove(player, x, y);
+            this.__addCapturedArmies(player);
+
             this.board.print();
             return true;
         }
         return false;
     }
 
-    //  opposingPlayer
+    // placeToken
+    //
+    //      Compares the new board to the previous turn, counting the difference
+    //      in the opoponents armies, and adding it to the current player's
+    //      capture total
+    //
     //      Params:
-    //          player - 1 or 2, whoever's turn it is
-    //      Returns 1 or 2, the opposing player's number
-    __opposingPlayer (player) {
+    //          player - the player capturing armies
+    //      Returns:
+    //          True if the move was legal and applied
+    //          False if the move was illegal and not applied
+    __addCapturedArmies(player) {
+
+        var captured;
+        var opponent = this.__opposingPlayer(player);
+
+        captured = this.history[this.history.length-1].count(opponent) - this.board.count(opponent);
+
         if (player === 1) {
-            return 2;
+            this.p1Captured += captured;
         }
         else {
-            return 1;
+            this.p2Captured += captured;
         }
     }
 
-    //  boardReverted
+    //  koRule
     //      Params:
-    //          player - the player placing a token
-    //          x - the x-coordinate where the player is trying to place a token
-    //          y - the y-coordinate
+    //          tempBoard - a gameboard object to be compared with the last one
     //      Returns:
-    //          True if this move would revert the board to the same state it
-    //              was last turn
+    //          True if this board is different to last turn's
     //          False otherwise
-    __boardReverted (player, x, y) {
+    __koRule (tempBoard) {
+        //handles edge case of first move
         if (this.history.length === 0) {
-            return false;
-        }
-
-        var tempBoard = this.board.clone();
-        tempBoard.set(player, x, y);
-
-        return GameBoard.equal(tempBoard, this.history[this.history.length - 1])
-    }
-
-    //  countSpaceLiberties
-    //      Params:
-    //          player - the player placing a token
-    //          x - the x-coordinate where the player is trying to place a token
-    //          y - the y-coordinate
-    //      Returns the number of liberties the space has, including friendly
-    //          armies
-    __countSpaceLiberties (player, x, y) {
-
-        var liberties = 0
-        var opponent = this.__opposingPlayer(player);
-
-        if (x - 1 > -1 && this.board.get(x - 1, y) != opponent) {
-            liberties += 1;
-        }
-        if (y - 1 > -1 && this.board.get(x, y - 1) != opponent) {
-            liberties += 1;
-        }
-        if (x + 1 < this.size && this.board.get(x + 1, y) != opponent) {
-            liberties += 1;
-        }
-        if (y + 1 < this.size && this.board.get(x, y + 1) != opponent) {
-            liberties += 1;
-        }
-
-        return liberties;
-    }
-
-    //  countArmyLibertiesDFS
-    //
-    //      This is a recursive DFS algorithm that counts the liberties of an
-    //      army.
-    //
-    //      Params:
-    //          player - 1 or 2, the player trying to play their turn
-    //          x - the x-coordinate where the player is trying to place a token
-    //          y - the y-coordinate
-    //          visited - a GameBoard object where visited spaces are marked 1
-    //      Return the number of liberties the army starting at (x,y) has
-    __countArmyLibertiesDFS (player, x, y, visited) {
-
-        console.log('-----------------------');
-        console.log('(' + x + ',' + y + ')');
-        console.log('(Visited: ' + visited.get(x, y));
-        console.log('Belongs To:' + this.board.get(x, y));
-
-        var liberties = 0;
-
-        //If
-        //  1) This space has been visited
-        //  2) This space belongs to the current player
-        //Then don't count its liberties towards the total
-        if (visited.get(x, y) === 1 || this.board.get(x, y) === player) {
-            return 0;
-        }
-
-        //Mark as Visited
-        visited.set(1, x, y);
-
-        //If This space is unoccupied
-        //Then Return 1 Liberty
-        if (this.board.get(x, y) === 0) {
-            return 1;
-        }
-
-        //If adjacent square is not off the board
-        //Then check who it belongs to and add their liberties to the total
-        if (x - 1 > -1) {
-            liberties += this.__countArmyLibertiesDFS(player, x-1, y, visited);
-        }
-        if (y - 1 > -1) {
-            liberties += this.__countArmyLibertiesDFS(player, x, y-1, visited);
-        }
-        if (x + 1 < this.size) {
-            liberties += this.__countArmyLibertiesDFS(player, x+1, y, visited);
-        }
-        if (y + 1 < this.size) {
-            liberties += this.__countArmyLibertiesDFS(player, x, y+1, visited);
-        }
-
-        //Return the Liberties of all adjacent, non-visted spaces
-        return liberties;
-    }
-
-    //  countArmyLiberties
-    //      Params:
-    //          player - 1 or 2, the player trying to play their turn
-    //          x - the x-coordinate where the player is trying to place a token
-    //          y - the y-coordinate
-    //      Return the TOTAL number of liberties the army including (x,y) has
-    __countArmyLiberties (player, x, y) {
-        var visited = new GameBoard(this.size);
-
-        visited.print();
-
-        return this.__countArmyLibertiesDFS(player, x, y, visited);
-    }
-
-    //  areArmiesDestroyed
-    //
-    //      This algorithm checks if an adjacent army has been destroyed by
-    //      counting its liberties. If it only has one remaining liberty, then
-    //      it is THIS space, and placing this army will destroy it.
-    //
-    //      Params:
-    //          player - 1 or 2, the player trying to play their turn
-    //          x - the x-coordinate where the player is trying to place a token
-    //          y - the y-coordinate
-    //      Returns:
-    //          True if this move destroys one of the adjacent armies
-    //          False otherwise
-    __areArmiesDestroyed (player, x, y) {
-
-        var destroyed = false;
-        var count;
-        var opponent = this.__opposingPlayer(player);
-
-        if (x - 1 > -1 && this.board.get(x-1, y) === opponent) {
-            count = this.__countArmyLiberties(player, x-1, y);
-            console.log('(' + (x-1) + ',' + y + ')' + ' army liberties:' + count);
-            if (count === 1) {
-                return true;
-            }
-        }
-        if (y - 1 > -1 && this.board.get(x, y-1) === opponent) {
-            count = this.__countArmyLiberties(player, x, y-1);
-            console.log('(' + x + ',' + (y-1) + ')' + ' army liberties:' + count);
-            if (count === 1) {
-                return true;
-            };
-        }
-        if (x + 1 < this.size && this.board.get(x+1, y) === opponent) {
-            count = this.__countArmyLiberties(player, x+1, y);
-            console.log('(' + (x+1) + ',' + y + ')' + ' army liberties:' + count);
-            if (count === 1) {
-                return true;
-            };
-        }
-        if (y + 1 < this.size && this.board.get(x, y+1) === opponent) {
-            count = this.__countArmyLiberties(player, x, y+1);
-            console.log('(' + x + ',' + (y+1) + ')' + ' army liberties:' + count);
-            if (count === 1) {
-                return true;
-            };
-        }
-
-        return false;
-    }
-
-    //  getArmyCoordsDFS
-    //
-    //      This is a recursive DFS algorithm that gets the coordinates of each
-    //      token in an army, returning them in post-order.
-    //
-    //      Params:
-    //          player - 1 or 2, the player trying to play their turn
-    //          x - the x-coordinate where the player is placing a token
-    //          y - the y-coordinate
-    //          visited - a GameBoard object where visited spaces are marked 1
-    //          tokens - an array of objects containing token coordinates
-    //      Return a token of this spaces coordinates and validity
-    __getArmyCoordsDFS (player, x, y, visited, tokens) {
-
-        console.log('-----------------------');
-        console.log('(' + x + ',' + y + ')');
-        console.log('(Visited: ' + visited.get(x, y));
-        console.log('Belongs To:' + this.board.get(x, y));
-
-        var opponent = this.__opposingPlayer(player);
-
-        var token = {
-            invalid: false,
-            x: x,
-            y: y
-        }
-
-        //If this space has been visited
-        //Then return token, but mark it as a duplicate of a visited token
-        if (visited.get(x, y) === 1) {
-            token.invalid = true;
-            return token;
-        }
-
-        //Mark as Visited
-        visited.set(x, y, 1);
-
-        //If
-        //  1) this space belongs to the opponent
-        //  2) this space is unoccupied
-        //Then visit
-        if (this.board.get(x, y) === opponent || this.board.get(x, y) === 0) {
-            token.invalid = true;
-            return token;
-        }
-
-        //If adjacent square is not off the board
-        //Then check who it belongs to and add their liberties to the total
-        if (x-1 > -1) {
-            tokens.push(this.__getArmyCoordsDFS (player, x-1 , y, visited, tokens));
-        }
-        if (y-1 > -1) {
-            tokens.push(this.__getArmyCoordsDFS (player, x, y-1, visited, tokens));
-        }
-        if (x+1 < this.size) {
-            tokens.push(this.__getArmyCoordsDFS (player, x+1, y, visited, tokens));
-        }
-        if (y+1 < this.size) {
-            tokens.push(this.__getArmyCoordsDFS (player, x, y+1, visited, tokens));
-        }
-
-        //Return the the token
-        return token;
-    }
-
-    //  getArmyCoords
-    //
-    //      This is a recursive DFS algorithm that gets the coordinates of each
-    //      token in an army, returning them in post-order.
-    //
-    //      Params:
-    //          player - 1 or 2, the player trying to play their turn
-    //          x - the x-coordinate where the player is placing a token
-    //          y - the y-coordinate
-    //      Return an array of objects containing the coordinates of each token
-    //          in the army
-    __getArmyCoords (player, x, y) {
-
-        var visited = new GameBoard(this.size);
-        var tokens = [];
-
-        return __getArmyCoordsDFS(player, x, y, visited, tokens);
-    }
-
-    //  isArmyDestroyed
-    //
-    //      Params:
-    //          player - 1 or 2, the player trying to play their turn
-    //          x - the x-coordinate of a opponent's token
-    //          y - the y-coordinate
-    //      Returns:
-    //          True if the army is destroyed by this move
-    //          False otherwise
-    __isArmyDestroyed (player, x, y) {
-        if (__countArmyLibertiesDFS (player, x, y, visited) === 0) {
             return true;
         }
+        return !GameBoard.equal(tempBoard, this.history[this.history.length - 1]);
+    }
+
+    //  evaluationTest
+    //
+    //      Performs legality checking that requires evaluating the board.
+    //      Returns true when:
+    //          1) Armies were destroyed, and the Ko Rule is upheld
+    //          2) No armies were destroyed, and the space has liberties
+    //
+    //      Params:
+    //          player - the player placing a token
+    //          x - the x-coordinate where the player is trying to place a token
+    //          y - the y-coordinate
+    //      Returns:
+    //          True if the move is legal
+    //          False otherwise
+    __evaluationTest (player, x, y) {
+
+        var captured;
+        var opponent = this.__opposingPlayer(player);
+        var tempBoard = this.board.clone();
+        tempBoard.evaluateMove(player, x, y);
+
+        //The first move is always legal
+        if (this.history.length === 0){
+            return true;
+        }
+
+        captured = this.history[this.history.length-1].count(opponent) - this.board.count(opponent);
+
+        if (captured > 0 ) {
+            return this.__koRule(tempBoard);
+        }
         else {
-            return false;
+            return this.board.__countSpaceLiberties(player, x, y) > 0;
         }
     }
 
-    //  captureArmy
+    //  checkLegal
     //
-    //      Captures the army that the token at (x,y) is included in, removing
-    //      all tokens from the board.
+    //      Tests whether the move is legal
     //
     //      Params:
-    //          x - the x-coordinate of a token in the army being destroyed
+    //          player - the player placing a token
+    //          x - the x-coordinate where the player is trying to place a token
     //          y - the y-coordinate
-    __captureArmy (x, y) {
-
-    }
-
-    //returns true if move is legal, false if illegal
+    //      Returns:
+    //          True if the move is legal
+    //          False otherwise
     checkLegal (player, x, y) {
 
-        //If the space is occupied
+        //Is the space occupied?
         if (this.board.get(x, y) !== 0) {
-            return false
-        }
-
-        //If an adjacent enemy army is destroyed, freeing that space's liberty
-        if (this.__areArmiesDestroyed(player, x, y)) {
-
-            //If the move does not revert to the previous turn
-            if (this.__boardReverted(player, x, y)) {
-                console.log("--invalid move: board reverted");
-                return false;
-            }
-
-            else {
-                console.log('--valid move');
-                return true;
-            }
-        }
-
-        else if (this.__countSpaceLiberties(player, x, y) > 0) {
-            console.log('--valid move');
-            return true;
-        }
-
-        else  {
-            console.log("--invalid move: no liberties");
             return false;
         }
+
+        return this.__evaluationTest(player, x, y);
+
     }
+
 }
-
-// Testing Code
-
-var a = new GameSpace(9);
-a.getBoard();
-a.getBoard().print();
-a.placeToken(1,3,1);
-a.placeToken(1,3,2);
-a.placeToken(1,5,1);
-a.placeToken(1,5,2);
-a.placeToken(1,4,3);
-// a.placeToken(2,4,1);
-// a.placeToken(2,4,2);
-// a.placeToken(2,2,3);
-// a.placeToken(2,3,3);
-// a.placeToken(2,5,3);
-// a.placeToken(2,4,4);

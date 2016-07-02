@@ -43,5 +43,5 @@ class GameController {
 	setView(view){
 		this.__view = view;
 	}
-	
+
 }
