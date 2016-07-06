@@ -24,6 +24,12 @@ app.get("/ai", function (req, res) {
     res.sendfile("public/aiTester.html");
 });
 
+app.get("/mp", function (req, res) {
+    res.sendfile("public/multiplayer_lobby.html");
+});
+
+
+
 app.post("/ai", function (req, res) {
 	
 	var userid = req.body.userid; // for user specific actions
