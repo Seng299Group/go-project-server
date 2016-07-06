@@ -4,8 +4,27 @@
         <title>MP Lobby</title>
     </head>
 
+	<style>
+		.player{
+			display: block;
+			background: green;
+			color: white;
+			margin: 8px;
+			padding: 8px;
+			cursor: pointer
+		}
+		
+		.request{
+		
+		}
+	</style>
+	
     <body>
 
+		<div id="receivedGameRequests">
+		
+		</div>
+	
 		<div id="onlinePlayers">
 			
 		</div>
@@ -39,8 +58,26 @@
 				
 				// generate new list on the UI
 				for (p in playerList) {
-					$('#onlinePlayers').append(p + "<br>");
+					$('#onlinePlayers').append(makeLink(p));
 				}
+			});
+			
+			// The client received a game request
+			socket.on('gameRequest', function (fromUser) {
+				var div = $(document.createElement('div'));
+				div.attr("class","request");
+				div.html(fromUser + " challenged you.");
+				
+				var button_accept = $(document.createElement('button'));
+				button_accept.html("accept");
+				
+				var button_decline = $(document.createElement('button'));
+				button_decline.html("decline");
+				
+				div.append(button_accept);
+				div.append(button_decline);
+				
+				$("#receivedGameRequests").append(div);
 			});
 			
 			// Log Error if server sends an error message
@@ -51,6 +88,28 @@
 					console.log(data);
 				}
 			});
+			
+			// Creates a link to challenge a user
+			function makeLink(username){	
+				var div = $(document.createElement('div'));
+				div.attr("class","player");
+				div.append(username);
+				div.attr("onclick","sendRequest("+username+")");
+				return div;
+			}
+			
+			/**
+			* This function sends a game request to the target user
+			*
+			* @param {string} toUser - The target user
+			*/
+			function sendRequest(toUser){
+				if (toUser !== user.username){
+					socket.emit("gameRequest", {toUser: toUser, fromUser: user.username});
+				} else {
+					alert("You cannot challenge yourself");
+				}
+			}
 
 		</script>
 

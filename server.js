@@ -143,10 +143,21 @@ io.on('connection', function (socket) {
 			socket.emit("playerList", JSON.stringify(playerList));
 			socket.broadcast.emit("playerList", JSON.stringify(playerList));
 		} else {
+			log("duplicate player");
 			socket.emit("_error", "duplicate player");
 		}
     });
 
+	// Server received a game request
+	socket.on('gameRequest', function(data) {
+		
+		if (io.sockets.connected[playerList[data.toUser].socketid] !== undefined){
+			io.sockets.connected[playerList[data.toUser].socketid].emit("gameRequest", data.fromUser);	
+		} else {
+			log("player do not exit");
+		}
+	});
+	
 	socket.on('move', function(data) {
 		// todo issue the move to opponent
 
