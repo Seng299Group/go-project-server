@@ -5,6 +5,9 @@ var express = require("express");
 var bodyParser = require("body-parser");
 
 var app = express();
+var server = http.createServer(app);
+var io = require("socket.io").listen(server);
+
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
@@ -85,10 +88,32 @@ app.post("/ai", function (req, res) {
 
 
 
+io.on('connection', function (socket) {
+
+    socket.on('newPlayer', function (playerName) {
+		log("new user");
+    });
+
+    socket.on('disconnect', function () {
+        log("user left");
+    });
+
+});
+
+
+
+
+
+
+
 
 /******************************** Port assignment *****************************/
-app.listen(3000, function () {
-    console.log("Listening on port 3000\n");
+// app.listen(3000, function () {
+    // console.log("Listening on port 3000\n");
+// });
+
+server.listen(3000, function(){
+	log("Listening on port 3000");
 });
 /******************************* End of Express *******************************/
 
