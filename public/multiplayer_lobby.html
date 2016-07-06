@@ -6,13 +6,51 @@
 
     <body>
 
+		<div id="onlinePlayers">
+			
+		</div>
+
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 		<script>
-		
+			
+			var user = {
+				username: (new Date()).getTime(), // send username form here
+				opponent: "null",
+				lastMove: "null"
+			}
+			
+			
+			
 			var socket = io();
 
-			socket.emit("newPlayer", "name");
+			socket.emit("newPlayer", user);
+			
+			
+			
+			// When server sends a playerList
+			socket.on('playerList', function (data) {
+				
+				// String to object
+				var playerList = JSON.parse(data);
+				
+				// Clear the online players' list on the UI
+				$('#onlinePlayers').empty();
+				
+				// generate new list on the UI
+				for (p in playerList) {
+					$('#onlinePlayers').append(p + "<br>");
+				}
+			});
+			
+			// Log Error if server sends an error message
+			socket.on('_error', function (data) {
+				if (data === "duplicate player"){
+					$("body").html("this account is already logged in");
+				} else {
+					console.log(data);
+				}
+			});
 
 		</script>
 
