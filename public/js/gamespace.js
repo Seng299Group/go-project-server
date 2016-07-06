@@ -102,7 +102,7 @@ class GameSpace {
     //      Returns:
     //          True if the move was legal and applied
     //          False if the move was illegal and not applied
-    __addCapturedArmies(player) {
+    __addCapturedArmies (player) {
 
         var captured;
         var opponent = this.__opposingPlayer(player);
@@ -163,7 +163,7 @@ class GameSpace {
             return this.__koRule(tempBoard);
         }
         else {
-            return this.board.__countSpaceLiberties(player, x, y) > 0;
+            return tempBoard.__countArmyLiberties(player, x, y) > 0;
         }
     }
 
