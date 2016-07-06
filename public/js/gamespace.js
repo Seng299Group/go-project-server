@@ -41,14 +41,14 @@ class GameSpace {
     getGrid () {
         return this.board.getGrid();
     }
-	
+
 	/*
 	* @returns {object} - the __lastMove variable.
 	*/
 	getLastMove(){
 		return this.__lastMove;
 	}
-	
+
     //  opposingPlayer
     //      Params:
     //          player - 1 or 2, whoever's turn it is
@@ -78,14 +78,14 @@ class GameSpace {
         var captured;
 
         if (this.checkLegal(player, x, y)) {
-            console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
+            // console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
 			this.__lastMove = {"x":y, "y":x, "c":player, "pass":false}; // temporary fix: x=y and y=x
             this.history.push(this.board);
             this.board = this.board.clone();
             this.board.evaluateMove(player, x, y);
             this.__addCapturedArmies(player);
 
-            this.board.print();
+            // this.board.print();
             return true;
         }
         return false;
@@ -157,7 +157,7 @@ class GameSpace {
             return true;
         }
 
-        captured = this.history[this.history.length-1].count(opponent) - this.board.count(opponent);
+        captured = this.board.count(opponent) - tempBoard.count(opponent);
 
         if (captured > 0 ) {
             return this.__koRule(tempBoard);
