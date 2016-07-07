@@ -148,6 +148,8 @@ io.on('connection', function (socket) {
 		}
     });
 
+	
+	
 	// Server received a game request
 	socket.on('gameRequest', function(data) {
 		
@@ -158,6 +160,9 @@ io.on('connection', function (socket) {
 		}
 	});
 	
+	
+	
+	// When a user makes a move
 	socket.on('move', function(data) {
 		// todo issue the move to opponent
 
@@ -168,6 +173,9 @@ io.on('connection', function (socket) {
 		*/
 	});
 	
+	
+	
+	// Socket.io Event: Disconnect
 	socket.on('disconnect', function () {
 		// Remove user from server
 		var user = socketIDtoUser[socket.id];

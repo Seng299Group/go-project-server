@@ -5,80 +5,228 @@
     </head>
 
 	<style>
-		.player{
-			display: block;
-			background: green;
-			color: white;
-			margin: 8px;
+		
+		/********************************/
+		
+		/*
+		* Wrapper for the profile section
+		*/
+		.profile-wrapper {
+			border: 1pt black solid;
+			margin: 8px auto;
 			padding: 8px;
-			cursor: pointer
+			text-align: center;
+			width: 50%;
+			
 		}
 		
-		.request{
 		
+		/*
+		* 
+		*/
+		#profile-username {
+			display: inline;
+			
 		}
+		
+		
+		/*
+		* 
+		*/
+		#button_logout {
+			background: red;
+			border: none;
+			color: white;
+			font-size: 10pt;
+			margin: 4px;
+			padding: 6px;
+			width: 25%;
+			
+		}
+		
+		
+		/*
+		* 
+		*/
+		#button_logout:active {
+			background: brown;
+			transform: translateY(4px);
+			
+		}
+		
+		
+		/********************************/
+		
+		
+		/*
+		* 
+		*/
+		.gameRequests-wrapper {
+			border: 1pt black solid;
+			margin: 8px auto;
+			padding: 8px;
+			width: 50%;
+			
+		}
+		
+		
+		/*
+		* 
+		*/
+		.gameRequests-wrapper h1{
+			font-size: 12pt;
+
+		}
+		
+		/*
+		* 
+		*/
+		.gameRequest-row {
+			
+		}
+		
+		/********************************/
+		
+		
+		/*
+		* 
+		*/
+		.onlinePlayers-wrapper {
+			border: 1pt black solid;
+			margin: 8px auto;
+			padding: 8px;
+			width: 50%;
+			
+		}
+
+		.onlinePlayers-wrapper h1 {
+			font-size: 12pt;
+			
+		}
+		
+		
+		/*
+		* 
+		*/
+		.onlinePlayers-row {
+			border: 1px solid black;
+			display: block;
+			margin: 8px;
+			padding: 16px;
+			
+		}
+		
+		.button_sendRequest {
+			background: green;
+			cursor: pointer;
+			display: box;
+			padding: 8px;
+			text-align: center;
+			width: 25%;
+		}
+		
+		/*
+		* JavaScript changes to this class after the "Send request" button
+		* is clicked.
+		*/
+		.button_requestSent {
+			background: yellow;
+			border: 1px solid black;
+			cursor: default;
+			display: box;
+			padding: 8px;
+			text-align: center;
+			width: 25%;
+		}
+		
+		/********************************/
+		
+		
+		
 	</style>
 	
     <body>
 
-		<div id="receivedGameRequests">
+		<!-- Profile section -->
+		<div id="profile-wrapper" class="profile-wrapper">
+			Logged in as:
+			<div id="profile-username"></div>
+			<br>
+			<button id="button_logout" onclick="onLogoutButtonPress()">Logout</button>
+		</div>
 		
+		<!-- Game request section -->
+		<div id="gameRequests-wrapper" class="gameRequests-wrapper">
+			<h1>Game Requests</h1>
+			<div id="gameRequests-list">
+			
+			</div>
 		</div>
 	
-		<div id="onlinePlayers">
+		<!-- Online players' section -->
+		<div id="onlinePlayers-wrapper" class="onlinePlayers-wrapper">
+			<h1>Online Players</h1>
+			<div id="onlinePlayers-list">
 			
+			</div>
 		</div>
 
+		
+		
+		<script src="js/utils.js" type="text/javascript"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		
 		<script>
 			
+			
+			
+			// Default data (Guest user data)
 			var user = {
-				username: (new Date()).getTime(), // send username form here
+				username: "user" + (new Date()).getTime(), // send username form here
 				opponent: "null",
 				lastMove: "null"
 			}
 			
+			// todo: If client logged in, get user's data from the database
+			
+			// Update UI: User's profile
+			function decorateProfile(){
+				$('#profile-username').html(user.username);
+				// other stuff
+			}
+			decorateProfile();
 			
 			
+			
+			
+			
+			/******************** Socket IO communication ********************/
 			var socket = io();
 
 			socket.emit("newPlayer", user);
 			
 			
 			
-			// When server sends a playerList
+			// When client receives online players' list
 			socket.on('playerList', function (data) {
 				
 				// String to object
 				var playerList = JSON.parse(data);
 				
-				// Clear the online players' list on the UI
-				$('#onlinePlayers').empty();
+				onReceivedPlayerList(playerList);
 				
-				// generate new list on the UI
-				for (p in playerList) {
-					$('#onlinePlayers').append(makeLink(p));
-				}
+				
 			});
+			
+			
 			
 			// The client received a game request
 			socket.on('gameRequest', function (fromUser) {
-				var div = $(document.createElement('div'));
-				div.attr("class","request");
-				div.html(fromUser + " challenged you.");
-				
-				var button_accept = $(document.createElement('button'));
-				button_accept.html("accept");
-				
-				var button_decline = $(document.createElement('button'));
-				button_decline.html("decline");
-				
-				div.append(button_accept);
-				div.append(button_decline);
-				
-				$("#receivedGameRequests").append(div);
+				onReceivedGameRequest(fromUser);
 			});
+			
+			
 			
 			// Log Error if server sends an error message
 			socket.on('_error', function (data) {
@@ -89,14 +237,11 @@
 				}
 			});
 			
-			// Creates a link to challenge a user
-			function makeLink(username){	
-				var div = $(document.createElement('div'));
-				div.attr("class","player");
-				div.append(username);
-				div.attr("onclick","sendRequest("+username+")");
-				return div;
-			}
+			
+			
+			
+			
+			/**************** JavaScript and DOM manipulation *****************/
 			
 			/**
 			* This function sends a game request to the target user
@@ -104,13 +249,76 @@
 			* @param {string} toUser - The target user
 			*/
 			function sendRequest(toUser){
-				if (toUser !== user.username){
-					socket.emit("gameRequest", {toUser: toUser, fromUser: user.username});
-				} else {
-					alert("You cannot challenge yourself");
-				}
+				socket.emit("gameRequest", {toUser: toUser, fromUser: user.username});
 			}
 
+			
+			function onReceivedGameRequest(fromUser){
+				var div = $(document.createElement('div'));
+				div.attr("class","gameRequest-row");
+				div.html(fromUser + " challenged you.");
+				
+				var button_accept = $(document.createElement('button'));
+				button_accept.html("accept");
+				button_accept.click(function(){
+					log("accepted request. unimplemented method call");
+				});
+				
+				var button_decline = $(document.createElement('button'));
+				button_decline.html("decline");
+				button_decline.click(function(){
+					log("declined request. unimplemented method call");
+				});
+				
+				div.append(button_accept);
+				div.append(button_decline);
+				$("#gameRequests-list").append(div);
+			}
+			
+			
+			
+			function onReceivedPlayerList(playerList){
+			
+				// Creates a link to challenge a user
+				function makeRequestElement(forUser){
+					var div = $(document.createElement('div'));
+					div.attr("class","onlinePlayers-row");
+					
+					var reqButton = $(document.createElement('div'));
+					reqButton.attr("class","button_sendRequest");
+					//reqButton.attr("onclick","sendRequest(" + forUser + ")");
+					reqButton.click(function(){
+						sendRequest(forUser);
+						$(this).html("Invitation Sent");
+						$(this).attr("class","button_requestSent");
+					});
+					reqButton.html("Send Invitation");
+					
+					div.append(forUser);
+					div.append(reqButton);
+					
+					//div.attr("onclick","sendRequest(" + forUser + ")");
+					return div;
+				}
+			
+				// Clear the UI
+				$('#onlinePlayers-list').empty();
+				
+				// generate new list on the UI
+				for (p in playerList) {
+					if(p != user.username){ // != instead of !== for type conversion
+						$('#onlinePlayers-list').append(makeRequestElement(p));
+					}
+				}
+			}
+			
+			
+			function onLogoutButtonPress(){
+				log("logout button pressed. unimplemented method call.");
+			}
+			
+			
+			
 		</script>
 
 	</body>
