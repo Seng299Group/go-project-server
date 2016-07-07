@@ -1,8 +1,22 @@
 class NetworkAdapter {
 	
+	/* List of variables
+	* 
+	* __socket		- established socket with the server.
+	*					A Socket.io object. Use setSocket()
+	* 
+	*/
+	
 	constructor(){
 		
 	}
+	
+	setSocket(socket){
+		this.__socket = socket;
+	}
+	
+	
+	
 	
 	sendMove(){
 		console.log("unimplemented method call");
@@ -10,7 +24,6 @@ class NetworkAdapter {
 	
 	getAIMove(size, board, lastMove, callback){
 		var data = {
-			"userid":"user", // use to handle user specific request
 			"size": size,
 			"board": board,
 			"last": lastMove
@@ -48,8 +61,18 @@ class NetworkAdapter {
 		console.log("unimplemented method call");
 	}
 	
-	inviteToGame(){
-		console.log("unimplemented method call");
+	/**
+	* @param {object} data - { toUser: username, fromUser: username}
+	*/
+	inviteToGame(data){
+		socket.emit("gameRequest", data);
+	}
+	
+	/**
+	* @param {string} username - client user's username
+	*/
+	sendUsername(username){
+		socket.emit("newPlayer", username);
 	}
 	
 }
