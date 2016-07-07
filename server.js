@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 
 
 var User = require("./serverjs/User.js");
+var NetworkAdapter = require("./serverjs/NetworkAdapter.js");
 
 
 
