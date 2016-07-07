@@ -179,8 +179,6 @@
 		
 		<script>
 			
-			
-			
 			// Default data (Guest user data)
 			var user = {
 				username: "user" + (new Date()).getTime(), // send username form here
@@ -232,6 +230,8 @@
 			socket.on('_error', function (data) {
 				if (data === "duplicate player"){
 					$("body").html("this account is already logged in");
+				} else if (data === "player is not online") {
+					log("player is not online. unimplemented"); // todo
 				} else {
 					console.log(data);
 				}

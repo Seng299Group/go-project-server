@@ -13,6 +13,10 @@ app.use(bodyParser.json());
 
 
 
+var User = require("./serverjs/User.js");
+
+
+
 
 
 /****************************** Express Routes ********************************/
@@ -97,8 +101,9 @@ app.post("/ai", function (req, res) {
 * 
 * var playerList = {
 * 		{
-* 			username: username
+* 			username: username	
 * 			opponent: username
+*			sentGameRequestTo: [username1, username2, ... ]
 * 			socketid: Socket ID
 *	 	},
 * 		{
@@ -154,9 +159,10 @@ io.on('connection', function (socket) {
 	socket.on('gameRequest', function(data) {
 		
 		if (io.sockets.connected[playerList[data.toUser].socketid] !== undefined){
+			playerList[data.fromUser].sentGameRequestTo.push(data.toUser);
 			io.sockets.connected[playerList[data.toUser].socketid].emit("gameRequest", data.fromUser);	
 		} else {
-			log("player do not exit");
+			socket.emit("_error", "player is not online");
 		}
 	});
 	
