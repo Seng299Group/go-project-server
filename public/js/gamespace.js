@@ -28,6 +28,8 @@ class GameSpace {
         this.history = [];
         this.p1Captured = 0;
         this.p2Captured = 0;
+        this.p1Score = 0;
+        this.p2Score = 0;
     }
 
     //  getBoard
@@ -247,6 +249,7 @@ class GameSpace {
                     visited.set(1, row, col);
                     var emptySpaces = this.board.__getArmyCoords(0, row, col);
                     for(var i = 0; i < emptySpaces.length; i++){
+                        visited.set(1, emptySpaces[i].x, emptySpaces[i].y);
                         if(this.__hasBlackNeighbours(emptySpaces[i].x, emptySpaces[i].y)){
                             hasBlackNeighbours = true;
                         }
@@ -258,10 +261,18 @@ class GameSpace {
                         }
                     }
                     if(!(hasBlackNeighbours && hasWhiteNeighbours)){
-                        console.log(emptySpaces.length);
+                        if(hasBlackNeighbours){
+                            this.p2Score += emptySpaces.length;
+                        }else{
+                            this.p1Score += emptySpaces.length;
+                        }
                     }
                 }
             }
         }
+        this.p1Score += this.p1Captured + this.board.count(1);
+        this.p2Score += this.p2Captured + this.board.count(2) + 6.5;
+
+        console.log("Player One Score: " + this.p1Score + " Player Two Score: " + this.p2Score);
     }
 }
