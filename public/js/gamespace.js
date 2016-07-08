@@ -239,6 +239,9 @@ class GameSpace {
         return false;
     }
     score(){
+        this.p1Score = 0;
+        this.p2Score = 0;
+        
         var visited = new GameBoard(this.size);
         for(var row = 0; row < this.size; row++){
             for(var col = 0; col < this.size; col++){
