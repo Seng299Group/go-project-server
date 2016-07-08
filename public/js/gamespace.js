@@ -188,5 +188,65 @@ class GameSpace {
         return this.__evaluationTest(player, x, y);
 
     }
+    //ASSUMES P2 IS BLACK
+    __hasBlackNeighbours(x, y){
+        if (x - 1 > -1) {
+            if(this.board.get(x-1, y) === 2){
+                return true;
+            }
+        }
+        if (y - 1 > -1) {
+            if(this.board.get(x, y-1) === 2){
+                return true;
+            }
+        }
+        if (x + 1 < this.size) {
+            if(this.board.get(x+1, y) === 2){
+                return true;
+            }
+        }
+        if (y + 1 < this.size) {
+            if(this.board.get(x, y+1) === 2){
+                return true;
+            }
+        }
+        return false;
+    }
+    //ASSUMES P1 IS WHITE
+    __hasWhiteNeighbours(x, y){
+        if (x - 1 > -1) {
+            if(this.board.get(x-1, y) === 1){
+                return true;
+            }
+        }
+        if (y - 1 > -1) {
+            if(this.board.get(x, y-1) === 1){
+                return true;
+            }
+        }
+        if (x + 1 < this.size) {
+            if(this.board.get(x+1, y) === 1){
+                return true;
+            }
+        }
+        if (y + 1 < this.size) {
+            if(this.board.get(x, y+1) === 1){
+                return true;
+            }
+        }
+        return false;
+    }
+    score(){
+        visited = new GameBoard(this.size);
+        for(var row = 0; row < this.size; row++){
+            for(var col = 0; col < this.size; col++){
+                var hasBlackNeighbours = false;
+                var hasWhiteNeighbours = false;
 
+                if(visited.get(row, col) === 0 && this.board.get(row, col) === 0){
+                    visited.set(1, row, col);
+                }
+            }
+        }
+    }
 }
