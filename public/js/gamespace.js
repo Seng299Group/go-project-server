@@ -237,7 +237,7 @@ class GameSpace {
         return false;
     }
     score(){
-        visited = new GameBoard(this.size);
+        var visited = new GameBoard(this.size);
         for(var row = 0; row < this.size; row++){
             for(var col = 0; col < this.size; col++){
                 var hasBlackNeighbours = false;
@@ -245,6 +245,21 @@ class GameSpace {
 
                 if(visited.get(row, col) === 0 && this.board.get(row, col) === 0){
                     visited.set(1, row, col);
+                    var emptySpaces = this.board.__getArmyCoords(0, row, col);
+                    for(var i = 0; i < emptySpaces.length; i++){
+                        if(this.__hasBlackNeighbours(emptySpaces[i].x, emptySpaces[i].y)){
+                            hasBlackNeighbours = true;
+                        }
+                        if(this.__hasWhiteNeighbours(emptySpaces[i].x, emptySpaces[i].y)){
+                            hasWhiteNeighbours = true;
+                        }
+                        if(hasBlackNeighbours && hasWhiteNeighbours){
+                            break;
+                        }
+                    }
+                    if(!(hasBlackNeighbours && hasWhiteNeighbours)){
+                        console.log(emptySpaces.length);
+                    }
                 }
             }
         }
