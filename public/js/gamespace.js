@@ -191,6 +191,14 @@ class GameSpace {
 
     }
     //ASSUMES P2 IS BLACK
+    //
+    //  hasBlackNeighbours
+    //
+    //  Tests the neighbours of a space to see if any are black
+    //
+    //  Params:
+    //      x - the x-coordinate of the space to be checked
+    //      y - the y-coordinate of the space to be checked
     __hasBlackNeighbours(x, y){
         if (x - 1 > -1) {
             if(this.board.get(x-1, y) === 2){
@@ -215,6 +223,14 @@ class GameSpace {
         return false;
     }
     //ASSUMES P1 IS WHITE
+    //
+    //  hasBlackNeighbours
+    //
+    //  Tests the neighbours of a space to see if any are white
+    //
+    //  Params:
+    //      x - the x-coordinate of the space to be checked
+    //      y - the y-coordinate of the space to be checked
     __hasWhiteNeighbours(x, y){
         if (x - 1 > -1) {
             if(this.board.get(x-1, y) === 1){
@@ -238,19 +254,32 @@ class GameSpace {
         }
         return false;
     }
+    //
+    //  score
+    //
+    //  Responsible for Scoring the Game
+    //
+    //  Params:
+    //      x - the x-coordinate of the space to be checked
+    //      y - the y-coordinate of the space to be checked
     score(){
         this.p1Score = 0;
         this.p2Score = 0;
-        
+
+        //Will be Used to Track Which Spaces Have Been Checked
         var visited = new GameBoard(this.size);
+
         for(var row = 0; row < this.size; row++){
             for(var col = 0; col < this.size; col++){
                 var hasBlackNeighbours = false;
                 var hasWhiteNeighbours = false;
 
+                //Only Check Empty Spaces Which Have Not Yet Been Visited
                 if(visited.get(row, col) === 0 && this.board.get(row, col) === 0){
                     visited.set(1, row, col);
+                    //An Array Containing The Coordinates of a Grouping of Empty Spaces
                     var emptySpaces = this.board.__getArmyCoords(0, row, col);
+
                     for(var i = 0; i < emptySpaces.length; i++){
                         visited.set(1, emptySpaces[i].x, emptySpaces[i].y);
                         if(this.__hasBlackNeighbours(emptySpaces[i].x, emptySpaces[i].y)){
@@ -259,6 +288,8 @@ class GameSpace {
                         if(this.__hasWhiteNeighbours(emptySpaces[i].x, emptySpaces[i].y)){
                             hasWhiteNeighbours = true;
                         }
+                        //If The Grouping of Spaces Has Black and White
+                        //Neighbours, the territory is not owned by either
                         if(hasBlackNeighbours && hasWhiteNeighbours){
                             break;
                         }
@@ -273,9 +304,11 @@ class GameSpace {
                 }
             }
         }
+        //Score = Territory Owned + Stones Captured + Stones on Board + Komi
         this.p1Score += this.p1Captured + this.board.count(1);
         this.p2Score += this.p2Captured + this.board.count(2) + 6.5;
 
+        //This Will Be Changed In Implementation (Just to See Result of Calculation)
         console.log("Player One Score: " + this.p1Score + " Player Two Score: " + this.p2Score);
     }
 }
