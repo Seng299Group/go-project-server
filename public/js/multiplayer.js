@@ -1,11 +1,17 @@
 
+var socket = io();
+var networkAdapter = new NetworkAdapter();
+networkAdapter.setSocket(socket);
+
+
+
 // User data of the client
 // Set to default data (Guest user data)
 var user = {
 	username: "user" + (new Date()).getTime(), // send username form here
 	opponent: "null",
 	lastMove: "null"
-}
+};
 
 // todo: If the client is logged in
 // get user's data from the database
@@ -73,9 +79,9 @@ socket.on('_error', function (data) {
 
 /* List of functions for DOM manipulation
 *
-* decorateProfile			- updates the profile section
+* decorateProfile		- updates the profile section
 * onReceivedPlayerList		- inflates the online players' section
-* sendRequest				- sends a game request to an user
+* sendGameRequest		- sends a game request to an user
 * onReceivedGameRequest		- when the client receives a game request
 * onLogoutButtonPress		- when the user presses the logout button
 * 
@@ -93,6 +99,8 @@ function decorateProfile(){
 
 /**
 * This function is called when the 
+* 
+* @param{object} - 'onlineUsers' object form the server
 */
 function onReceivedPlayerList(playerList){
 
@@ -101,92 +109,107 @@ function onReceivedPlayerList(playerList){
 	
 	// generate new list on the UI
 	for (p in playerList) {
+                // excluding self from appearing on the list
 		if(p != user.username){ // != instead of !== for type conversion
-			$('#onlinePlayers-list').append(makeRequestElement(playerList[p]));
+			$('#onlinePlayers-list').append(makeOnlineUserRow(playerList[p]));
 		}
 	}
-
-	
-	
+        
 	/**
 	* Creates a row for the online users' section
 	*
 	* @param {object} forUser - User object (follows server-side
 	*											User object standards)
 	*/
-	function makeRequestElement(forUser){
+	function makeOnlineUserRow(forUser){
 		
 		// A row for the player
 		var div = $(document.createElement('div'));
 		div.attr("class","onlinePlayers-row");
 		
+                // Button to send request
 		var reqButton = makeRequestButton(forUser);
 		
-		// Nesting DOM elements
+		// Nesting DOM elements. All that goes in a row for each player
 		div.append(forUser.__username);
 		div.append(reqButton);
 		
 		return div;
 	}
-
-	/**
-	* Creates a button to challenge a user
-	*
-	* @param {object} forUser - User object (follows server-side
-	*											User object standards)
-	*/
-	function makeRequestButton(forUser){
-		// A button to send game request
-		var reqButton = $(document.createElement('div'));
-		reqButton.attr("class","button_sendRequest");
-		reqButton.html("Send Invitation");
-		
-		reqButton.click(function(){
-			
-			// Checking if game invitation is not sent
-			if ( $(this).attr("class") ===  "button_sendRequest" ){
-				
-				// Send request
-				sendRequest(forUser.__username);
-				
-				// Update UI
-				$(this).html("Invitation Sent");
-				$(this).attr("class","button_requestSent");
-				$(this).removeAttr("onclick");
-				
-			} else if ( $(this).attr("class") ===  "button_requestSent" ) {
-				// todo notify user to wait for opponent to accept request
-				console.log("request has been sent. please wait. unimplemented");
-			}
-			
-		});
-		
-		return reqButton;
-	}
-	
+        
 }
+
+
+
+/**
+* Creates a button to challenge a user
+*
+* @param {object} forUser - User object (follows server-side
+*											User object standards)
+*/
+function makeRequestButton(forUser){
+
+        // A button to send game request
+        var reqButton = $(document.createElement('div'));
+
+        reqButton.attr("class","button_sendRequest");
+        reqButton.html("Send Invitation");
+
+        reqButton.click(function(){
+            
+            // Send game request to user
+            sendGameRequest(forUser.__username);
+
+            // Updating UI to notify the user that the game invitation was sent
+            $(this).replaceWith(getRequestSentButton());
+            
+        });
+
+        return reqButton;
+}
+
+function getRequestSentButton(){
+    var requestSentButton;
+    
+    requestSentButton =  $(document.createElement('div'));
+    requestSentButton.html("Invitation Sent");
+    requestSentButton.attr("class","button_requestSent");
+    requestSentButton.click(function(){
+        // todo notify user to wait for opponent to accept request
+        console.log("request has been sent. please wait. unimplemented");
+    });
+    
+    return requestSentButton;
+}
+
+
 
 /**
 * This function sends a game request to the target user
 *
 * @param {string} toUser - The target user
 */
-function sendRequest(toUser){
+function sendGameRequest(toUser){
 	var data = {
 		toUser: toUser,
 		fromUser: user.username
-	}
+	};
 	networkAdapter.inviteToGame(data);
 }
 
+
+
 /**
 * This function is called when the user receives a game request
+* 
+* @param {string} fromUser - username
 */
 function onReceivedGameRequest(fromUser){
 	var div = $(document.createElement('div'));
 	div.attr("class","gameRequest-row");
 	div.html(fromUser + " challenged you.");
 	
+        // todo change to div buttons
 	var button_accept = $(document.createElement('button'));
 	button_accept.html("accept");
 	button_accept.click(function(){
@@ -203,6 +226,8 @@ function onReceivedGameRequest(fromUser){
 	div.append(button_decline);
 	$("#gameRequests-list").append(div);
 }
+
+
 
 /**
 * This function is called when the user clicks the logout button

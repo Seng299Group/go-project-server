@@ -51,6 +51,13 @@ function listen(io) {
 * disconnect	- Socket.io event. When a user disconnects
 * 
 * 
+* 
+******************** List of events triggered by our server ********************
+*
+* playerList    - List of online players. I.e. sending the 'onlineUsers' variable
+* _error        - any serverside error that the client needs to know about.
+*               E.g. to notify user.
+* 
 *******************************************************************************/
 		
 		
