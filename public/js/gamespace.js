@@ -231,7 +231,7 @@ class GameSpace {
     //  Params:
     //      x - the x-coordinate of the space to be checked
     //      y - the y-coordinate of the space to be checked
-    score(){
+    __score(){
         this.p1Score = 0;
         this.p2Score = 0;
 
@@ -266,7 +266,7 @@ class GameSpace {
                     if(!(hasBlackNeighbours && hasWhiteNeighbours)){
                         if(hasBlackNeighbours){
                             this.p2Score += emptySpaces.length;
-                        }else{
+                        }else if(hasWhiteNeighbours){
                             this.p1Score += emptySpaces.length;
                         }
                     }
@@ -276,8 +276,15 @@ class GameSpace {
         //Score = Territory Owned + Stones Captured + Stones on Board + Komi
         this.p1Score += this.p1Captured + this.board.count(1);
         this.p2Score += this.p2Captured + this.board.count(2) + 6.5;
-
-        //This Will Be Changed In Implementation (Just to See Result of Calculation)
-        console.log("Player One Score: " + this.p1Score + " Player Two Score: " + this.p2Score);
+    }
+    declareWinner(){
+        this.__score();
+        if(this.p1Score > this.p2Score){
+            alert("Player One is the Winner!\n" + this.p1Score + " to " + this.p2Score);
+        }else if(this.p2Score > this.p1Score){
+            alert("Player Two is the Winner!\n" + this.p2Score + " to " + this.p1Score);
+        }else{
+            alert("Tie Game!\n" + this.p1Score + " to " + this.p1Score);
+        }
     }
 }
