@@ -190,65 +190,34 @@ class GameSpace {
         return this.__evaluationTest(player, x, y);
 
     }
-    //ASSUMES P2 IS BLACK
+    //ASSUMES P1 IS WHITE (NOT SURE IF THIS IS ALWAYS TRUE OR NOT **AI GAMES and NETWORK??**)
     //
-    //  hasBlackNeighbours
+    //  hasOccupiedNeighbours
     //
     //  Tests the neighbours of a space to see if any are black
     //
     //  Params:
+    //      colour - the colour of neighbour to be checked for
     //      x - the x-coordinate of the space to be checked
     //      y - the y-coordinate of the space to be checked
-    __hasBlackNeighbours(x, y){
+    __hasOccupiedNeighbours(colour, x, y){
         if (x - 1 > -1) {
-            if(this.board.get(x-1, y) === 2){
+            if(this.board.get(x-1, y) === colour){
                 return true;
             }
         }
         if (y - 1 > -1) {
-            if(this.board.get(x, y-1) === 2){
+            if(this.board.get(x, y-1) === colour){
                 return true;
             }
         }
         if (x + 1 < this.size) {
-            if(this.board.get(x+1, y) === 2){
+            if(this.board.get(x+1, y) === colour){
                 return true;
             }
         }
         if (y + 1 < this.size) {
-            if(this.board.get(x, y+1) === 2){
-                return true;
-            }
-        }
-        return false;
-    }
-    //ASSUMES P1 IS WHITE
-    //
-    //  hasBlackNeighbours
-    //
-    //  Tests the neighbours of a space to see if any are white
-    //
-    //  Params:
-    //      x - the x-coordinate of the space to be checked
-    //      y - the y-coordinate of the space to be checked
-    __hasWhiteNeighbours(x, y){
-        if (x - 1 > -1) {
-            if(this.board.get(x-1, y) === 1){
-                return true;
-            }
-        }
-        if (y - 1 > -1) {
-            if(this.board.get(x, y-1) === 1){
-                return true;
-            }
-        }
-        if (x + 1 < this.size) {
-            if(this.board.get(x+1, y) === 1){
-                return true;
-            }
-        }
-        if (y + 1 < this.size) {
-            if(this.board.get(x, y+1) === 1){
+            if(this.board.get(x, y+1) === colour){
                 return true;
             }
         }
@@ -282,10 +251,10 @@ class GameSpace {
 
                     for(var i = 0; i < emptySpaces.length; i++){
                         visited.set(1, emptySpaces[i].x, emptySpaces[i].y);
-                        if(this.__hasBlackNeighbours(emptySpaces[i].x, emptySpaces[i].y)){
+                        if(this.__hasOccupiedNeighbours(2, emptySpaces[i].x, emptySpaces[i].y)){
                             hasBlackNeighbours = true;
                         }
-                        if(this.__hasWhiteNeighbours(emptySpaces[i].x, emptySpaces[i].y)){
+                        if(this.__hasOccupiedNeighbours(1, emptySpaces[i].x, emptySpaces[i].y)){
                             hasWhiteNeighbours = true;
                         }
                         //If The Grouping of Spaces Has Black and White
