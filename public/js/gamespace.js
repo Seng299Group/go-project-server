@@ -28,6 +28,8 @@ class GameSpace {
         this.history = [];
         this.p1Captured = 0;
         this.p2Captured = 0;
+        this.p1Score = 0;
+        this.p2Score = 0;
     }
 
     //  getBoard
@@ -188,5 +190,101 @@ class GameSpace {
         return this.__evaluationTest(player, x, y);
 
     }
+    //ASSUMES P1 IS WHITE (NOT SURE IF THIS IS ALWAYS TRUE OR NOT **AI GAMES and NETWORK??**)
+    //
+    //  hasOccupiedNeighbours
+    //
+    //  Tests the neighbours of a space to see if any are black
+    //
+    //  Params:
+    //      colour - the colour of neighbour to be checked for
+    //      x - the x-coordinate of the space to be checked
+    //      y - the y-coordinate of the space to be checked
+    __hasOccupiedNeighbours(colour, x, y){
+        if (x - 1 > -1) {
+            if(this.board.get(x-1, y) === colour){
+                return true;
+            }
+        }
+        if (y - 1 > -1) {
+            if(this.board.get(x, y-1) === colour){
+                return true;
+            }
+        }
+        if (x + 1 < this.size) {
+            if(this.board.get(x+1, y) === colour){
+                return true;
+            }
+        }
+        if (y + 1 < this.size) {
+            if(this.board.get(x, y+1) === colour){
+                return true;
+            }
+        }
+        return false;
+    }
+    //
+    //  score
+    //
+    //  Responsible for Scoring the Game
+    //
+    //  Params:
+    //      x - the x-coordinate of the space to be checked
+    //      y - the y-coordinate of the space to be checked
+    __score(){
+        this.p1Score = 0;
+        this.p2Score = 0;
 
+        //Will be Used to Track Which Spaces Have Been Checked
+        var visited = new GameBoard(this.size);
+
+        for(var row = 0; row < this.size; row++){
+            for(var col = 0; col < this.size; col++){
+                var hasBlackNeighbours = false;
+                var hasWhiteNeighbours = false;
+
+                //Only Check Empty Spaces Which Have Not Yet Been Visited
+                if(visited.get(row, col) === 0 && this.board.get(row, col) === 0){
+                    visited.set(1, row, col);
+                    //An Array Containing The Coordinates of a Grouping of Empty Spaces
+                    var emptySpaces = this.board.__getArmyCoords(0, row, col);
+
+                    for(var i = 0; i < emptySpaces.length; i++){
+                        visited.set(1, emptySpaces[i].x, emptySpaces[i].y);
+                        if(this.__hasOccupiedNeighbours(2, emptySpaces[i].x, emptySpaces[i].y)){
+                            hasBlackNeighbours = true;
+                        }
+                        if(this.__hasOccupiedNeighbours(1, emptySpaces[i].x, emptySpaces[i].y)){
+                            hasWhiteNeighbours = true;
+                        }
+                        //If The Grouping of Spaces Has Black and White
+                        //Neighbours, the territory is not owned by either
+                        if(hasBlackNeighbours && hasWhiteNeighbours){
+                            break;
+                        }
+                    }
+                    if(!(hasBlackNeighbours && hasWhiteNeighbours)){
+                        if(hasBlackNeighbours){
+                            this.p2Score += emptySpaces.length;
+                        }else if(hasWhiteNeighbours){
+                            this.p1Score += emptySpaces.length;
+                        }
+                    }
+                }
+            }
+        }
+        //Score = Territory Owned + Stones Captured + Stones on Board + Komi
+        this.p1Score += this.p1Captured + this.board.count(1);
+        this.p2Score += this.p2Captured + this.board.count(2) + 6.5;
+    }
+    declareWinner(){
+        this.__score();
+        if(this.p1Score > this.p2Score){
+            alert("Player One is the Winner!\n" + this.p1Score + " to " + this.p2Score);
+        }else if(this.p2Score > this.p1Score){
+            alert("Player Two is the Winner!\n" + this.p2Score + " to " + this.p1Score);
+        }else{
+            alert("Tie Game!\n" + this.p1Score + " to " + this.p1Score);
+        }
+    }
 }
