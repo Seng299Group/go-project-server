@@ -74,8 +74,8 @@ socketioAdapter.listen(io);
 
 
 /******************************** Port assignment *****************************/
-server.listen(3000, function(){
-	log("Listening on port 3000");
+server.listen(30154, function(){
+	log("Listening on port 30154");
 });
 
 

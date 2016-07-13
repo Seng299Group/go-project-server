@@ -20,22 +20,28 @@ class HotSeatGameController extends GameController {
 	* @param {Number} y - coordinate on the board.
 	*/
 	placeToken(player, x, y){
-		
 		var validMove = this.__gameSpace.placeToken(player, x, y);
 		
 		if (validMove){
+			this.__pass = false;
 			this.swapTurn();
 		} else {
-			// Invalid move.
-			
-			// todo: Notify user
-			console.log("Invalid move.");
+			alert("Invalid Move!");
 		}
 		
 	}
-	
+	/*
+	*	Function Called When a Player Passes
+	*	
+	* 	Will End Game If Two Consecutive Passes
+	*/
 	pass(){
-		console.log("unimplemented method call");
+		if(this.__pass){
+			this.__gameSpace.declareWinner();
+			window.location.href = "winnerPage.html";
+		}else{
+			this.__pass = true;
+		}
 	}
 	
 	resign(){

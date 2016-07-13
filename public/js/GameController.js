@@ -13,6 +13,7 @@ class GameController {
 	
 	constructor() {
 		this.__playerTurn = 1; // black
+		this.__pass = false; //Set to false if previous turn was not a pass
 	}
 	
 	/**
@@ -43,5 +44,6 @@ class GameController {
 	setView(view){
 		this.__view = view;
 	}
+
 
 }
