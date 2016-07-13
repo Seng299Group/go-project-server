@@ -81,8 +81,8 @@ app.post("/ai", function (req, res) {
 
 
 /******************************** Port assignment *****************************/
-app.listen(3000, function () {
-    console.log("Listening on port 3000\n");
+app.listen(30154, function () {
+    console.log("Listening on port 30154\n");
 });
 /******************************* End of Express *******************************/
 
