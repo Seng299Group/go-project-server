@@ -46,6 +46,10 @@ class GameController {
 		this.__view = view;
 	}
 
+	//	Replay
+	//
+	//		Will be Used to Show Replay
+	//		After Game is Finished
 	replay(){
 		var gameHistory = this.__gameSpace.getHistory();
 			this.__historySpot += 1;
