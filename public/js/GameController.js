@@ -13,6 +13,7 @@ class GameController {
 	
 	constructor() {
 		this.__playerTurn = 1; // black
+		this.__historySpot = 0; //Temporary Fix
 		this.__pass = false; //Set to false if previous turn was not a pass
 	}
 	
@@ -45,5 +46,13 @@ class GameController {
 		this.__view = view;
 	}
 
+	replay(){
+		var gameHistory = this.__gameSpace.getHistory();
+			this.__historySpot += 1;
+			if(this.__historySpot < gameHistory.length){
+				this.__gameSpace.board = gameHistory[this.__historySpot];
+				this.__view.draw();
+			}
+	}
 
 }
