@@ -26,6 +26,7 @@ class GameSpace {
         this.board = new GameBoard(size);
         this.size = size;
         this.history = [];
+		this.__lastMove = null;
         this.p1Captured = 0;
         this.p2Captured = 0;
         this.p1Score = 0;
@@ -287,4 +288,5 @@ class GameSpace {
             alert("Tie Game!\n" + this.p1Score + " to " + this.p1Score);
         }
     }
+
 }
