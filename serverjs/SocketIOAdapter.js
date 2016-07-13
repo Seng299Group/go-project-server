@@ -35,7 +35,6 @@ var socketIDtoUser = {};
 
 
 
-
 function listen(io) {
 	
 	io.on('connection', function (socket) {
@@ -92,17 +91,25 @@ function listen(io) {
 
 
 
+                
+                
+                socket.on('_random', function(data){
+                    
+                    // Create new user
+                    var newUser = new User(getName());
+                    newUser.setSocketid(socket.id);
 
-                socket.on('userdata', function(request){
-                    console.log(socket.id);
-//                    if (request === 'all'){
-//                        socket.emit('userdata',JSON.stringify(socketIDtoUser[socket.I]));
-//                    } else {
-//                        console.log("unknow request");
-//                    }
+                    // Update dictionary
+                    onlineUsers[newUser.getUsername()] = newUser;
+                    socketIDtoUser[socket.id] = newUser.getUsername();
+
+                    socket.emit("_random", newUser);
                 });
 
 
+                socket.on('userdata', function(user){
+                    socket.emit("userdata", onlineUsers[user]);
+                });
 		
 		
 		// Server received a game request from a client
@@ -162,9 +169,9 @@ function listen(io) {
 		// Socket.io Event: Disconnect
 		socket.on('disconnect', function () {
 			// Remove user from server
-			var username = socketIDtoUser[socket.id];
-			delete(onlineUsers[username]);
-			delete(socketIDtoUser[socket.id]);
+			//var username = socketIDtoUser[socket.id];
+			//delete(onlineUsers[username]);
+			//delete(socketIDtoUser[socket.id]); // todo auto logout after inactive
 			
 			// Send playerList
 			socket.broadcast.emit("playerList", JSON.stringify(onlineUsers));
@@ -174,6 +181,41 @@ function listen(io) {
 	
 }
 
+var names = [
+    "Friendly Ape",
+    "Friendly Bear",
+    "Friendly Bee",
+    "Friendly Bison",
+    "Friendly Buffalo",
+    "Friendly Butterfly",
+    "Friendly Camel",
+    "Friendly Caribou",
+    "Friendly Cat",
+    "Friendly Deer",
+    "Friendly Dinosaur",
+    "Friendly Eagle",
+    "Friendly Falcon",
+    "Friendly Giraffe",
+    "Friendly Hamster",
+    "Friendly Hawk",
+    "Friendly Jaguar",
+    "Friendly Kangaroo",
+    "Friendly Koala",
+    "Friendly Lion",
+    "Friendly Octopus",
+    "Friendly Parrot",
+    "Friendly Rabbit",
+    "Friendly Raccoon",
+    "Friendly Ram",
+    "Friendly Raven",
+    "Friendly Red deer",
+    "Friendly Swan",
+    "Friendly Zebra"
+];
+function getName(){
+    return names.shift();
+}
+
 module.exports = {
 	listen : listen
-}
+};

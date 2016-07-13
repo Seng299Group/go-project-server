@@ -1,83 +1,17 @@
 
-var networkAdapter = new NetworkAdapter();
 
+var socket = io();
 
+/**
+ * This object must be retrieved from the server.
+ * And since this will be recieved from sever, this object will follow
+ * sever-side User specification
+ * 
+ * @type server-side User object
+ */
+var user;
 
-
-
-// Assume login is authenticated for this socket id
-
-
-
-var user = networkAdapter.getUserdataForThisSession();
-
-
-
-// User data of the client
-// = {
-//	username: "user" + (new Date()).getTime(), // send username form here
-//	opponent: "null",
-//	lastMove: "null"
-//};
-
-// todo: If the client is logged in
-// get user's data from the database
-// and update the "user" variable above
-
-
-
-
-
-// Once user data is available, update the profile section.
-decorateProfile();
-
-// and send username to the server
-networkAdapter.sendUsername(user.username);
-
-
-
-
-/********************************* Socket IO **********************************/
-
-/* List of Socket IO triggered events.
-* 
-* playerList 		- when the server sends a list of all online players
-* gameRequest		- when the server sends a game request
-* _error			- when the server sends an error signal that require
-*						client-side attention (e.g. user account is
-*						already logged in, target user is offline etc.)
-*
-*/
-
-
-
-//// Event: When client receives online players' list
-//socket.on('playerList', function (data) {
-//	
-//	// String to object
-//	var playerList = JSON.parse(data);
-//	
-//	onReceivedPlayerList(playerList);
-//});
-//
-//
-//// The client received a game request
-//socket.on('gameRequest', function (fromUser) {
-//	onReceivedGameRequest(fromUser);
-//});
-//
-//
-//// Log Error if server sends an error message
-//socket.on('_error', function (data) {
-//	if (data === "duplicate player"){
-//		$("body").html("this account is already logged in");
-//	} else if (data === "player is not online") {
-//		log("player is not online. unimplemented"); // todo
-//	} else {
-//		console.log(data);
-//	}
-//});
-
+getUserData();
 
 
 
@@ -100,7 +34,7 @@ networkAdapter.sendUsername(user.username);
 * This function updates the profile section of the page.
 */
 function decorateProfile(){
-	$('#profile-username').html(user.username);
+	$('#profile-username').html(user.__username);
 	// other profile related stuff
 }
 
@@ -114,6 +48,7 @@ function onReceivedPlayerList(playerList){
 	// Clear the UI
 	$('#onlinePlayers-list').empty();
         
+        // todo when server sends the list, check list to see if 
         console.log(playerList);
 	
 	// generate new list on the UI
@@ -244,3 +179,104 @@ function onReceivedGameRequest(fromUser){
 function onLogoutButtonPress(){
 	log("logout button pressed. unimplemented method call.");
 }
+
+
+
+function lockDownUI(){
+    $("html").html("You are currently not logged in"); // todo fancy UI
+}
+
+
+
+
+
+
+/********************************* Socket IO **********************************/
+/* List of Socket IO triggered events.
+* 
+* playerList 		- when the server sends a list of all online players
+* gameRequest		- when the server sends a game request
+* _error			- when the server sends an error signal that require
+*						client-side attention (e.g. user account is
+*						already logged in, target user is offline etc.)
+*
+*/
+
+
+socket.on('_random', function (data) { // todo delete after account
+        console.log(data);
+        user = data;
+        sessionStorage.sessionID = user.__username;
+        decorateProfile();
+});
+
+
+socket.on('userdata', function (data) { // todo delete after account
+        console.log(data);
+        user = data;
+        sessionStorage.sessionID = user.__username;
+        decorateProfile();
+});
+
+
+// Event: When client receives online players' list
+socket.on('playerList', function (data) {
+
+        // String to object
+        var playerList = JSON.parse(data);
+
+        onReceivedPlayerList(playerList);
+});
+
+
+
+// The client received a game request
+socket.on('gameRequest', function (fromUser) {
+        onReceivedGameRequest(fromUser);
+});
+
+
+
+// Log Error if server sends an error message
+socket.on('_error', function (data) {
+        if (data === "duplicate player"){
+                $("body").html("this account is already logged in");
+        } else if (data === "player is not online") {
+                log("player is not online. unimplemented"); // todo
+        } else {
+                console.log(data);
+        }
+});
+
+
+/********************************* Functions **********************************/
+
+/**
+* @param {object} data - { toUser: username, fromUser: username}
+*/
+function inviteToGame(data){
+    socket.emit("gameRequest", data);
+}
+
+/**
+* @param {string} username - client user's username
+*/
+//function sendUsername(username){
+//    socket.emit("newPlayer", username);
+//}
+
+function getUserData(){
+    // todo, at the end of all dev, move from sessionStorage to local storage (scope: from tab to window)
+    if (sessionStorage.sessionID === undefined){ 
+        // lockDownUI(); // todo uncomment this once accounts are supported
+        
+        // for dev purposes, get random name
+        socket.emit("_random", "_random"); // todo delete after account
+    } else {
+        socket.emit("userdata", sessionStorage.sessionID);
+    }
+}
+
+/****************************** End of Socket IO ******************************/
+
+
