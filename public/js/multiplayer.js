@@ -1,17 +1,24 @@
 
-var socket = io();
 var networkAdapter = new NetworkAdapter();
-networkAdapter.setSocket(socket);
+
+
+
+
+
+// Assume login is authenticated for this socket id
+
+
+
+var user = networkAdapter.getUserdataForThisSession();
 
 
 
 // User data of the client
-// Set to default data (Guest user data)
-var user = {
-	username: "user" + (new Date()).getTime(), // send username form here
-	opponent: "null",
-	lastMove: "null"
-};
+// = {
+//	username: "user" + (new Date()).getTime(), // send username form here
+//	opponent: "null",
+//	lastMove: "null"
+//};
 
 // todo: If the client is logged in
 // get user's data from the database
@@ -44,32 +51,32 @@ networkAdapter.sendUsername(user.username);
 
 
 
-// Event: When client receives online players' list
-socket.on('playerList', function (data) {
-	
-	// String to object
-	var playerList = JSON.parse(data);
-	
-	onReceivedPlayerList(playerList);
-});
-
-
-// The client received a game request
-socket.on('gameRequest', function (fromUser) {
-	onReceivedGameRequest(fromUser);
-});
-
-
-// Log Error if server sends an error message
-socket.on('_error', function (data) {
-	if (data === "duplicate player"){
-		$("body").html("this account is already logged in");
-	} else if (data === "player is not online") {
-		log("player is not online. unimplemented"); // todo
-	} else {
-		console.log(data);
-	}
-});
+//// Event: When client receives online players' list
+//socket.on('playerList', function (data) {
+//	
+//	// String to object
+//	var playerList = JSON.parse(data);
+//	
+//	onReceivedPlayerList(playerList);
+//});
+//
+//
+//// The client received a game request
+//socket.on('gameRequest', function (fromUser) {
+//	onReceivedGameRequest(fromUser);
+//});
+//
+//
+//// Log Error if server sends an error message
+//socket.on('_error', function (data) {
+//	if (data === "duplicate player"){
+//		$("body").html("this account is already logged in");
+//	} else if (data === "player is not online") {
+//		log("player is not online. unimplemented"); // todo
+//	} else {
+//		console.log(data);
+//	}
+//});
 
 
 
@@ -100,12 +107,14 @@ function decorateProfile(){
 /**
 * This function is called when the 
 * 
-* @param{object} - 'onlineUsers' object form the server
+* @param{object} playerList - 'onlineUsers' object form the server
 */
 function onReceivedPlayerList(playerList){
 
 	// Clear the UI
 	$('#onlinePlayers-list').empty();
+        
+        console.log(playerList);
 	
 	// generate new list on the UI
 	for (p in playerList) {

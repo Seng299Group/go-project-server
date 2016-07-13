@@ -90,6 +90,19 @@ function listen(io) {
 			}
 		});
 
+
+
+
+                socket.on('userdata', function(request){
+                    console.log(socket.id);
+//                    if (request === 'all'){
+//                        socket.emit('userdata',JSON.stringify(socketIDtoUser[socket.I]));
+//                    } else {
+//                        console.log("unknow request");
+//                    }
+                });
+
+
 		
 		
 		// Server received a game request from a client
@@ -105,7 +118,8 @@ function listen(io) {
 				
 				// update user data
 				onlineUsers[data.fromUser].sentGameRequestTo(data.toUser);
-				
+				console.log(onlineUsers);
+                                // send game request signal
 				io.sockets.connected[onlineUsers[data.toUser].getSocketid()].emit("gameRequest", data.fromUser);	
 			} else {
 				socket.emit("_error", "player is not online");
@@ -113,6 +127,8 @@ function listen(io) {
 		});
 		
 		
+                
+                
 		
 		// When a user makes a move
 		socket.on('move', function(data) {
