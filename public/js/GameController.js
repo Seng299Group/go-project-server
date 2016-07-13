@@ -13,7 +13,7 @@ class GameController {
 	
 	constructor() {
 		this.__playerTurn = 1; // black
-		this.__historySpot = 0; //Temporary Fix
+		this.__historySpot = 0; //Temporary Fix (Hopefully someone smarter can figure this out)
 		this.__pass = false; //Set to false if previous turn was not a pass
 	}
 	
