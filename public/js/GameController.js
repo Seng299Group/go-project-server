@@ -52,11 +52,27 @@ class GameController {
 	//		After Game is Finished
 	replay(){
 		var gameHistory = this.__gameSpace.getHistory();
-			this.__historySpot += 1;
-			if(this.__historySpot < gameHistory.length){
-				this.__gameSpace.board = gameHistory[this.__historySpot];
-				this.__view.draw();
-			}
+		this.__historySpot += 1;
+		if(this.__historySpot < gameHistory.length){
+			this.__gameSpace.board = gameHistory[this.__historySpot];
+			this.__view.draw();
+		}else{
+			this.__historySpot = gameHistory.length - 1;
+		}
+	}
+	//Rewind
+	//
+	//		Used for Replay Purposes
+	//		to go Back instead of Forward
+	rewind(){
+		var gameHistory = this.__gameSpace.getHistory();
+		this.__historySpot -= 1;
+		if(this.__historySpot > 0){
+			this.__gameSpace.board = gameHistory[this.__historySpot];
+			this.__view.draw();
+		}else{
+			this.__historySpot = 1;
+		}
 	}
 
 }
