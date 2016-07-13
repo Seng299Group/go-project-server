@@ -30,7 +30,6 @@ class GameController {
 	* This method swaps the player's turn.
 	*/
 	swapTurn(){
-		//Swapping players
 		if (this.__playerTurn === 1) {
 		   this.__playerTurn = 2;
 		} else if (this.__playerTurn === 2) {
