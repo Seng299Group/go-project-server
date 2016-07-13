@@ -287,4 +287,5 @@ class GameSpace {
             alert("Tie Game!\n" + this.p1Score + " to " + this.p1Score);
         }
     }
+
 }
