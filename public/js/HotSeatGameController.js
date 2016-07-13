@@ -26,9 +26,6 @@ class HotSeatGameController extends GameController {
 			this.__pass = false;
 			this.swapTurn();
 		} else {
-			// Invalid move.
-			
-			// todo: Notify user
 			alert("Invalid Move!");
 		}
 		

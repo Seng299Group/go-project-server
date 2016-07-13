@@ -47,8 +47,6 @@ class AIGameController extends GameController {
 			});
 			
 		} else {
-			// todo: notify user that the move was not accepted
-			// and ask to try again.
 			alert("Invalid Move!");
 		}
 	}
