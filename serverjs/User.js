@@ -33,6 +33,7 @@ class User {
                 this.__opponent = null
 		this.__sentGameRequestTo = [];
                 this.__socketid = null
+                this.__isOnline = true;
 	}
 	
 	getUsername(){
@@ -58,6 +59,14 @@ class User {
 	sentGameRequestTo(toUser){
 		this.__sentGameRequestTo.push(toUser)
 	}
+        
+        setIsOnline(isOnline){
+            this.__isOnline = isOnline;
+        }
+        
+        isOnline(){
+            return this.__isOnline;
+        }
 	
 }
 
