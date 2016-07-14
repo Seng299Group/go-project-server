@@ -1,0 +1,140 @@
+/********************************/
+
+/*
+* Wrapper for the profile section
+*/
+.profile-wrapper {
+    border: 1pt black solid;
+    margin: 8px auto;
+    padding: 8px;
+    text-align: center;
+    width: 50%;
+
+}
+
+
+/*
+* 
+*/
+#profile-username {
+    display: inline;
+
+}
+
+
+/*
+* 
+*/
+#button_logout {
+    background: red;
+    border: none;
+    color: white;
+    font-size: 10pt;
+    margin: 4px;
+    padding: 6px;
+    width: 25%;
+
+}
+
+/*
+* 
+*/
+#button_logout:hover {
+    background: brown;	
+}
+
+/*
+* 
+*/
+#button_logout:active {
+    background: brown;
+    transform: translateY(4px);
+
+}
+
+
+/********************************/
+
+
+/*
+* 
+*/
+.gameRequests-wrapper {
+    border: 1pt black solid;
+    margin: 8px auto;
+    padding: 8px;
+    width: 50%;
+
+}
+
+
+/*
+* 
+*/
+.gameRequests-wrapper h1{
+    font-size: 12pt;
+
+}
+
+/*
+* 
+*/
+.gameRequest-row {
+
+}
+
+/********************************/
+
+
+/*
+* 
+*/
+.onlinePlayers-wrapper {
+    border: 1pt black solid;
+    margin: 8px auto;
+    padding: 8px;
+    width: 50%;
+
+}
+
+.onlinePlayers-wrapper h1 {
+    font-size: 12pt;
+
+}
+
+
+/*
+* 
+*/
+.onlinePlayers-row {
+    border: 1px solid black;
+    display: block;
+    margin: 8px;
+    padding: 16px;
+
+}
+
+.button_sendRequest {
+    background: green;
+    cursor: pointer;
+    display: box;
+    padding: 8px;
+    text-align: center;
+    width: 25%;
+}
+
+/*
+* JavaScript changes to this class after the "Send request" button
+* is clicked.
+*/
+.button_requestSent {
+    background: yellow;
+    border: 1px solid black;
+    cursor: default;
+    display: box;
+    padding: 8px;
+    text-align: center;
+    width: 25%;
+}
+
+/********************************/
