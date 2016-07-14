@@ -30,7 +30,9 @@ class User {
 	
 	constructor(username){
 		this.__username = username;
+                this.__opponent = null
 		this.__sentGameRequestTo = [];
+                this.__socketid = null
 	}
 	
 	getUsername(){
@@ -45,11 +47,11 @@ class User {
 		return this.__opponent;
 	}
 	
-	setSocketid(socketid){
+	setSocketID(socketid){
 		this.__socketid = socketid;
 	}
 	
-	getSocketid(){
+	getSocketID(){
 		return this.__socketid;
 	}
 	

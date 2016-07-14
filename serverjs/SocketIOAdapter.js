@@ -74,7 +74,7 @@ function listen(io) {
 				
 				// Create new user
 				var newUser = new User(username);
-				newUser.setSocketid(socket.id);
+				newUser.setSocketID(socket.id);
 				
 				// Update dictionary
 				onlineUsers[newUser.getUsername()] = newUser;
@@ -91,25 +91,35 @@ function listen(io) {
 
 
 
-                
-                
-                socket.on('_random', function(data){
-                    
-                    // Create new user
+                socket.on('guestLogin', function(data){
+                    // Make new user object
                     var newUser = new User(getName());
-                    newUser.setSocketid(socket.id);
-
-                    // Update dictionary
-                    onlineUsers[newUser.getUsername()] = newUser;
-                    socketIDtoUser[socket.id] = newUser.getUsername();
-
-                    socket.emit("_random", newUser);
+                    newUser.setSocketID(socket.id);
+                    
+                    // add user in dictionary
+                    addUserOnDictionary(newUser, socket.id);
+                    
+                    // respond
+                    socket.emit('guestLogin', newUser);
                 });
+                
+//                socket.on('_random', function(data){
+//                    
+//                    // Create new user
+//                    var newUser = new User(getName());
+//                    newUser.setSocketid(socket.id);
+//
+//                    // Update dictionary
+//                    onlineUsers[newUser.getUsername()] = newUser;
+//                    socketIDtoUser[socket.id] = newUser.getUsername();
+//
+//                    socket.emit("_random", newUser);
+//                });
 
 
-                socket.on('userdata', function(user){
-                    socket.emit("userdata", onlineUsers[user]);
-                });
+                //socket.on('userdata', function(user){
+                   // socket.emit("userdata", onlineUsers[user]);
+                //});
 		
 		
 		// Server received a game request from a client
@@ -179,6 +189,13 @@ function listen(io) {
 
 	});
 	
+}
+
+
+function addUserOnDictionary(user, socketid){
+    onlineUsers[user.getUsername()] = user;
+    socketIDtoUser[socketid] = socketid;
+    console.log(onlineUsers);
 }
 
 var names = [
