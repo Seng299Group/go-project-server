@@ -1,5 +1,4 @@
 #settingsBar {
-	background-color: red;
 	height: 100%;
 	width: 25%;
 	position: fixed;
@@ -18,6 +17,7 @@
 	background-color: orange;
 }
 table{
+	visibility: visible;
 	border: 1px solid;
 	width: 100%;
 	height: 75%;

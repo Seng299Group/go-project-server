@@ -122,4 +122,11 @@ class View {
 		// Drawing the board
 		this.draw();
 	}
+	showBar(){
+		if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
+			document.getElementById("colourButtonTable").style.visibility = "visible";
+		}else{
+			document.getElementById("colourButtonTable").style.visibility = "hidden";
+		}
+	}
 }
