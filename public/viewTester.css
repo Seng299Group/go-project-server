@@ -1,0 +1,32 @@
+#settingsBar {
+	background-color: red;
+	height: 100%;
+	width: 25%;
+	position: fixed;
+}
+
+#showBar {
+	background-color: green;
+	height: 15%;
+	width: 100%;
+	border-radius: 25px;
+	text-align: center;
+}
+.colourButton{
+	width: 100%;
+	height: 100%;
+	background-color: orange;
+}
+table{
+	border: 1px solid;
+	width: 100%;
+	height: 75%;
+}
+tr{
+	padding: 0px;
+	width: 100%;
+}
+td{
+	padding: 0px;
+	width: 50%;
+}
