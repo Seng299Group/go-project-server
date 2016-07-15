@@ -53,38 +53,47 @@ function onReceivedPlayerList(playerList) {
     // Clear the UI
     $('#onlinePlayers-list').empty();
 
-    // todo when server sends the list, check list to see if 
-    console.log(playerList);
-
     // generate new list on the UI
+    var listIsInflated = false;
     for (var p in playerList) {
 
         // excluding self from appearing on the list
         // and players that are in a game
-        if (p !== user.__username && !playerList[p].__isInGame) { // != instead of !== for type conversion
+        if (p !== user.__username && !playerList[p].__isInGame) {
             $('#onlinePlayers-list').append(makeOnlineUserRow(playerList[p]));
+            listIsInflated = true;
         }
 
+    }
+
+    if (!listIsInflated) {
+        $('#onlinePlayers-list').html("No one is online").css("text-align", "center");
+        return;
     }
 
     /**
      * Creates a row for the online users' section
      *
-     * @param {object} forUser - User object (follows server-side
-     *											User object standards)
+     * @param {object} forUser - User object (follows server-side User object standards)
      */
     function makeOnlineUserRow(forUser) {
 
         // A row for the player
         var div = $(document.createElement('div'));
-        div.attr("class", "onlinePlayers-row");
+        div.addClass("onlinePlayers-row");
+
+        // Username
+        var usernameText = $(document.createElement('div'));
+        usernameText.html(forUser.__username);
+        usernameText.attr("class", "onlinePlayers-username");
 
         // Button to send request
         var reqButton = makeInvitationButton(forUser);
 
         // Nesting DOM elements. All that goes in a row for each player
-        div.append(forUser.__username);
+        div.append(usernameText);
         div.append(reqButton);
+        div.append($(document.createElement('div')).attr("class", "clearFloat"));
 
         return div;
     }
@@ -219,6 +228,8 @@ function declineRequest(toUser) {
  * @param {int} boardSize - size of the board
  */
 function onReceivedGameRequest(fromUser, boardSize) {
+    $("#gameRequests-wrapper").css("display", "block");
+
     var div = $(document.createElement('div'));
     div.attr("class", "gameRequest-row");
     div.html(fromUser + " challenged you for a " + boardSize + " game");

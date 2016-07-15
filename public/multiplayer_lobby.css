@@ -4,12 +4,12 @@
 * Wrapper for the profile section
 */
 .profile-wrapper {
-    border: 1pt black solid;
-    margin: 8px auto;
-    padding: 8px;
+    margin: 16px auto;
+    padding: 16px;
+    box-shadow: 0px 0px 8px -0.5px grey;
     text-align: center;
     width: 50%;
-
+    min-width: 500px;
 }
 
 
@@ -60,10 +60,12 @@
 * 
 */
 .gameRequests-wrapper {
-    border: 1pt black solid;
-    margin: 8px auto;
-    padding: 8px;
+    margin: 16px auto;
+    padding: 16px;
+    box-shadow: 0px 0px 8px -0.5px grey;
     width: 50%;
+    min-width: 500px;
+    display: none; /* hidden to begin. will appear when request arrive */
 
 }
 
@@ -72,7 +74,7 @@
 * 
 */
 .gameRequests-wrapper h1{
-    font-size: 12pt;
+    font-size: 16pt;
 
 }
 
@@ -90,15 +92,18 @@
 * 
 */
 .onlinePlayers-wrapper {
-    border: 1pt black solid;
-    margin: 8px auto;
-    padding: 8px;
+    margin: 16px auto;
+    padding: 16px;
+    box-shadow: 0px 0px 8px -0.5px grey;
+
     width: 50%;
+    min-width: 500px;
+
 
 }
 
 .onlinePlayers-wrapper h1 {
-    font-size: 12pt;
+    font-size: 16pt;
 
 }
 
@@ -107,20 +112,32 @@
 * 
 */
 .onlinePlayers-row {
-    border: 1px solid black;
+    /*border-top: 1px solid black;*/
     display: block;
-    margin: 8px;
-    padding: 16px;
+    /*margin: 8px;*/
+    padding: 8px;
 
 }
 
+.onlinePlayers-username {
+    display: inline-block;
+    float: left;
+    padding: 8px;
+}
+
 .button_sendRequest {
+    color: white;
     background: green;
     cursor: pointer;
-    display: box;
+    display: inline-block;
     padding: 8px;
     text-align: center;
-    width: 25%;
+    width: 120px;
+    float: right;
+}
+
+.button_sendRequest:hover {
+    background: darkgreen;
 }
 
 /*
@@ -134,7 +151,10 @@
     display: box;
     padding: 8px;
     text-align: center;
-    width: 25%;
+    width: 120px;
+    display: inline-block;
+    width: 120px;
+    float: right;
 }
 
 /********************************/
@@ -163,3 +183,8 @@
     border: 1pt solid black;
     display: inline-block;
 }
+
+.clearFloat{
+    clear: both;
+}
+
