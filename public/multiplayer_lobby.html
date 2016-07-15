@@ -7,28 +7,36 @@
 
     <body>
 
-        <!-- Profile section -->
-        <div id="profile-wrapper" class="profile-wrapper">
-            Logged in as:
-            <div id="profile-username"></div>
-            <br>
-            <button id="button_logout" onclick="onLogoutButtonPress()">Logout</button>
+        <div id="notificationCenter">
+
         </div>
 
-        <!-- Game request section -->
-        <div id="gameRequests-wrapper" class="gameRequests-wrapper">
-            <h1>Game Requests</h1>
-            <div id="gameRequests-list">
+        <div id="lobbyBody">
 
+            <!-- Profile section -->
+            <div id="profile-wrapper" class="profile-wrapper">
+                Logged in as:
+                <div id="profile-username"></div>
+                <br>
+                <button id="button_logout" onclick="onLogoutButtonPress()">Logout</button>
             </div>
-        </div>
 
-        <!-- Online players' section -->
-        <div id="onlinePlayers-wrapper" class="onlinePlayers-wrapper">
-            <h1>Online Players</h1>
-            <div id="onlinePlayers-list">
+            <!-- Game request section -->
+            <div id="gameRequests-wrapper" class="gameRequests-wrapper">
+                <h1>Game Requests</h1>
+                <div id="gameRequests-list">
 
+                </div>
             </div>
+
+            <!-- Online players' section -->
+            <div id="onlinePlayers-wrapper" class="onlinePlayers-wrapper">
+                <h1>Online Players</h1>
+                <div id="onlinePlayers-list">
+
+                </div>
+            </div>
+
         </div>
 
 
@@ -36,6 +44,7 @@
         <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="js/NetworkAdapter.js" type="text/javascript"></script>
+        <script src="js/NotificationBuilder.js" type="text/javascript"></script>
         <script src="js/multiplayer_lobby.js" type="text/javascript"></script>
 
     </body>

@@ -96,7 +96,6 @@ function listen(io) {
             updateDictionary(username, newSocketID);
 
             socket.emit("userdata", user);
-
             broadcastOnlinePlayers(socket);
         });
 
@@ -104,35 +103,49 @@ function listen(io) {
 
         // Server received a game request from a client
         socket.on('gameRequest', function (data) {
+//            console.log(data);
             if (data.type === "sendRequest") {
                 // checking if the toUser is online
-                if (io.sockets.connected[onlineUsers[data.toUser].getSocketID()] !== undefined) {
+                if (onlineUsers[data.toUser] === undefined) {
+                    socket.emit("_error", "player is not in mp-lobby");
+                } else {
                     // update user data
                     onlineUsers[data.fromUser].sentGameRequestTo(data.toUser);
+                    var newData = {
+                        fromUser: data.fromUser,
+                        boardSize: data.boardSize
+                    };
                     // send game request signal
-                    io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("gameRequest", data.fromUser);
-                } else {
-                    socket.emit("_error", "player is not online");
+                    io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("gameRequest", newData);
                 }
             } else if (data.type === "requestAccepted") {
 //                console.log("user accepted");
+                if (onlineUsers[data.toUser] === undefined) {
+                    socket.emit("_error", "player no longer available");
+                    return;
+                }
 
                 // todo decline all pending requests
 
                 onlineUsers[data.fromUser].setOpponent(data.toUser);
                 onlineUsers[data.toUser].setOpponent(data.fromUser);
 
+                onlineUsers[data.fromUser].setBoardSize(data.boardSize);
+                onlineUsers[data.toUser].setBoardSize(data.boardSize);
+
+                onlineUsers[data.fromUser].setIsInGame(true);
+                onlineUsers[data.toUser].setIsInGame(true);
+
                 // Signal both user that the game has been approved by the server
                 io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
                 io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
 
+                broadcastOnlinePlayers(socket);
             } else if (data.type === "requestDeclined") {
                 console.log("user declined"); // todo handle decline
 
             }
         });
-
-
 
 
 
@@ -235,10 +248,10 @@ function removeUserFromDictionary(username) {
 
     var user = onlineUsers[username];
     var socketid = user.getSocketID();
+    // todo decline all game requests
 
     delete(socketIDtoUsername[socketid]);
     delete(onlineUsers[username]);
-
 
 //    console.log("========================= after remove");
 //    console.log(socketIDtoUsername);
@@ -253,40 +266,49 @@ function broadcastOnlinePlayers(socket) {
     socket.broadcast.emit("playerList", JSON.stringify(onlineUsers));
 }
 
-var names = [
-    "Friendly Ape",
-    "Friendly Bear",
-    "Friendly Bee",
-    "Friendly Bison",
-    "Friendly Buffalo",
-    "Friendly Butterfly",
-    "Friendly Camel",
-    "Friendly Caribou",
-    "Friendly Cat",
-    "Friendly Deer",
-    "Friendly Dinosaur",
-    "Friendly Eagle",
-    "Friendly Falcon",
-    "Friendly Giraffe",
-    "Friendly Hamster",
-    "Friendly Hawk",
-    "Friendly Jaguar",
-    "Friendly Kangaroo",
-    "Friendly Koala",
-    "Friendly Lion",
-    "Friendly Octopus",
-    "Friendly Parrot",
-    "Friendly Rabbit",
-    "Friendly Raccoon",
-    "Friendly Ram",
-    "Friendly Raven",
-    "Friendly Red deer",
-    "Friendly Swan",
-    "Friendly Zebra"
-];
+var names = [];
 
 function getName() {
-    return names.shift();
+
+    var name = names.shift();
+
+    if (name === undefined) {
+        names = [
+            "Friendly Ape",
+            "Friendly Bear",
+            "Friendly Bee",
+            "Friendly Bison",
+            "Friendly Buffalo",
+            "Friendly Butterfly",
+            "Friendly Camel",
+            "Friendly Caribou",
+            "Friendly Cat",
+            "Friendly Deer",
+            "Friendly Dinosaur",
+            "Friendly Eagle",
+            "Friendly Falcon",
+            "Friendly Giraffe",
+            "Friendly Hamster",
+            "Friendly Hawk",
+            "Friendly Jaguar",
+            "Friendly Kangaroo",
+            "Friendly Koala",
+            "Friendly Lion",
+            "Friendly Octopus",
+            "Friendly Parrot",
+            "Friendly Rabbit",
+            "Friendly Raccoon",
+            "Friendly Ram",
+            "Friendly Raven",
+            "Friendly Red deer",
+            "Friendly Swan",
+            "Friendly Zebra"
+        ];
+
+        name = names.shift();
+    }
+
+    return name;
 }
 
 module.exports = {

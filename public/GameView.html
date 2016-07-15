@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>View Tester</title>
+        <title></title>
     </head>
     <body>
 
@@ -48,20 +48,20 @@
 
                     view.onBoardClick(x, y);
                 });
-                
-                
-                
-                
-                
+
+
+
+
+
             } else if (sessionStorage.gameMode === "ai") {
                 console.log("ai game play");
-                
-                
-                
-                
-                
+
+
+
+
+
             } else if (sessionStorage.gameMode === "network") {
-                
+
                 var socket = io();
                 var user;
 
@@ -72,42 +72,45 @@
                 socket.on('userdata', function (data) {
                     user = data;
                     sessionStorage.sessionID = user.__socketid;
+
+                    render();
                 });
 
 
+                function render() {
+                    // todo fixme
+                    // change from hotseat to network
 
-                // todo fixme
-                // change from hotseat to network
+                    // fixme note: the "user" variable has __username and __opponent
 
-                // fixme note: the "user" variable has __username and __opponent
+                    // Model - The board
+                    console.log(user);
+                    var myGameSpace = new GameSpace(user.__boardSize);
+                    var player = 1;
 
-                // Model - The board
-                var myGameSpace = new GameSpace(9);
-                var player = 1;
-
-                // Controller - Game controller
-                var gameController = new HotSeatGameController();
+                    // Controller - Game controller
+                    var gameController = new HotSeatGameController();
 
 
-                // View
-                var view = new View();
+                    // View
+                    var view = new View();
 
-                view.setGameSpace(myGameSpace);
-                view.setController(gameController);
-                view.init();
-                view.draw(); // Draws the empty board
+                    view.setGameSpace(myGameSpace);
+                    view.setController(gameController);
+                    view.init();
+                    view.draw(); // Draws the empty board
 
-                gameController.setGameSpace(myGameSpace);
-                gameController.setView(view);
+                    gameController.setGameSpace(myGameSpace);
+                    gameController.setView(view);
 
-                $("#canvas").click(function (e) {
-                    // Clicked coordinates
-                    var x = e.pageX - $(this).offset().left;
-                    var y = e.pageY - $(this).offset().top;
+                    $("#canvas").click(function (e) {
+                        // Clicked coordinates
+                        var x = e.pageX - $(this).offset().left;
+                        var y = e.pageY - $(this).offset().top;
 
-                    view.onBoardClick(x, y);
-                });
-
+                        view.onBoardClick(x, y);
+                    });
+                }
 
 
 

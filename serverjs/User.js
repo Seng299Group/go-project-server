@@ -34,6 +34,8 @@ class User {
 		this.__sentGameRequestTo = [];
                 this.__socketid = null
                 this.__isOnline = true;
+                this.__boardSize = 0;
+                this.__isInGame = false;
 	}
 	
 	getUsername(){
@@ -66,6 +68,22 @@ class User {
         
         isOnline(){
             return this.__isOnline;
+        }
+        
+        setBoardSize(size){
+            this.__boardSize = size;
+        }
+        
+        getBoardSize(){
+            return this.__boardSize;
+        }
+        
+        setIsInGame(isInGame){
+            this.__isInGame = true;
+        }
+        
+        getIsInGame(){
+            return this.__isInGame;
         }
 	
 }

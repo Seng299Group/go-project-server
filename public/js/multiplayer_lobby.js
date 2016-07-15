@@ -57,11 +57,14 @@ function onReceivedPlayerList(playerList) {
     console.log(playerList);
 
     // generate new list on the UI
-    for (p in playerList) {
+    for (var p in playerList) {
+
         // excluding self from appearing on the list
-        if (p != user.__username) { // != instead of !== for type conversion
+        // and players that are in a game
+        if (p !== user.__username && !playerList[p].__isInGame) { // != instead of !== for type conversion
             $('#onlinePlayers-list').append(makeOnlineUserRow(playerList[p]));
         }
+
     }
 
     /**
@@ -77,7 +80,7 @@ function onReceivedPlayerList(playerList) {
         div.attr("class", "onlinePlayers-row");
 
         // Button to send request
-        var reqButton = makeRequestButton(forUser);
+        var reqButton = makeInvitationButton(forUser);
 
         // Nesting DOM elements. All that goes in a row for each player
         div.append(forUser.__username);
@@ -96,7 +99,7 @@ function onReceivedPlayerList(playerList) {
  * @param {object} forUser - User object (follows server-side
  *											User object standards)
  */
-function makeRequestButton(forUser) {
+function makeInvitationButton(forUser) {
 
     // A button to send game request
     var reqButton = $(document.createElement('div'));
@@ -106,18 +109,57 @@ function makeRequestButton(forUser) {
 
     reqButton.click(function () {
 
-        // Send game request to user
-        sendGameRequest(forUser.__username);
+
+        hideLobbyBody();
+
+
+        // asking for board size
+        var nfBuilder = new NotificationBuilder();
+        var notification;
+
+        var buttons = [
+            nfBuilder.makeNotificationButton("9x9", function () {
+                sendGameRequest(forUser.__username, 9);
+                showLobbyBody();
+                notification.remove();
+            }).attr("class", "notification_button_general")
+                    ,
+            nfBuilder.makeNotificationButton("13x13", function () {
+                sendGameRequest(forUser.__username, 13);
+                showLobbyBody();
+                notification.remove();
+            }).attr("class", "notification_button_general")
+                    ,
+            nfBuilder.makeNotificationButton("19x19", function () {
+                sendGameRequest(forUser.__username, 19);
+                showLobbyBody();
+                notification.remove();
+            }).attr("class", "notification_button_general")
+        ];
+
+
+        notification = nfBuilder.makeNotification("Please select A board Size", "", buttons).attr("class", "boardSizeNotification");
+
+        $("#notificationCenter").append(notification);
 
         // Updating UI to notify the user that the game invitation was sent
-        $(this).replaceWith(getRequestSentButton());
+        $(this).replaceWith(getInvitationSentButton());
 
     });
 
     return reqButton;
 }
 
-function getRequestSentButton() {
+function hideLobbyBody() {
+    $("#lobbyBody").css("display", "none");
+}
+
+function showLobbyBody() {
+    $("#lobbyBody").css("display", "block");
+}
+
+function getInvitationSentButton() {
+
     var requestSentButton;
 
     requestSentButton = $(document.createElement('div'));
@@ -137,22 +179,25 @@ function getRequestSentButton() {
  * This function sends a game request to the target user
  *
  * @param {string} toUser - The target user
+ * @param {int} boardSize - the size of the board
  */
-function sendGameRequest(toUser) {
+function sendGameRequest(toUser, boardSize) {
     var data = {
         type: "sendRequest",
         toUser: toUser,
-        fromUser: user.__username
+        fromUser: user.__username,
+        boardSize: boardSize
     };
     socket.emit("gameRequest", data);
 }
 
 
-function acceptRequest(toUser) {
+function acceptRequest(toUser, boardSize) {
     var data = {
         type: "requestAccepted",
         toUser: toUser,
-        fromUser: user.__username
+        fromUser: user.__username,
+        boardSize: boardSize
     };
     socket.emit("gameRequest", data);
 }
@@ -171,17 +216,18 @@ function declineRequest(toUser) {
  * This function is called when the user receives a game request
  * 
  * @param {string} fromUser - username
+ * @param {int} boardSize - size of the board
  */
-function onReceivedGameRequest(fromUser) {
+function onReceivedGameRequest(fromUser, boardSize) {
     var div = $(document.createElement('div'));
     div.attr("class", "gameRequest-row");
-    div.html(fromUser + " challenged you.");
+    div.html(fromUser + " challenged you for a " + boardSize + " game");
 
     // todo change to div buttons
     var button_accept = $(document.createElement('button'));
     button_accept.html("accept");
     button_accept.click(function () {
-        acceptRequest(fromUser);
+        acceptRequest(fromUser, boardSize);
     });
 
     var button_decline = $(document.createElement('button'));
@@ -245,8 +291,8 @@ socket.on('playerList', function (data) {
 
 
 // The client received a game request
-socket.on('gameRequest', function (fromUser) {
-    onReceivedGameRequest(fromUser);
+socket.on('gameRequest', function (data) {
+    onReceivedGameRequest(data.fromUser, data.boardSize);
 });
 
 
@@ -263,7 +309,9 @@ socket.on('_error', function (data) {
     if (data === "duplicate player") {
         $("body").html("this account is already logged in");
     } else if (data === "player is not online") {
-        console.log("player is not online. unimplemented"); // todo
+        console.log("player is not in mp-lobby");
+    } else if (data === "player no longer available") {
+        // todo in a game
     } else {
         console.log(data);
     }
@@ -275,9 +323,9 @@ socket.on('_error', function (data) {
 /**
  * @param {object} data - { toUser: username, fromUser: username}
  */
-function inviteToGame(data) {
-    socket.emit("gameRequest", data);
-}
+//function inviteToGame(data) {
+//    socket.emit("gameRequest", data);
+//}
 
 /**
  * This function requests server for user data

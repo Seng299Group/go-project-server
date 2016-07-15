@@ -138,3 +138,28 @@
 }
 
 /********************************/
+
+
+#notificationCenter{
+
+}
+
+.boardSizeNotification{
+    width: 50%;
+    border: 1pt solid black;
+    position: absolute;
+    background: white;
+}
+
+.boardSizeNotification h1{
+    font-size: 14pt;
+    color: black;
+}
+
+.notification_button_general{
+    cursor: pointer;
+    padding: 16px 16px;
+    margin: 8px;
+    border: 1pt solid black;
+    display: inline-block;
+}
