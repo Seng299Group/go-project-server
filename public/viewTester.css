@@ -2,6 +2,7 @@
 	height: 100%;
 	width: 25%;
 	position: fixed;
+	z-index: -1;
 }
 
 #showBar {
