@@ -38,7 +38,8 @@ class HotSeatGameController extends GameController {
 	pass(){
 		if(this.__pass){
 			this.__gameSpace.declareWinner();
-			window.location.href = "winnerPage.html";//TODO: Change to Game Selection
+			this.__view.showReplayOptions();
+			//window.location.href = "winnerPage.html";//TODO: Change to Game Selection
 		}else{
 			this.__pass = true;
 		}
