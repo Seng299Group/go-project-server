@@ -1,8 +1,8 @@
 #settingsBar {
-	height: 100%;
+	height: 80%;
 	width: 25%;
 	position: fixed;
-	z-index: -1;
+	z-index: 1;
 }
 
 #showBar {
