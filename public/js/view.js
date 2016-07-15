@@ -60,6 +60,11 @@ class View {
 		this.__radius = (this.__scale / 2) - 1;
 		this.__offset = this.__scale / 2;
 		this.__canvas.append(this.__svg);
+
+		//SVG Colours
+		this.__p1Colour = "black";
+		this.__p2Colour = "white";
+		this.__currentPlayer = 1; //Player Who's Colour is to be Changed
 	}
 	
 	/**
@@ -92,12 +97,12 @@ class View {
 			for (var row in boardArray[col]) {
 				if (boardArray[col][row] === 1) {
 					// black stone
-					var circ = makeCircle((row * this.__scale) + this.__offset, (col * this.__scale) + this.__offset, this.__radius, "black", "black");
+					var circ = makeCircle((row * this.__scale) + this.__offset, (col * this.__scale) + this.__offset, this.__radius, this.__p1Colour, "black");
 					this.__svg.append(circ);
 
 				} else if (boardArray[col][row] === 2) {
 					// white stone
-					var circ = makeCircle((row * this.__scale) + this.__offset, (col * this.__scale) + this.__offset, this.__radius, "white", "black");
+					var circ = makeCircle((row * this.__scale) + this.__offset, (col * this.__scale) + this.__offset, this.__radius, this.__p2Colour, "black");
 					this.__svg.append(circ);
 				}
 			}
@@ -121,5 +126,23 @@ class View {
 		
 		// Drawing the board
 		this.draw();
+	}
+	showBar(){
+		if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
+			document.getElementById("colourButtonTable").style.visibility = "visible";
+		}else{
+			document.getElementById("colourButtonTable").style.visibility = "hidden";
+		}
+	}
+	changeColour(colour){
+		if(this.__currentPlayer == 1){
+			this.__p1Colour = colour;
+		}else{
+			this.__p2Colour = colour;
+		}
+		this.draw();
+	}
+	setPlayer(player){
+		this.__currentPlayer = player;
 	}
 }

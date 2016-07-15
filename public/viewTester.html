@@ -1,10 +1,36 @@
 <html>
     <head>
         <title>View Tester</title>
+        <link rel="stylesheet" type="text/css" href="viewTester.css">
     </head>
-    <body>
+    <body style="margin:0">
 
-        <div >
+        <div>
+            <div id="settingsBar">
+                <div id="showBar" onclick="view.showBar();">Show/Hide</div>
+                <table id="colourButtonTable">
+                    <tr>
+                        <td><div class="colourButton" style="background-color: red" onclick="view.changeColour(&quot;red&quot;);"></div></td>
+                        <td><div class="colourButton" style="background-color: orange"onclick="view.changeColour(&quot;orange&quot;);"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="colourButton" style="background-color: pink"onclick="view.changeColour(&quot;pink&quot;);"></div></td>
+                        <td><div class="colourButton" style="background-color: purple"onclick="view.changeColour(&quot;purple&quot;);"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="colourButton" style="background-color: green"onclick="view.changeColour(&quot;green&quot;);"></div></td>
+                        <td><div class="colourButton" style="background-color: blue"onclick="view.changeColour(&quot;blue&quot;);"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="colourButton" style="background-color: brown"onclick="view.changeColour(&quot;brown&quot;);"></div></td>
+                        <td><div class="colourButton" style="background-color: black"onclick="view.changeColour(&quot;black&quot;);"></div></td>
+                    </tr>
+                    <tr>
+                        <td><div class="playerButton" onclick="view.setPlayer(1)">Player One</div></td>
+                        <td><div class="playerButton" onclick="view.setPlayer(2)">Player Two</div></td>
+                    </tr>
+                </table>
+            </div>
             <div id="canvas" style="margin: 0px auto 0px auto;">
 
             </div>
