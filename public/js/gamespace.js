@@ -31,6 +31,8 @@ class GameSpace {
         this.p2Captured = 0;
         this.p1Score = 0;
         this.p2Score = 0;
+		
+		this.history.push(this.board);
     }
 
     //  getBoard
@@ -50,6 +52,12 @@ class GameSpace {
 	*/
 	getLastMove(){
 		return this.__lastMove;
+	}
+	
+	//	getHistory
+	//		Returns the History of the Board
+	getHistory(){
+		return this.history;
 	}
 
     //  opposingPlayer
@@ -83,10 +91,10 @@ class GameSpace {
         if (this.checkLegal(player, x, y)) {
             // console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
 			this.__lastMove = {"x":y, "y":x, "c":player, "pass":false}; // temporary fix: x=y and y=x
-            this.history.push(this.board);
             this.board = this.board.clone();
             this.board.evaluateMove(player, x, y);
             this.__addCapturedArmies(player);
+			this.history.push(this.board);
 
             // this.board.print();
             return true;
