@@ -1,4 +1,6 @@
 
+sessionStorage.gameMode = "network";
+
 var socket = io();
 
 /**
@@ -138,12 +140,31 @@ function getRequestSentButton() {
  */
 function sendGameRequest(toUser) {
     var data = {
+        type: "sendRequest",
         toUser: toUser,
-        fromUser: user.username
+        fromUser: user.__username
     };
-    networkAdapter.inviteToGame(data);
+    socket.emit("gameRequest", data);
 }
 
+
+function acceptRequest(toUser) {
+    var data = {
+        type: "requestAccepted",
+        toUser: toUser,
+        fromUser: user.__username
+    };
+    socket.emit("gameRequest", data);
+}
+
+function declineRequest(toUser) {
+    var data = {
+        type: "requestDeclined",
+        toUser: toUser,
+        fromUser: user.__username
+    };
+    socket.emit("gameRequest", data);
+}
 
 
 /**
@@ -160,13 +181,13 @@ function onReceivedGameRequest(fromUser) {
     var button_accept = $(document.createElement('button'));
     button_accept.html("accept");
     button_accept.click(function () {
-        console.log("accepted request. unimplemented method call");
+        acceptRequest(fromUser);
     });
 
     var button_decline = $(document.createElement('button'));
     button_decline.html("decline");
     button_decline.click(function () {
-        console.log("declined request. unimplemented method call");
+        declineRequest(fromUser);
     });
 
     div.append(button_accept);
@@ -226,6 +247,13 @@ socket.on('playerList', function (data) {
 // The client received a game request
 socket.on('gameRequest', function (fromUser) {
     onReceivedGameRequest(fromUser);
+});
+
+
+
+socket.on('requestAccepted', function () {
+    // redirecting to game view
+    window.location.href = "/GameView.html";
 });
 
 

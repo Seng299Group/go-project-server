@@ -61,33 +61,6 @@ function listen(io) {
 
 
 
-        // New user on the server
-//		socket.on('newPlayer', 
-//		
-//		/**
-//		* @param {string} username - username
-//		*/
-//		function (username) {
-//			
-//			// check if user is already on the server
-//			if (onlineUsers[username] === undefined){
-//				
-//				// Create new user
-//				var newUser = new User(username);
-//				newUser.setSocketID(socket.id);
-//				
-//				// Update dictionary
-//				onlineUsers[newUser.getUsername()] = newUser;
-//				socketIDtoUser[socket.id] = newUser.getUsername();
-//				
-//				// Send all client a list of all online players
-//				socket.emit("playerList", JSON.stringify(onlineUsers));
-//				socket.broadcast.emit("playerList", JSON.stringify(onlineUsers));
-//			} else {
-//				console.log("duplicate player");
-//				socket.emit("_error", "duplicate player");
-//			}
-//		});
 
 
 
@@ -130,22 +103,32 @@ function listen(io) {
 
 
         // Server received a game request from a client
-        socket.on('gameRequest',
-        /**
-         * @param {object} data - { fromUser: username , toUser: username }
-         */
-        function (data) {
+        socket.on('gameRequest', function (data) {
+            if (data.type === "sendRequest") {
+                // checking if the toUser is online
+                if (io.sockets.connected[onlineUsers[data.toUser].getSocketID()] !== undefined) {
+                    // update user data
+                    onlineUsers[data.fromUser].sentGameRequestTo(data.toUser);
+                    // send game request signal
+                    io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("gameRequest", data.fromUser);
+                } else {
+                    socket.emit("_error", "player is not online");
+                }
+            } else if (data.type === "requestAccepted") {
+//                console.log("user accepted");
 
-            // checking if the toUser is online
-            if (io.sockets.connected[onlineUsers[data.toUser].getSocketid()] !== undefined) {
+                // todo decline all pending requests
 
-                // update user data
-                onlineUsers[data.fromUser].sentGameRequestTo(data.toUser);
-                console.log(onlineUsers);
-                // send game request signal
-                io.sockets.connected[onlineUsers[data.toUser].getSocketid()].emit("gameRequest", data.fromUser);
-            } else {
-                socket.emit("_error", "player is not online");
+                onlineUsers[data.fromUser].setOpponent(data.toUser);
+                onlineUsers[data.toUser].setOpponent(data.fromUser);
+
+                // Signal both user that the game has been approved by the server
+                io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
+                io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
+
+            } else if (data.type === "requestDeclined") {
+                console.log("user declined"); // todo handle decline
+
             }
         });
 
@@ -240,6 +223,11 @@ function updateDictionary(username, newSocketid) {
 }
 
 function removeUserFromDictionary(username) {
+
+    if (onlineUsers[username] === undefined) {
+        console.log("user left after server restart");
+        return;
+    }
 
 //    console.log("========================= before remove");
 //    console.log(socketIDtoUsername);
