@@ -73,5 +73,11 @@ class GameController {
 			this.__historySpot = 1;
 		}
 	}
+	restartReplay(){
+		var gameHistory = this.__gameSpace.getHistory();
 
+		this.__historySpot = 1;
+		this.__gameSpace.board = gameHistory[this.__historySpot];
+		this.__view.draw();
+	}
 }
