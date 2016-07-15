@@ -10,7 +10,6 @@ class NetworkAdapter {
 	
 	getAIMove(size, board, lastMove, callback){
 		var data = {
-			"userid":"user", // use to handle user specific request
 			"size": size,
 			"board": board,
 			"last": lastMove
@@ -31,7 +30,6 @@ class NetworkAdapter {
 		});
 	}
 
-	
 	createAccount(){
 		console.log("unimplemented method call");
 	}
@@ -45,10 +43,6 @@ class NetworkAdapter {
 	}
 	
 	lookForGame(){
-		console.log("unimplemented method call");
-	}
-	
-	inviteToGame(){
 		console.log("unimplemented method call");
 	}
 	
