@@ -121,30 +121,36 @@ class View {
         var posy = Math.floor(y / (this.__offset * 2));
 
         // Placing the stone
-        this.__controller.placeToken(this.__controller.getPlayerTurn(), posx, posy);
-
-        // Drawing the board
-        this.draw();
+	this.__controller.placeToken(this.__controller.getPlayerTurn(), posx, posy);
+		
+	// Drawing the board
+	this.draw();
     }
 
     showBar(){
-        if (document.getElementById("colourButtonTable").style.visibility == "hidden"){
+        if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
             document.getElementById("colourButtonTable").style.visibility = "visible";
-        } else{
+	}else{
             document.getElementById("colourButtonTable").style.visibility = "hidden";
-        }
-    }
-
+            }
+	}
+        
     changeColour(colour){
-    if (this.__currentPlayer == 1){
-    this.__p1Colour = colour;
-            } else{
-    this.__p2Colour = colour;
-            }
-    this.draw();
-            }
-
+        if(this.__currentPlayer == 1){
+                this.__p1Colour = colour;
+        }else{
+                this.__p2Colour = colour;
+        }
+        this.draw();
+    }
+        
     setPlayer(player){
         this.__currentPlayer = player;
+    }
+        
+    showReplayOptions(){
+            var buttonString = "<button id=\"StartReplay\" class=\"button\" onclick=\"gameController.restartReplay()\">Start Replay</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.rewind()\">Back</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.replay()\">Next</button>";
+            var replayBar = document.getElementById("replayOptions");
+            replayBar.innerHTML = buttonString;
     }
 }
