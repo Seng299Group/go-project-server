@@ -32,6 +32,7 @@ class GameSpace {
         this.p1Score = 0;
         this.p2Score = 0;
 		
+        this.__gameOver = false;
 		this.history.push(this.board);
     }
 
@@ -85,21 +86,24 @@ class GameSpace {
     //          True if the move was legal and applied
     //          False if the move was illegal and not applied
     placeToken (player, x, y) {
+        if(!this.__gameOver){
+            var captured;
 
-        var captured;
+            if (this.checkLegal(player, x, y)) {
+                // console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
+    			this.__lastMove = {"x":y, "y":x, "c":player, "pass":false}; // temporary fix: x=y and y=x
+                this.board = this.board.clone();
+                this.board.evaluateMove(player, x, y);
+                this.__addCapturedArmies(player);
+    			this.history.push(this.board);
 
-        if (this.checkLegal(player, x, y)) {
-            // console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
-			this.__lastMove = {"x":y, "y":x, "c":player, "pass":false}; // temporary fix: x=y and y=x
-            this.board = this.board.clone();
-            this.board.evaluateMove(player, x, y);
-            this.__addCapturedArmies(player);
-			this.history.push(this.board);
-
-            // this.board.print();
+                // this.board.print();
+                return true;
+            }
+            return false;
+        }else{
             return true;
         }
-        return false;
     }
 
     // placeToken
@@ -295,6 +299,8 @@ class GameSpace {
         }else{
             alert("Tie Game!\n" + this.p1Score + " to " + this.p1Score);
         }
+        //End Game
+        this.__gameOver = true;
     }
 
 }
