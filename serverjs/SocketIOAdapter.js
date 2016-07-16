@@ -1,5 +1,6 @@
 
 var User = require("./User.js");
+var db = require("./DatabaseAdapter.js");
 
 
 
@@ -74,6 +75,32 @@ function listen(io) {
 
             // respond
             socket.emit('guestLogin', newUser);
+        });
+
+
+
+        socket.on('accountLogin', function (data) {
+
+            /*
+             * data should have user name and password (plain or hashed)
+             * i.e.
+             * data = {
+             *      username: string,
+             *      password: string
+             * }
+             */
+
+            var authSucess = db.authenticate(data.username, data.password);
+
+            if (authSucess) {
+                console.log("suc");
+                socket.emit("loginSucceeded");
+            } else {
+                console.log("login failed. login request:");
+                console.log(data);
+                socket.emit("loginFailed");
+            }
+
         });
 
 

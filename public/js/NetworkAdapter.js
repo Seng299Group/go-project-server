@@ -38,8 +38,11 @@ class NetworkAdapter {
 		console.log("unimplemented method call");
 	}
 	
-	login(){
-		console.log("unimplemented method call");
+	login(username, password){
+//          console.log("unimplemented method call");
+            var socket = io();
+            socket.emit("accountLogin", {username: username, password: password});
+//            console.log(username + " " + password);
 	}
 	
 	lookForGame(){
