@@ -4,6 +4,7 @@ body {
 
 img {
     width: 200px;
+    cursor: pointer;
 }
 
 #bodyWrapper{

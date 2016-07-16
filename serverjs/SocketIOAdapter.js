@@ -111,7 +111,7 @@ function listen(io) {
                     socket.emit("_error", "player is not in mp-lobby");
                 } else {
                     // update user data
-                    onlineUsers[data.fromUser].sentGameRequestTo(data.toUser);
+                    onlineUsers[data.fromUser].addToRequestSentList(data.toUser);
                     var newData = {
                         fromUser: data.fromUser,
                         boardSize: data.boardSize
@@ -143,8 +143,11 @@ function listen(io) {
                     broadcastOnlinePlayers(socket);
                 }
             } else if (data.type === "requestDeclined") {
-                console.log("user declined"); // todo handle decline
+                // updating status
+                onlineUsers[data.toUser].updateRequestStatus(data.fromUser, "declined");
 
+                // telling the client
+                io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestDeclined", data.fromUser);
             }
         });
 
