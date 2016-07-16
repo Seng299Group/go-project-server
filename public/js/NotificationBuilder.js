@@ -63,10 +63,10 @@ class NotificationBuilder {
         });
         button.addClass("sessionExpiredNotification-button");
 
-        nf = nfBuilder.makeNotification(title, msg, button);
+        nf = nfBuilder.makeNotification(title, msg, button); // todo remove nfBuilder and replace with this
         nf.addClass("sessionExpiredNotification");
 
         return nf;
     }
-
+    
 }

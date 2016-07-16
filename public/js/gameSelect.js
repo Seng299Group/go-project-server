@@ -49,16 +49,68 @@ if (sessionStorage.sessionID === undefined) { // new user
 }
 
 $("#button-hotseat").click(function () {
+
+
+
+
+//
+//    var nf = (new NotificationBuilder()).getBoardSizePickerNotification();
+//    $("#notificationCenter").append(nf);
+//
+//    $("#notification-screenLock").css("display", "block");
+//
+//    sessionStorage.gameMode = "hotseat";
+//    sessionStorage.boardSize = "hotseat";
+
     sessionStorage.gameMode = "hotseat";
-    window.location.href = "/GameView.html";
+    showBoardSizePickerNotification();
 });
 
 $("#button-ai").click(function () {
     sessionStorage.gameMode = "ai";
-    window.location.href = "/GameView.html";
+    showBoardSizePickerNotification();
 });
 
 $("#button-network").click(function () {
     sessionStorage.gameMode = "network";
     window.location.href = "/multiplayer_lobby.html";
 });
+
+
+
+function applyScreenLock() {
+    $("#notification-screenLock").css("display", "block");
+}
+
+function removeScreenLock() {
+    $("#notification-screenLock").css("display", "none");
+}
+
+function showBoardSizePickerNotification() {
+    var nfBuilder = new NotificationBuilder();
+
+    var notification;
+
+    var buttons = [
+        nfBuilder.makeNotificationButton("9x9", function () {
+            sessionStorage.boardSize = 9;
+            window.location.href = "/GameView.html";
+        }).attr("class", "notification_button_general")
+                ,
+        nfBuilder.makeNotificationButton("13x13", function () {
+            sessionStorage.boardSize = 13;
+            window.location.href = "/GameView.html";
+        }).attr("class", "notification_button_general")
+                ,
+        nfBuilder.makeNotificationButton("19x19", function () {
+            sessionStorage.boardSize = 19;
+            window.location.href = "/GameView.html";
+        }).attr("class", "notification_button_general")
+    ];
+
+    notification = nfBuilder.makeNotification("Please select A board Size", "", buttons).attr("class", "boardSizeNotification");
+
+    applyScreenLock();
+    $("#notificationCenter").append(notification);
+
+}

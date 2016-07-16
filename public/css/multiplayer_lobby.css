@@ -233,52 +233,6 @@ body {
 
 }
 
-.boardSizeNotification{
-    width: 450px;
-    height: 125px;
-    padding: 16px;
-    /*border: 1pt solid black;*/
-    position: absolute;
-    background: white;
-
-    box-shadow: 0px 0px 8px -0.5px grey;
-
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-
-    margin: auto;
-
-    z-index: 1;
-
-}
-
-.boardSizeNotification h1{
-    font-size: 14pt;
-    color: black;
-}
-
-.notification_button_general{
-    text-align: center;
-    width: 100px;    
-    padding: 16px 16px;
-    margin: 8px;
-    /*border: 1pt solid black;*/
-    box-shadow: 0px 0px 8px -0.5px grey;
-    display: inline-block;
-}
-
-.notification_button_general:hover {
-    box-shadow: 0px 0px 16px -0.5px grey;
-}
-
-.notification_button_general:active {
-    box-shadow: 0px 0px 4px -0.5px grey;
-}
-
-
-
 
 
 /*********************** Notification : user is in game ***********************/

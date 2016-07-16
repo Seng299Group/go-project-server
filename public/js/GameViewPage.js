@@ -2,12 +2,14 @@ if (sessionStorage.gameMode === "hotseat") {
 
     (function () { // for packaging
 
+        var boardSize = sessionStorage.boardSize;
         delete(sessionStorage.gameMode);
+        delete(sessionStorage.boardSize);
 
         console.log("hotseat");
 
         // Model - The board
-        var myGameSpace = new GameSpace(9); // todo game size
+        var myGameSpace = new GameSpace(boardSize); // todo game size
         var player = 1;
 
         // Controller - Game controller
@@ -41,11 +43,13 @@ if (sessionStorage.gameMode === "hotseat") {
 } else if (sessionStorage.gameMode === "ai") {
 
     (function () { // for packaging 
+
+        var boardSize = sessionStorage.boardSize;
         delete(sessionStorage.gameMode);
-//    console.log("ai game play");
+        delete(sessionStorage.boardSize);
 
         // Model - The board
-        var myGameSpace = new GameSpace(9); // todo game size
+        var myGameSpace = new GameSpace(boardSize); // todo game size
         var player = 1;
 
         // Controller - Game controller
@@ -143,7 +147,7 @@ if (sessionStorage.gameMode === "hotseat") {
 
 } else {
 //    console.log("gamemode not specIfied. Reasons: bookmarked or manually typed in the url");
-
+    console.log("unknow gamemode: " + sessionStorage.gameMode);
 
     var nfBuilder = new NotificationBuilder();
     var nf = nfBuilder.getSessionExpiredNotification();
