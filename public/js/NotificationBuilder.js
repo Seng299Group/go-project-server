@@ -49,5 +49,24 @@ class NotificationBuilder {
         b.click(onClick);
         return b;
     }
+    
+    
+    
+    
+    getSessionExpiredNotification() {
+        var nf;
+        var title = "Session Expired";
+        var msg = "Please return to the homepage";
+        var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
+            delete(sessionStorage.sessionID);
+            window.location.href = "/";
+        });
+        button.addClass("sessionExpiredNotification-button");
+
+        nf = nfBuilder.makeNotification(title, msg, button);
+        nf.addClass("sessionExpiredNotification");
+
+        return nf;
+    }
 
 }

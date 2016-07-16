@@ -47,3 +47,18 @@ if (sessionStorage.sessionID === undefined) { // new user
 
     console.log("returning user " + sessionStorage.sessionID); // todo handle returning user
 }
+
+$("#button-hotseat").click(function () {
+    sessionStorage.gameMode = "hotseat";
+    window.location.href = "/GameView.html";
+});
+
+$("#button-ai").click(function () {
+    sessionStorage.gameMode = "ai";
+    window.location.href = "/GameView.html";
+});
+
+$("#button-network").click(function () {
+    sessionStorage.gameMode = "network";
+    window.location.href = "/multiplayer_lobby.html";
+});

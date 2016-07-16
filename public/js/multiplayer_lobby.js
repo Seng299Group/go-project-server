@@ -275,24 +275,22 @@ function onReceivedGameRequest(fromUser, boardSize) {
 }
 
 
-function notifySessionExpired() {
-
-    hideLobbyBody();
-
-    var nf;
-    var title = "Session Expired";
-    var msg = "Please return to the homepage";
-    var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
-        delete(sessionStorage.sessionID);
-        window.location.href = "/";
-    });
-    button.addClass("sessionExpiredNotification-button");
-
-    nf = nfBuilder.makeNotification(title, msg, button);
-    nf.addClass("sessionExpiredNotification");
-
-    $("#notificationCenter").append(nf);
-}
+//function notifySessionExpired() {
+//
+//    var nf;
+//    var title = "Session Expired";
+//    var msg = "Please return to the homepage";
+//    var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
+//        delete(sessionStorage.sessionID);
+//        window.location.href = "/";
+//    });
+//    button.addClass("sessionExpiredNotification-button");
+//
+//    nf = nfBuilder.makeNotification(title, msg, button);
+//    nf.addClass("sessionExpiredNotification");
+//
+//    $("#notificationCenter").append(nf);
+//}
 
 
 
@@ -349,7 +347,13 @@ socket.on('_error', function (data) {
     } else if (data === "player no longer available") {
         // todo in a game
     } else if (data === "sessionExpired") {
-        notifySessionExpired();
+        hideLobbyBody();
+
+        var nfBuilder = new NotificationBuilder();
+        var nf = nfBuilder.getSessionExpiredNotification();
+        nf.appendTo("body");
+
+//        notifySessionExpired();
     } else {
         console.log(data);
     }

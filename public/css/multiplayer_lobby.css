@@ -281,49 +281,6 @@ body {
 
 
 
-/********************************/
-
-
-
-
-
-.sessionExpiredNotification {
-
-    width: 500px;
-    height: 180px;
-    padding: 16px;
-    /*border: 1pt solid black;*/
-    position: absolute;
-    background: white;
-
-    box-shadow: 0px 0px 8px -0.5px grey;
-
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-
-    margin: auto;
-
-}
-
-.sessionExpiredNotification-button {
-    width: 200px;
-    margin: 0px auto;
-    margin-top: 32px;
-    box-shadow: 0px 0px 8px -0.5px grey;
-    padding: 12px;
-    background: white;
-}
-
-.sessionExpiredNotification-button:hover {
-    box-shadow: 0px 0px 16px -0.5px grey;
-}
-
-
-
-
-
 /*********************** Notification : user is in game ***********************/
 
 .leftGameInProgressNotification {
