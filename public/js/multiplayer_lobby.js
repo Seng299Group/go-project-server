@@ -3,6 +3,8 @@ sessionStorage.gameMode = "network";
 
 var socket = io();
 
+var nfBuilder = new NotificationBuilder();
+
 /**
  * This object must be retrieved from the server using getUserData.
  * And since this will be recieved from sever, this object will follow
@@ -13,11 +15,7 @@ var socket = io();
 var user;
 
 // Login check
-if (sessionStorage.sessionID === undefined) {
-    lockDownUI();
-} else {
-    requestUserdata();
-}
+requestUserdata();
 
 
 
@@ -119,32 +117,37 @@ function makeInvitationButton(forUser) {
     reqButton.click(function () {
 
 
-        hideLobbyBody();
+//        hideLobbyBody();
+        applyScreenLock();
 
 
         // asking for board size
-        var nfBuilder = new NotificationBuilder();
+
         var notification;
 
         var buttons = [
             nfBuilder.makeNotificationButton("9x9", function () {
                 sendGameRequest(forUser.__username, 9);
-                showLobbyBody();
+                removeScreenLock();
                 notification.remove();
+                reqButton.replaceWith(getInvitationSentButton());
             }).attr("class", "notification_button_general")
                     ,
             nfBuilder.makeNotificationButton("13x13", function () {
                 sendGameRequest(forUser.__username, 13);
-                showLobbyBody();
+                removeScreenLock();
                 notification.remove();
+                reqButton.replaceWith(getInvitationSentButton());
             }).attr("class", "notification_button_general")
                     ,
             nfBuilder.makeNotificationButton("19x19", function () {
                 sendGameRequest(forUser.__username, 19);
-                showLobbyBody();
+                removeScreenLock();
                 notification.remove();
+                reqButton.replaceWith(getInvitationSentButton());
             }).attr("class", "notification_button_general")
         ];
+
 
 
         notification = nfBuilder.makeNotification("Please select A board Size", "", buttons).attr("class", "boardSizeNotification");
@@ -152,7 +155,7 @@ function makeInvitationButton(forUser) {
         $("#notificationCenter").append(notification);
 
         // Updating UI to notify the user that the game invitation was sent
-        $(this).replaceWith(getInvitationSentButton());
+//        $(this).replaceWith(getInvitationSentButton());
 
     });
 
@@ -165,6 +168,14 @@ function hideLobbyBody() {
 
 function showLobbyBody() {
     $("#lobbyBody").css("display", "block");
+}
+
+function applyScreenLock() {
+    $("#screenLock").css("display", "block");
+}
+
+function removeScreenLock() {
+    $("#screenLock").css("display", "none");
 }
 
 function getInvitationSentButton() {
@@ -228,46 +239,60 @@ function declineRequest(toUser) {
  * @param {int} boardSize - size of the board
  */
 function onReceivedGameRequest(fromUser, boardSize) {
-    $("#gameRequests-wrapper").css("display", "block");
 
-    var div = $(document.createElement('div'));
-    div.attr("class", "gameRequest-row");
-    div.html(fromUser + " challenged you for a " + boardSize + " game");
+    var gameRequest;
 
-    // todo change to div buttons
-    var button_accept = $(document.createElement('button'));
-    button_accept.html("accept");
-    button_accept.click(function () {
-        acceptRequest(fromUser, boardSize);
+    var title = "Game request";
+    var msg = "You have game request form <b>" + fromUser + "</b><br>Board size: <b>" + boardSize + "x" + boardSize + "</b>";
+    var buttons = [makeAcceptButton(), makeDeclineButton()];
+
+    gameRequest = nfBuilder.makeNotification(title, msg, buttons);
+    gameRequest.addClass("gameRequestsNotification");
+
+    $("#gameRequests-wrapper").append(gameRequest);
+
+
+
+    function makeAcceptButton() {
+        var button = $(document.createElement('div'));
+        button.attr("class", "button_acceptRequest");
+        button.html("Accept");
+        button.click(function () {
+            acceptRequest(fromUser, boardSize);
+        });
+        return button;
+    }
+
+    function makeDeclineButton() {
+        var button = $(document.createElement('div'));
+        button.attr("class", "button_declineRequest");
+        button.html("Decline");
+        button.click(function () {
+            declineRequest(fromUser);
+        });
+        return button;
+    }
+}
+
+
+function notifySessionExpired() {
+
+    hideLobbyBody();
+
+    var nf;
+    var title = "Session Expired";
+    var msg = "Please return to the homepage";
+    var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
+        delete(sessionStorage.sessionID);
+        window.location.href = "/";
     });
+    button.addClass("sessionExpiredNotification-button");
 
-    var button_decline = $(document.createElement('button'));
-    button_decline.html("decline");
-    button_decline.click(function () {
-        declineRequest(fromUser);
-    });
+    nf = nfBuilder.makeNotification(title, msg, button);
+    nf.addClass("sessionExpiredNotification");
 
-    div.append(button_accept);
-    div.append(button_decline);
-    $("#gameRequests-list").append(div);
+    $("#notificationCenter").append(nf);
 }
-
-
-
-/**
- * This function is called when the user clicks the logout button
- */
-function onLogoutButtonPress() {
-    console.log("logout button pressed. unimplemented method call.");
-}
-
-
-
-function lockDownUI() {
-    $("html").html("You are currently not logged in"); // todo fancy UI
-}
-
-
 
 
 
@@ -323,6 +348,8 @@ socket.on('_error', function (data) {
         console.log("player is not in mp-lobby");
     } else if (data === "player no longer available") {
         // todo in a game
+    } else if (data === "sessionExpired") {
+        notifySessionExpired();
     } else {
         console.log(data);
     }

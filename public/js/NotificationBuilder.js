@@ -9,20 +9,28 @@ class NotificationBuilder {
      * @param {type} buttons - array of buttons made with the makeNotificationButton() function
      * @returns {DOM object} - Div element: notification
      */
-    makeNotification(title, body, buttons) {
+    makeNotification(title, bodyText, buttons) {
         var notification = $(document.createElement('div'));
 
         var headline = $(document.createElement('h1'));
         headline.html(title);
         notification.append(headline);
 
-        var headline = $(document.createElement('p'));
-        headline.html(body);
-        notification.append(headline);
+        var body = $(document.createElement('p'));
+        body.html(bodyText);
+        notification.append(body);
 
-        for (var b in buttons) {
-            notification.append(buttons[b]);
+        var buttonWrapper = $(document.createElement('div'));
+        buttonWrapper.css("text-align","center");
+        if (buttons.length == 1) {
+            buttonWrapper.append(buttons);
+        } else {
+            for (var b in buttons) {
+                buttonWrapper.append(buttons[b]);
+            }
         }
+       
+        notification.append(buttonWrapper);
 
         return notification;
     }
@@ -37,6 +45,7 @@ class NotificationBuilder {
     makeNotificationButton(text, onClick) {
         var b = $(document.createElement('div'));
         b.html(text);
+        b.css("cursor", "pointer");
         b.click(onClick);
         return b;
     }

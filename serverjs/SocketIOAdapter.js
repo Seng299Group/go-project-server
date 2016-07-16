@@ -88,15 +88,16 @@ function listen(io) {
             var newSocketID = socket.id;
 
             if (user === undefined) {
-                console.log("user is browsing after server restarted");
-                return;
+                socket.emit("_error", "sessionExpired");
+            } else {
+                user.setIsOnline(true);
+                updateDictionary(username, newSocketID);
+
+                socket.emit("userdata", user);
+                broadcastOnlinePlayers(socket);
             }
 
-            user.setIsOnline(true);
-            updateDictionary(username, newSocketID);
 
-            socket.emit("userdata", user);
-            broadcastOnlinePlayers(socket);
         });
 
 
@@ -122,25 +123,25 @@ function listen(io) {
 //                console.log("user accepted");
                 if (onlineUsers[data.toUser] === undefined) {
                     socket.emit("_error", "player no longer available");
-                    return;
+                } else {
+
+                    // todo decline all pending requests
+
+                    onlineUsers[data.fromUser].setOpponent(data.toUser);
+                    onlineUsers[data.toUser].setOpponent(data.fromUser);
+
+                    onlineUsers[data.fromUser].setBoardSize(data.boardSize);
+                    onlineUsers[data.toUser].setBoardSize(data.boardSize);
+
+                    onlineUsers[data.fromUser].setIsInGame(true);
+                    onlineUsers[data.toUser].setIsInGame(true);
+
+                    // Signal both user that the game has been approved by the server
+                    io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
+                    io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
+
+                    broadcastOnlinePlayers(socket);
                 }
-
-                // todo decline all pending requests
-
-                onlineUsers[data.fromUser].setOpponent(data.toUser);
-                onlineUsers[data.toUser].setOpponent(data.fromUser);
-
-                onlineUsers[data.fromUser].setBoardSize(data.boardSize);
-                onlineUsers[data.toUser].setBoardSize(data.boardSize);
-
-                onlineUsers[data.fromUser].setIsInGame(true);
-                onlineUsers[data.toUser].setIsInGame(true);
-
-                // Signal both user that the game has been approved by the server
-                io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
-                io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
-
-                broadcastOnlinePlayers(socket);
             } else if (data.type === "requestDeclined") {
                 console.log("user declined"); // todo handle decline
 
@@ -186,21 +187,15 @@ function listen(io) {
 
             if (user === undefined) {
                 console.log("user left after server restart");
-                return;
+            } else {
+                user.setIsOnline(false);
+                setTimeout(function () {
+                    if (!user.isOnline()) { // User left (i.e. not a refresh)
+                        removeUserFromDictionary(user.getUsername());
+                        broadcastOnlinePlayers(socket);
+                    }
+                }, 2000);
             }
-
-            user.setIsOnline(false);
-
-            setTimeout(function () {
-                if (!user.isOnline()) {
-//                    console.log("user quit");
-                    removeUserFromDictionary(user.getUsername());
-                    broadcastOnlinePlayers(socket);
-                } else {
-//                    console.log("user refreshed");
-                }
-
-            }, 2000);
 
         });
 
@@ -212,14 +207,9 @@ function listen(io) {
 function addUserOnDictionary(user, socketid) {
     onlineUsers[user.getUsername()] = user;
     socketIDtoUsername[socketid] = user.getUsername();
-//    console.log(onlineUsers);
 }
 
 function updateDictionary(username, newSocketid) {
-
-//    console.log("========================= update");
-//    console.log("before update");
-//    console.log(socketIDtoUsername);
 
     var user = onlineUsers[username];
     var oldSocketID = user.getSocketID();
@@ -229,35 +219,21 @@ function updateDictionary(username, newSocketid) {
     delete(socketIDtoUsername[oldSocketID]);
     socketIDtoUsername[newSocketid] = user.getUsername();
 
-//    console.log("after update");
-//    console.log(socketIDtoUsername);
-//    console.log("========================= end of update");
-
 }
 
 function removeUserFromDictionary(username) {
 
     if (onlineUsers[username] === undefined) {
         console.log("user left after server restart");
-        return;
+    } else {
+        var user = onlineUsers[username];
+        var socketid = user.getSocketID();
+
+        // todo decline all game requests
+
+        delete(socketIDtoUsername[socketid]);
+        delete(onlineUsers[username]);
     }
-
-//    console.log("========================= before remove");
-//    console.log(socketIDtoUsername);
-//    console.log(onlineUsers);
-
-    var user = onlineUsers[username];
-    var socketid = user.getSocketID();
-    // todo decline all game requests
-
-    delete(socketIDtoUsername[socketid]);
-    delete(onlineUsers[username]);
-
-//    console.log("========================= after remove");
-//    console.log(socketIDtoUsername);
-//    console.log(onlineUsers);
-
-
 
 }
 

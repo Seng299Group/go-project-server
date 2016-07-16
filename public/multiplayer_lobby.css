@@ -1,3 +1,28 @@
+body {
+    margin: 0px;
+}
+
+#screenLock {
+    background: gray;
+    opacity: 0.5;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    display: none;
+}
+
+.clearFloat{
+    clear: both;
+}
+
+
+
+
+
 /********************************/
 
 /*
@@ -8,8 +33,8 @@
     padding: 16px;
     box-shadow: 0px 0px 8px -0.5px grey;
     text-align: center;
-    width: 50%;
-    min-width: 500px;
+    /*width: 50%;*/
+    width: 500px;
 }
 
 
@@ -60,30 +85,74 @@
 * 
 */
 .gameRequests-wrapper {
-    margin: 16px auto;
-    padding: 16px;
-    box-shadow: 0px 0px 8px -0.5px grey;
-    width: 50%;
-    min-width: 500px;
-    display: none; /* hidden to begin. will appear when request arrive */
-
+    text-align: center;
 }
+
+.gameRequestsNotification {
+    margin: 16px auto;
+    width: 500px;
+    box-shadow: 0px 0px 8px -0.5px grey;
+    padding: 16px;
+}
+
+.gameRequestsNotification h1 {
+    font-size: 14pt;
+    margin: 0px;
+}
+
+.gameRequestsNotification p {
+    /*font-size: 14pt;*/
+    margin: 4px;
+}
+
 
 
 /*
 * 
 */
-.gameRequests-wrapper h1{
+/*.gameRequests-wrapper h1{
     font-size: 16pt;
 
-}
+}*/
 
 /*
 * 
 */
-.gameRequest-row {
+/*.gameRequest-row {
 
+}*/
+
+.button_acceptRequest {
+    color: white;
+    background: green;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px;
+    text-align: center;
+    width: 100px;
+    margin: 0px 4px;
 }
+
+.button_acceptRequest:hover {
+    background: darkgreen;
+}
+
+
+.button_declineRequest {
+    color: white;
+    background: red;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px;
+    text-align: center;
+    width: 100px;
+    margin: 0px 4px;
+}
+
+.button_declineRequest:hover {
+    background: darkred;
+}
+
 
 /********************************/
 
@@ -96,8 +165,8 @@
     padding: 16px;
     box-shadow: 0px 0px 8px -0.5px grey;
 
-    width: 50%;
-    min-width: 500px;
+    width: 500px;
+    /*min-width: 500px;*/
 
 
 }
@@ -165,10 +234,24 @@
 }
 
 .boardSizeNotification{
-    width: 50%;
-    border: 1pt solid black;
+    width: 450px;
+    height: 125px;
+    padding: 16px;
+    /*border: 1pt solid black;*/
     position: absolute;
     background: white;
+
+    box-shadow: 0px 0px 8px -0.5px grey;
+
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    margin: auto;
+
+    z-index: 1;
+
 }
 
 .boardSizeNotification h1{
@@ -177,14 +260,97 @@
 }
 
 .notification_button_general{
-    cursor: pointer;
+    text-align: center;
+    width: 100px;    
     padding: 16px 16px;
     margin: 8px;
-    border: 1pt solid black;
+    /*border: 1pt solid black;*/
+    box-shadow: 0px 0px 8px -0.5px grey;
     display: inline-block;
 }
 
-.clearFloat{
-    clear: both;
+.notification_button_general:hover {
+    box-shadow: 0px 0px 16px -0.5px grey;
 }
+
+.notification_button_general:active {
+    box-shadow: 0px 0px 4px -0.5px grey;
+}
+
+
+
+
+
+/********************************/
+
+
+
+
+
+.sessionExpiredNotification {
+
+    width: 500px;
+    height: 180px;
+    padding: 16px;
+    /*border: 1pt solid black;*/
+    position: absolute;
+    background: white;
+
+    box-shadow: 0px 0px 8px -0.5px grey;
+
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    margin: auto;
+
+}
+
+.sessionExpiredNotification-button {
+    width: 200px;
+    margin: 0px auto;
+    margin-top: 32px;
+    box-shadow: 0px 0px 8px -0.5px grey;
+    padding: 12px;
+    background: white;
+}
+
+.sessionExpiredNotification-button:hover {
+    box-shadow: 0px 0px 16px -0.5px grey;
+}
+
+
+
+
+
+/*********************** Notification : user is in game ***********************/
+
+.leftGameInProgressNotification {
+    width: 200px;
+    margin: 0px auto;
+    margin-top: 32px;
+    box-shadow: 0px 0px 8px -0.5px grey;
+    padding: 12px;
+    background: white;
+}
+
+.leftGameInProgressNotification-button {
+
+}
+
+.leftGameInProgressNotification-button:hover {
+    box-shadow: 0px 0px 16px -0.5px grey;
+}
+
+
+
+
+
+/********************************/
+
+
+
+
+
 
