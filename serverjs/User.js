@@ -6,8 +6,6 @@
 * __opponent			- The name of the opponent.
 * __socketid			- Socket ID
 *
-* __sentGameRequestTo	- an array of all users that
-*							this user sent a game request to.
 *
 */
 
@@ -31,7 +29,12 @@ class User {
 	constructor(username){
 		this.__username = username;
                 this.__opponent = null
-		this.__sentGameRequestTo = [];
+                
+		this.__requestSentList = []; // [ {username: username, status: } , {...} , ... ]
+                // status: pending or declined
+                
+                this.__requestReceivedList = [];
+                
                 this.__socketid = null
                 this.__isOnline = true;
                 this.__boardSize = 0;
@@ -58,9 +61,17 @@ class User {
 		return this.__socketid;
 	}
 	
-	sentGameRequestTo(toUser){
-		this.__sentGameRequestTo.push(toUser)
+	addToRequestSentList(username){
+                this.__requestSentList[username] = "pending";
 	}
+        
+        getRequestSentList(){
+            return this.__requestSentList;
+        }
+        
+        updateRequestStatus(toUser, newStatus){
+            this.__requestSentList[toUser] = newStatus;
+        }
         
         setIsOnline(isOnline){
             this.__isOnline = isOnline;

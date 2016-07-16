@@ -130,21 +130,21 @@ function makeInvitationButton(forUser) {
                 sendGameRequest(forUser.__username, 9);
                 removeScreenLock();
                 notification.remove();
-                reqButton.replaceWith(getInvitationSentButton());
+                reqButton.replaceWith(getInvitationSentButton(forUser));
             }).attr("class", "notification_button_general")
                     ,
             nfBuilder.makeNotificationButton("13x13", function () {
                 sendGameRequest(forUser.__username, 13);
                 removeScreenLock();
                 notification.remove();
-                reqButton.replaceWith(getInvitationSentButton());
+                reqButton.replaceWith(getInvitationSentButton(forUser));
             }).attr("class", "notification_button_general")
                     ,
             nfBuilder.makeNotificationButton("19x19", function () {
                 sendGameRequest(forUser.__username, 19);
                 removeScreenLock();
                 notification.remove();
-                reqButton.replaceWith(getInvitationSentButton());
+                reqButton.replaceWith(getInvitationSentButton(forUser));
             }).attr("class", "notification_button_general")
         ];
 
@@ -178,18 +178,30 @@ function removeScreenLock() {
     $("#screenLock").css("display", "none");
 }
 
-function getInvitationSentButton() {
+function getInvitationSentButton(toUser) {
 
     var requestSentButton;
 
     requestSentButton = $(document.createElement('div'));
     requestSentButton.html("Invitation Sent");
     requestSentButton.attr("class", "button_requestSent");
-    requestSentButton.click(function () {
-        // todo notify user to wait for opponent to accept request
-        console.log("request has been sent. please wait. unimplemented");
+//    requestSentButton.attr("toUser", toUser);
+
+    socket.on('requestDeclined', function (fromUser) {
+        if (toUser.__username === fromUser) {
+            requestSentButton.replaceWith(makeRequestDeclinedButton());
+        }
+
     });
 
+    return requestSentButton;
+}
+
+function makeRequestDeclinedButton() {
+    var requestSentButton;
+    requestSentButton = $(document.createElement('div'));
+    requestSentButton.html("Request Declined");
+    requestSentButton.attr("class", "button_requestDecliend");
     return requestSentButton;
 }
 
@@ -242,8 +254,8 @@ function onReceivedGameRequest(fromUser, boardSize) {
 
     var gameRequest;
 
-    var title = "Game request";
-    var msg = "You have game request form <b>" + fromUser + "</b><br>Board size: <b>" + boardSize + "x" + boardSize + "</b>";
+    var title = "";
+    var msg = "Game request form <b>" + fromUser + "</b><br>Board size: <b>" + boardSize + "x" + boardSize + "</b>";
     var buttons = [makeAcceptButton(), makeDeclineButton()];
 
     gameRequest = nfBuilder.makeNotification(title, msg, buttons);
@@ -269,11 +281,16 @@ function onReceivedGameRequest(fromUser, boardSize) {
         button.html("Decline");
         button.click(function () {
             declineRequest(fromUser);
+            gameRequest.remove();
         });
         return button;
     }
 }
 
+
+function showPendingGameRequests() {
+    console.log("pending game requests"); // todo show pending game requests here
+}
 
 //function notifySessionExpired() {
 //
@@ -310,6 +327,7 @@ socket.on('userdata', function (data) {
     user = data;
     sessionStorage.sessionID = user.__socketid;
     decorateProfile();
+    showPendingGameRequests();
 });
 
 
