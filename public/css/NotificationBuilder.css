@@ -1,4 +1,7 @@
 
+/*
+* The gray screen that appears between the notification and the page
+*/
 #notification-screenLock {
     background: gray;
     opacity: 0.5;
@@ -10,37 +13,43 @@
     left: 0px;
     right: 0px;
     display: none;
+
+    z-index: 10;
 }
 
-/******************************************************************************/
+
+
+/********************* Session Expired Notification Style *********************/
 
 .sessionExpiredNotification {
 
     width: 500px;
     height: 180px;
+
     padding: 16px;
-    /*border: 1pt solid black;*/
+    margin: auto;
+
     position: absolute;
-    background: white;
-
-    box-shadow: 0px 0px 8px -0.5px grey;
-
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
 
-    margin: auto;
+    background: white;
+    box-shadow: 0px 0px 8px -0.5px grey;
 
+    z-index: 20;
 }
 
 .sessionExpiredNotification-button {
     width: 200px;
     margin: 0px auto;
+
     margin-top: 32px;
-    box-shadow: 0px 0px 8px -0.5px grey;
     padding: 12px;
+
     background: white;
+    box-shadow: 0px 0px 8px -0.5px grey;
 }
 
 .sessionExpiredNotification-button:hover {
@@ -48,8 +57,8 @@
 }
 
 
-/******************************************************************************/
 
+/*********************** Board Size Notificaiton Styles ***********************/
 
 .boardSizeNotification{
     width: 450px;
@@ -68,7 +77,7 @@
 
     margin: auto;
 
-    z-index: 1;
+    z-index: 15;
 
 }
 
@@ -94,5 +103,3 @@
 .notification_button_general:active {
     box-shadow: 0px 0px 4px -0.5px grey;
 }
-
-
