@@ -1,7 +1,22 @@
 
 var User = require("./User.js");
+var db = require("./DatabaseAdapter.js");
+
+// Debug control
+var verbose_updateDictionary = false;
 
 
+
+/************************ The Online Users' Dictionary *************************
+ * Variables: 
+ *      onlineUsers             - List that maintains users that are online
+ *      socketIDtoUsername      - List to lookup username given socketID
+ * 
+ * functions:
+ *      addUserInDictionary()       - Adds a new user in the dictionary
+ *      updateDictionary()          - Updates relevant data to maintain the structure
+ *      removeUserFromDictionary()  - Removes the user from the data structure when they leave
+ */
 
 /*
  * List of users that are currently online.
@@ -10,8 +25,8 @@ var User = require("./User.js");
  * See the User data structure in "./serverjs/User.js"
  * 
  * var onlineUsers = {
- *		username1: User object,
- *		username2: User object,
+ *		{string} username1: {object} User1,
+ *		{string} username2: {object} User2,
  *		...
  * 	}
  */
@@ -34,6 +49,140 @@ var socketIDtoUsername = {};
 
 
 
+/**
+ * This function adds a User object instance to the data structure.
+ * 
+ * @param {object} user - a User object
+ * @param {string} socketid
+ */
+function addUserInDictionary(user, socketid) {
+
+    if (verbose_updateDictionary) {
+        console.log("before add");
+        console.log(onlineUsers);
+    }
+
+    onlineUsers[user.getUsername()] = user;
+    socketIDtoUsername[socketid] = user.getUsername();
+
+    if (verbose_updateDictionary) {
+        console.log("after add");
+        console.log(onlineUsers);
+    }
+}
+
+/**
+ * This function updates all relationships between variables to maintain the data structure
+ * 
+ * @param {string} username
+ * @param {string} newSocketid
+ */
+function updateDictionary(username, newSocketid) {
+    if (verbose_updateDictionary) {
+        console.log("before update");
+        console.log(onlineUsers);
+    }
+
+    var user = onlineUsers[username];
+    var oldSocketID = user.getSocketID();
+
+    user.setSocketID(newSocketid);
+
+    delete(socketIDtoUsername[oldSocketID]);
+    socketIDtoUsername[newSocketid] = user.getUsername();
+
+    if (verbose_updateDictionary) {
+        console.log("after update");
+        console.log(onlineUsers);
+    }
+
+}
+
+/**
+ * This function removes relationships and user from the server
+ * 
+ * @param {string} username
+ */
+function removeUserFromDictionary(username) {
+    if (verbose_updateDictionary) {
+        console.log("before remove");
+        console.log(onlineUsers);
+    }
+
+    if (onlineUsers[username] === undefined) {
+        console.log("user left after server restart");
+    } else {
+
+        // todo save user data before deleting
+        console.log("user left. save user data as required. (./SocketIOAdapter.js)");
+
+        var user = onlineUsers[username];
+        var socketid = user.getSocketID();
+
+        // todo decline all game requests for this user
+
+        delete(socketIDtoUsername[socketid]);
+        delete(onlineUsers[username]);
+    }
+
+    if (verbose_updateDictionary) {
+        console.log("after remove");
+        console.log(onlineUsers);
+    }
+
+}
+
+/*********************** End of Online Users' Dictionary **********************/
+
+
+
+
+/*
+ *******************************************************************************
+ ********************************* Socket IO ***********************************
+ *******************************************************************************
+ *
+ * -------------------- List of events triggered on server ---------------------
+ * 
+ *  newPlayer       - when client connects and sends its username
+ *  gameRequest     - when the server receives a game request from a client
+ *  move            - when user makes a move
+ *  disconnect      - Socket.io event. When a user disconnects
+ * 
+ *  guestLogin               - user did not logged in (i.e. guest)
+ *  accountLogin             - user logged in with username and password
+ *  userdataForUsername      - user data request given username
+ *  userdata                 - user data request given socketid
+ * 
+ *  gameRequest
+ * 	sendRequest         - when a client sends a game request to another client
+ * 	requestAccepted     - when a client accepts a game request
+ * 	requestDeclined     - when a client declines a game request
+ * 	
+ *  move                     - relay moves during network game
+ *  updateSocketIDForUser    - called when socket id needs to be updates. (see more doc below)
+ * 
+ * 
+ * 
+ * ------------ List of events triggered by the server to the client -----------
+ *
+ *  gameRequest             - to let client know
+ *      sendRequest
+ *      requestAccepted
+ *      requestDeclined
+ *  
+ *  loginSucceeded          - when user login is successful
+ *  loginFailed             - when user login fails
+ *  playerList              - to send client(s) all users that are in mp-lobby
+ *  userdataForUsername     - responding with user's data
+ *  userdata                - responding with user's data
+ *  _error                  - error messages
+ *  	sessionExpired      - user is not in online dictionary.
+ *                              Reasons: bookmarked page or data loss (fast frequent refreshes)
+ *  	notInMpLobby        - when user is no longer in the lobby.
+ *                              Reasons: went back to other pages or left the server completely
+ * 
+ *******************************************************************************/
 
 function listen(io) {
 
@@ -42,35 +191,14 @@ function listen(io) {
 
 
 
-        /********************** List of Socket IO triggered events *********************
-         * 
-         * newPlayer		- when client connects and sends its username
-         * gameRequest	- when the server receives a game request from a client
-         * move			- when user makes a move
-         * disconnect	- Socket.io event. When a user disconnects
-         * 
-         * 
-         * 
-         ******************** List of events triggered by our server ********************
-         *
-         * playerList    - List of online players. I.e. sending the 'onlineUsers' variable
-         * _error        - any serverside error that the client needs to know about.
-         *               E.g. to notify user.
-         * 
-         *******************************************************************************/
+        socket.on('guestLogin', function () {
 
-
-
-
-
-
-        socket.on('guestLogin', function (data) {
             // Make new user object
             var newUser = new User(getName());
             newUser.setSocketID(socket.id);
 
             // add user in dictionary
-            addUserOnDictionary(newUser, socket.id);
+            addUserInDictionary(newUser, socket.id);
 
             // respond
             socket.emit('guestLogin', newUser);
@@ -78,9 +206,74 @@ function listen(io) {
 
 
 
-        socket.on('userdata', function (socketID) {
+        socket.on('accountLogin', function (data) {
 
-//            console.log(socketID);
+            /*
+             * data should have user name and password (plain or hashed)
+             * i.e.
+             * data = {
+             *      username: string,
+             *      password: string
+             * }
+             */
+
+            // Authenticate login
+            var authSucess = db.authenticate(data.username, data.password);
+
+            if (authSucess) {
+
+                // get user data
+                var user = db.getUserData(data.username);
+
+                // init socket id
+                user.setSocketID(socket.id);
+
+                // add user in dictionary
+                addUserInDictionary(user, socket.id);
+
+                // respond
+                socket.emit("loginSucceeded", user);
+
+            } else {
+                // respond that login failed
+                console.log("login failed. login request:");
+                console.log(data);
+                socket.emit("loginFailed");
+            }
+
+        });
+
+
+
+        /**
+         * Currently used from the game selection page
+         * Used to request data given an username
+         */
+        socket.on('userdataForUsername', function (username) {
+
+            var user = onlineUsers[username];
+
+            if (user === undefined) {
+                socket.emit("_error", "sessionExpired");
+            } else {
+                user.setSocketID(socket.id);
+                user.setIsOnline(true);
+                updateDictionary(username, socket.id);
+
+                socket.emit("userdataForUsername", user);
+            }
+
+        });
+
+
+
+        /**
+         * Currently used in multiplayer lobby
+         * 
+         * Sends user data to requester, updates dictionary,
+         * and finally sends online users' list to all active users in lobby.
+         */
+        socket.on('userdata', function (socketID) {
 
             var oldSocketID = socketID;
             var username = socketIDtoUsername[oldSocketID];
@@ -88,7 +281,9 @@ function listen(io) {
             var newSocketID = socket.id;
 
             if (user === undefined) {
+                // if user is not on server memory
                 socket.emit("_error", "sessionExpired");
+
             } else {
                 user.setIsOnline(true);
                 updateDictionary(username, newSocketID);
@@ -102,13 +297,17 @@ function listen(io) {
 
 
 
-        // Server received a game request from a client
+        /**
+         * Server received a game request from a client
+         */
         socket.on('gameRequest', function (data) {
-//            console.log(data);
+
             if (data.type === "sendRequest") {
-                // checking if the toUser is online
+
+                // checking if the toUser is in lobby
                 if (onlineUsers[data.toUser] === undefined) {
-                    socket.emit("_error", "player is not in mp-lobby");
+                    socket.emit("_error", "notInMpLobby");
+
                 } else {
                     // update user data
                     onlineUsers[data.fromUser].addToRequestSentList(data.toUser);
@@ -116,17 +315,24 @@ function listen(io) {
                         fromUser: data.fromUser,
                         boardSize: data.boardSize
                     };
+
                     // send game request signal
                     io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("gameRequest", newData);
                 }
+
+
+
             } else if (data.type === "requestAccepted") {
-//                console.log("user accepted");
+
+                // checking if the toUser is in lobby
                 if (onlineUsers[data.toUser] === undefined) {
-                    socket.emit("_error", "player no longer available");
+                    socket.emit("_error", "notInMpLobby");
+
                 } else {
 
-                    // todo decline all pending requests
+                    // todo decline all pending game requests
 
+                    // update data
                     onlineUsers[data.fromUser].setOpponent(data.toUser);
                     onlineUsers[data.toUser].setOpponent(data.fromUser);
 
@@ -136,12 +342,16 @@ function listen(io) {
                     onlineUsers[data.fromUser].setIsInGame(true);
                     onlineUsers[data.toUser].setIsInGame(true);
 
-                    // Signal both user that the game has been approved by the server
+                    // Signal both users that the game has been approved by the server
                     io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
                     io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
 
+                    // Send out online players' list
                     broadcastOnlinePlayers(socket);
                 }
+
+
+
             } else if (data.type === "requestDeclined") {
                 // updating status
                 onlineUsers[data.toUser].updateRequestStatus(data.fromUser, "declined");
@@ -149,6 +359,7 @@ function listen(io) {
                 // telling the client
                 io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestDeclined", data.fromUser);
             }
+
         });
 
 
@@ -157,27 +368,28 @@ function listen(io) {
         socket.on('move', function (data) {
 
             /*
-             The data should include the following:
-             
-             data = {
-             fromUser: username,
-             toUser: username,
-             move: object (to be decided data structure)
-             }
-             
-             todo:
-             - decide on a data structure
-             - send the move
-             
+             * The data should include the following:
+             * data = {
+             *      fromUser: username,
+             *      toUser: username,
+             *      move: object (to be decided data structure)
+             *  }
              */
 
-            /* Example: to send message to a specific socket id
-             
-             if (io.sockets.connected[socketid]) {
-             io.sockets.connected[socketid].emit('eventName', 'message for the user');
-             }
-             */
+            var fromUser = data.fromUser;
+            var toUser = data.toUser;
 
+            // ... todo fixme make moves
+
+            var toUserSocketID = onlineUsers[toUser].getSocketID();
+            io.sockets.connected[toUserSocketID].emit("move", "someMove"); // second param can be an object
+
+        });
+
+
+
+        socket.on('updateSocketIDForUser', function (data) {
+            updateDictionary(data, socket.id);
         });
 
 
@@ -185,19 +397,25 @@ function listen(io) {
         // Socket.io Event: Disconnect
         socket.on('disconnect', function () {
 
-            var username = socketIDtoUsername[socket.id];
-            var user = onlineUsers[username];
+            var user = onlineUsers[socketIDtoUsername[socket.id]];
 
             if (user === undefined) {
-                console.log("user left after server restart");
+                console.log("user left after server restarted");
+
             } else {
+                // set user to ofline
                 user.setIsOnline(false);
+
+                // delete data if the user is not back within time
                 setTimeout(function () {
-                    if (!user.isOnline()) { // User left (i.e. not a refresh)
+
+                    if (!user.isOnline()) {
+                        // User left (i.e. not a refresh)
                         removeUserFromDictionary(user.getUsername());
                         broadcastOnlinePlayers(socket);
                     }
-                }, 2000);
+
+                }, 1000);
             }
 
         });
@@ -207,44 +425,21 @@ function listen(io) {
 }
 
 
-function addUserOnDictionary(user, socketid) {
-    onlineUsers[user.getUsername()] = user;
-    socketIDtoUsername[socketid] = user.getUsername();
-}
 
-function updateDictionary(username, newSocketid) {
-
-    var user = onlineUsers[username];
-    var oldSocketID = user.getSocketID();
-
-    user.setSocketID(newSocketid);
-
-    delete(socketIDtoUsername[oldSocketID]);
-    socketIDtoUsername[newSocketid] = user.getUsername();
-
-}
-
-function removeUserFromDictionary(username) {
-
-    if (onlineUsers[username] === undefined) {
-        console.log("user left after server restart");
-    } else {
-        var user = onlineUsers[username];
-        var socketid = user.getSocketID();
-
-        // todo decline all game requests
-
-        delete(socketIDtoUsername[socketid]);
-        delete(onlineUsers[username]);
-    }
-
-}
-
+/**
+ * This function send the list of all online players (the onlineUsers variable) to 
+ * all sockets that are connected.
+ * 
+ * @param {object} socket - SocketIO object
+ */
 function broadcastOnlinePlayers(socket) {
     socket.emit("playerList", JSON.stringify(onlineUsers));
     socket.broadcast.emit("playerList", JSON.stringify(onlineUsers));
 }
 
+
+
+/**************************** Names for guest login ***************************/
 var names = [];
 
 function getName() {
@@ -289,6 +484,9 @@ function getName() {
 
     return name;
 }
+/***************************** End of guest names *****************************/
+
+
 
 module.exports = {
     listen: listen

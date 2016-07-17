@@ -13,13 +13,14 @@
     left: 0px;
     right: 0px;
     display: none;
-
-    z-index: 10;
+    z-index: 1
 }
 
 
 
-/********************* Session Expired Notification Style *********************/
+
+
+/************************ Session Expired Notification ************************/
 
 .sessionExpiredNotification {
 
@@ -29,16 +30,16 @@
     padding: 16px;
     margin: auto;
 
+    background: white;
+    box-shadow: 0px 0px 8px -0.5px grey;
+
+
     position: absolute;
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
 
-    background: white;
-    box-shadow: 0px 0px 8px -0.5px grey;
-
-    z-index: 20;
 }
 
 .sessionExpiredNotification-button {
@@ -60,25 +61,26 @@
 
 /*********************** Board Size Notificaiton Styles ***********************/
 
+
+/*************************** Board Size Notification **************************/
+
 .boardSizeNotification{
     width: 450px;
     height: 125px;
+
     padding: 16px;
-    /*border: 1pt solid black;*/
+    margin: auto;
+
     position: absolute;
-    background: white;
-
-    box-shadow: 0px 0px 8px -0.5px grey;
-
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
 
-    margin: auto;
+    background: white;
+    box-shadow: 0px 0px 8px -0.5px grey;
 
-    z-index: 15;
-
+    z-index: 2;
 }
 
 .boardSizeNotification h1{
@@ -86,14 +88,16 @@
     color: black;
 }
 
-.notification_button_general{
-    text-align: center;
+.notification_button_general {
     width: 100px;    
+
     padding: 16px 16px;
     margin: 8px;
-    /*border: 1pt solid black;*/
+
+    display: inline-block; 
     box-shadow: 0px 0px 8px -0.5px grey;
-    display: inline-block;
+
+    text-align: center;
 }
 
 .notification_button_general:hover {
@@ -102,4 +106,56 @@
 
 .notification_button_general:active {
     box-shadow: 0px 0px 4px -0.5px grey;
+}
+
+
+
+
+
+/*********************** Game in Progress Notification  ***********************/
+
+.leftGameInProgressNotification {
+    width: 450px;
+    height: 150px;
+
+    padding: 16px;
+    margin: auto;
+
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    box-shadow: 0px 0px 8px -0.5px grey;
+    background: white;
+
+    z-index: 2;
+}
+
+.leftGameInProgressNotification-button {
+    text-align: center;
+    width: 150px;    
+    padding: 16px 16px;
+    margin: 8px;
+    /*border: 1pt solid black;*/
+    box-shadow: 0px 0px 8px -0.5px grey;
+    display: inline-block;
+}
+
+.leftGameInProgressNotification-button:hover {
+    box-shadow: 0px 0px 16px -0.5px grey;
+}
+
+.leftGameInProgressNotification-button:active {
+    box-shadow: 0px 0px 4px -0.5px grey;
+}
+
+
+
+
+
+/******************************************************************************/
+.clearFloat{
+    clear: both;
 }

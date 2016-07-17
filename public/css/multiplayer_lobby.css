@@ -2,19 +2,6 @@ body {
     margin: 0px;
 }
 
-#screenLock {
-    background: gray;
-    opacity: 0.5;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    display: none;
-}
-
 .clearFloat{
     clear: both;
 }
@@ -23,67 +10,25 @@ body {
 
 
 
-/********************************/
+/******************************* Profile section ******************************/
 
-/*
-* Wrapper for the profile section
-*/
 .profile-wrapper {
     margin: 16px auto;
     padding: 16px;
     box-shadow: 0px 0px 8px -0.5px grey;
     text-align: center;
-    /*width: 50%;*/
     width: 500px;
 }
 
-
-/*
-* 
-*/
 #profile-username {
     display: inline;
 
 }
 
 
-/*
-* 
-*/
-#button_logout {
-    background: red;
-    border: none;
-    color: white;
-    font-size: 10pt;
-    margin: 4px;
-    padding: 6px;
-    width: 25%;
 
-}
+/**************************** Game request section ****************************/
 
-/*
-* 
-*/
-#button_logout:hover {
-    background: brown;	
-}
-
-/*
-* 
-*/
-#button_logout:active {
-    background: brown;
-    transform: translateY(4px);
-
-}
-
-
-/********************************/
-
-
-/*
-* 
-*/
 .gameRequests-wrapper {
     text-align: center;
 }
@@ -101,27 +46,9 @@ body {
 }
 
 .gameRequestsNotification p {
-    /*font-size: 14pt;*/
     margin-top: 0px;
     margin-bottom: 8px;
 }
-
-
-
-/*
-* 
-*/
-/*.gameRequests-wrapper h1{
-    font-size: 16pt;
-
-}*/
-
-/*
-* 
-*/
-/*.gameRequest-row {
-
-}*/
 
 .button_acceptRequest {
     color: white;
@@ -137,7 +64,6 @@ body {
 .button_acceptRequest:hover {
     background: darkgreen;
 }
-
 
 .button_declineRequest {
     color: white;
@@ -155,38 +81,25 @@ body {
 }
 
 
-/********************************/
 
+/******************************* Online Players *******************************/
 
-/*
-* 
-*/
 .onlinePlayers-wrapper {
+    width: 500px;
+
     margin: 16px auto;
     padding: 16px;
+
     box-shadow: 0px 0px 8px -0.5px grey;
-
-    width: 500px;
-    /*min-width: 500px;*/
-
-
 }
 
 .onlinePlayers-wrapper h1 {
     font-size: 16pt;
-
 }
 
-
-/*
-* 
-*/
 .onlinePlayers-row {
-    /*border-top: 1px solid black;*/
     display: block;
-    /*margin: 8px;*/
     padding: 8px;
-
 }
 
 .onlinePlayers-username {
@@ -211,68 +124,25 @@ body {
 }
 
 /*
-* JavaScript changes to this class after the "Send request" button
-* is clicked.
+* JavaScript changes to this class after the "Send request" button is clicked.
 */
 .button_requestSent {
     background: yellow;
     border: 1px solid black;
     cursor: default;
-    display: box;
+    display: inline-block;
+    float: right;
     padding: 8px;
     text-align: center;
     width: 120px;
-    display: inline-block;
-    width: 120px;
-    float: right;
 }
 
 .button_requestDecliend {
-    color: white;
     background: red;
+    color: white;
     display: inline-block;
+    float: right;
     padding: 8px;
     text-align: center;
     width: 120px;
-    float: right;
 }
-
-/********************************/
-
-
-#notificationCenter{
-
-}
-
-
-
-/*********************** Notification : user is in game ***********************/
-
-.leftGameInProgressNotification {
-    width: 200px;
-    margin: 0px auto;
-    margin-top: 32px;
-    box-shadow: 0px 0px 8px -0.5px grey;
-    padding: 12px;
-    background: white;
-}
-
-.leftGameInProgressNotification-button {
-
-}
-
-.leftGameInProgressNotification-button:hover {
-    box-shadow: 0px 0px 16px -0.5px grey;
-}
-
-
-
-
-
-/********************************/
-
-
-
-
-
-

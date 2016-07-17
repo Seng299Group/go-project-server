@@ -8,12 +8,10 @@ img {
 }
 
 #bodyWrapper{
-    
     height: 500px;
     margin: auto;
-    
+
     position: absolute;
-    
     top: 0;
     bottom: 0;
     left: 0;
