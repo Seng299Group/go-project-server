@@ -1,23 +1,22 @@
 
-var socket = io();
+/*
+ * JavasScript file that runs the GameView.html file
+ */
 
+// Variables
+var socket = io();
 var user;
 
 
 
+// Requesting user data
+socket.emit("userdataForUsername", sessionStorage.username);
 
-(function () {
-
-    // Rquesting user data
-    socket.emit("userdataForUsername", sessionStorage.username);
-
-    // onReceive user data
-    socket.on('userdataForUsername', function (data) {
-        sessionStorage.sessionID = data.__socketid;
-        user = data;
-    });
-
-})();
+// onReceive user data
+socket.on('userdataForUsername', function (data) {
+    sessionStorage.sessionID = data.__socketid;
+    user = data;
+});
 
 
 
@@ -28,14 +27,12 @@ if (sessionStorage.gameMode === "hotseat") {
 
         var boardSize = sessionStorage.boardSize;
 
+        // cleaning up variables
         delete(sessionStorage.gameMode);
         delete(sessionStorage.boardSize);
 
-        console.log("hotseat");
-
         // Model - The board
-        var myGameSpace = new GameSpace(boardSize); // todo game size
-        var player = 1;
+        var myGameSpace = new GameSpace(boardSize);
 
         // Controller - Game controller
         var gameController = new HotSeatGameController();
@@ -67,14 +64,14 @@ if (sessionStorage.gameMode === "hotseat") {
 
 } else if (sessionStorage.gameMode === "ai") {
 
-    (function () { // for packaging 
+    (function () {
 
         var boardSize = sessionStorage.boardSize;
         delete(sessionStorage.gameMode);
         delete(sessionStorage.boardSize);
 
         // Model - The board
-        var myGameSpace = new GameSpace(boardSize); // todo game size
+        var myGameSpace = new GameSpace(boardSize);
         var player = 1;
 
         // Controller - Game controller

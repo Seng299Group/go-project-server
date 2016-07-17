@@ -1,5 +1,3 @@
-//delete(sessionStorage.sessionID);
-//delete(sessionStorage.gameMode);
 
 function login() {
 
@@ -33,6 +31,11 @@ function login() {
 
 }
 
+/**
+ * This function is called when the user clicks the Quick play button
+ * 
+ * called from the onclick attribute of the button in index.html file
+ */
 function quickplay() {
     sessionStorage.isGuest = true;
     window.location.href = "/gameSelect.html";

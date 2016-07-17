@@ -1,12 +1,38 @@
 
+/**
+ * CSS independent notification builder.
+ * CSS can be added using JavaScript or jquery.
+ * See example for user.
+ * 
+ * 
+ * 
+ * Example:
+ * 
+ * // Create the builder object
+ * var nfBuilder = new NotificationBuilder();
+ * 
+ * // Create a button
+ * var myButton = nfBuilder.makeNotificationButton("button text", function () {  }); //takes onClick function
+ * 
+ * // Create the notification
+ * var myNotification = nfBuilder.makeNotification("title", "body text", myButton);
+ * 
+ * // Add CSS
+ * myNotification.attr("class", "myClass"); // jquery
+ * 
+ * // Add to the view
+ * $("body").append(myNotification);
+ * 
+ */
+
 class NotificationBuilder {
 
     /**
      * This method returns a notification (DOM object - div)
      * 
-     * @param {type} title - Title of the notification
-     * @param {type} body - Body of the notification
-     * @param {type} buttons - array of buttons made with the makeNotificationButton() function
+     * @param {string} title - Title of the notification
+     * @param {string} bodyText - Body of the notification
+     * @param {div} buttons - one or an array of buttons made with the makeNotificationButton() function
      * @returns {DOM object} - Div element: notification
      */
     makeNotification(title, bodyText, buttons) {
@@ -40,7 +66,7 @@ class NotificationBuilder {
      * 
      * @param {string} text - Text inside the button
      * @param {function} onClick - executes when the button is clicked
-     * @returns {DOM object - div}
+     * @returns {DOM object} div
      */
     makeNotificationButton(text, onClick) {
         var b = $(document.createElement('div'));
@@ -53,13 +79,13 @@ class NotificationBuilder {
     
     
     
-    /************************** Premade Notifications *************************/
+    
+    /************************* Pre-made Notifications *************************/
     getSessionExpiredNotification() {
         var nf;
         var title = "Session Expired";
         var msg = "Please return to the homepage";
         var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
-//            delete(sessionStorage.sessionID);
             sessionStorage.clear();
             window.location.href = "/";
         });

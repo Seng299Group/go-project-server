@@ -23,19 +23,18 @@
 
     width: 500px;
     height: 180px;
-    padding: 16px;
-    /*border: 1pt solid black;*/
-    position: absolute;
-    background: white;
 
+    padding: 16px;
+    margin: auto;
+
+    background: white;
     box-shadow: 0px 0px 8px -0.5px grey;
 
+    position: absolute;
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
-
-    margin: auto;
 
 }
 
@@ -61,22 +60,20 @@
 .boardSizeNotification{
     width: 450px;
     height: 125px;
+
     padding: 16px;
-    /*border: 1pt solid black;*/
+    margin: auto;
+
     position: absolute;
-    background: white;
-
-    box-shadow: 0px 0px 8px -0.5px grey;
-
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
 
-    margin: auto;
+    background: white;
+    box-shadow: 0px 0px 8px -0.5px grey;
 
     z-index: 2;
-
 }
 
 .boardSizeNotification h1{
@@ -85,13 +82,15 @@
 }
 
 .notification_button_general {
-    text-align: center;
     width: 100px;    
+
     padding: 16px 16px;
     margin: 8px;
-    /*border: 1pt solid black;*/
+
+    display: inline-block; 
     box-shadow: 0px 0px 8px -0.5px grey;
-    display: inline-block;
+
+    text-align: center;
 }
 
 .notification_button_general:hover {
@@ -111,19 +110,18 @@
 .leftGameInProgressNotification {
     width: 450px;
     height: 150px;
+
     padding: 16px;
-    /*border: 1pt solid black;*/
+    margin: auto;
+
     position: absolute;
-    background: white;
-
-    box-shadow: 0px 0px 8px -0.5px grey;
-
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
 
-    margin: auto;
+    box-shadow: 0px 0px 8px -0.5px grey;
+    background: white;
 
     z-index: 2;
 }

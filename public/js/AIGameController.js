@@ -31,7 +31,6 @@ class AIGameController extends GameController {
 				
 				if(aiMove.pass){
 					// AI passed
-					// todo: handle passes
 					this.__pass = true;
 					alert("The AI passed");
 				} else {
