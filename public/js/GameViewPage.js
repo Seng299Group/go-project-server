@@ -1,8 +1,33 @@
+
+var socket = io();
+
+var user;
+
+
+
+
+(function () {
+
+    // Rquesting user data
+    socket.emit("userdataForUsername", sessionStorage.username);
+
+    // onReceive user data
+    socket.on('userdataForUsername', function (data) {
+        sessionStorage.sessionID = data.__socketid;
+        user = data;
+    });
+
+})();
+
+
+
+// Game modes
 if (sessionStorage.gameMode === "hotseat") {
 
-    (function () { // for packaging
+    (function () {
 
         var boardSize = sessionStorage.boardSize;
+
         delete(sessionStorage.gameMode);
         delete(sessionStorage.boardSize);
 
@@ -83,23 +108,20 @@ if (sessionStorage.gameMode === "hotseat") {
 
 } else if (sessionStorage.gameMode === "network") {
 
-    (function () { // for packaging 
+    (function () {
+
         console.log("network game acting like hotseat");
 
-        var socket = io();
-        var user;
+        // requesting user data
+        socket.emit("userdata", sessionStorage.sessionID);
 
-        (function requestUserdata() {
-            socket.emit("userdata", sessionStorage.sessionID);
-        })();
-
+        // onReceive user data
         socket.on('userdata', function (data) {
             user = data;
             sessionStorage.sessionID = user.__socketid;
 
             render();
         });
-
 
         function render() {
             // todo fixme

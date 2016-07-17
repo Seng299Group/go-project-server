@@ -53,12 +53,14 @@ class NotificationBuilder {
     
     
     
+    /************************** Premade Notifications *************************/
     getSessionExpiredNotification() {
         var nf;
         var title = "Session Expired";
         var msg = "Please return to the homepage";
         var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
-            delete(sessionStorage.sessionID);
+//            delete(sessionStorage.sessionID);
+            sessionStorage.clear();
             window.location.href = "/";
         });
         button.addClass("sessionExpiredNotification-button");
@@ -66,6 +68,21 @@ class NotificationBuilder {
         nf = nfBuilder.makeNotification(title, msg, button); // todo remove nfBuilder and replace with this
         nf.addClass("sessionExpiredNotification");
 
+        return nf;
+    }
+    
+    getInGameNotification(){
+        var nf ;
+        var title = "You are currently in a game";
+        var msg = "Please return to the game";
+        var button = this.makeNotificationButton("Return to the game", function () {
+            window.location.href = "/GameView.html";
+        });
+        button.addClass("leftGameInProgressNotification-button");
+
+        nf = this.makeNotification(title, msg, button).attr("class", "boardSizeNotification");
+        nf.addClass("leftGameInProgressNotification");
+        
         return nf;
     }
     

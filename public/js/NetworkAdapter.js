@@ -38,15 +38,27 @@ class NetworkAdapter {
 		console.log("unimplemented method call");
 	}
 	
-	login(username, password){
+        /**
+         * @param {string} username
+         * @param {string} password
+         * @param {function} callback - function that is called when server responds with authentication results
+         */
+	login(username, password, callback){
 //          console.log("unimplemented method call");
             var socket = io();
+
+            // sending data to server to authenticate
             socket.emit("accountLogin", {username: username, password: password});
-//            console.log(username + " " + password);
-	}
-	
-	lookForGame(){
-		console.log("unimplemented method call");
+            
+            // Login succeeded
+            socket.on("loginSucceeded", function(){
+                callback(true, socket.id);
+            });
+            
+            // Login failed
+            socket.on("loginFailed", function(){
+                callback(false, null);
+            });
 	}
 	
 }

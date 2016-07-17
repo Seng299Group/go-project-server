@@ -2,6 +2,7 @@
 var User = require("./User.js");
 var db = require("./DatabaseAdapter.js");
 
+var verbose_updateDictionary = false;
 
 
 /*
@@ -71,7 +72,7 @@ function listen(io) {
             newUser.setSocketID(socket.id);
 
             // add user in dictionary
-            addUserOnDictionary(newUser, socket.id);
+            addUserInDictionary(newUser, socket.id);
 
             // respond
             socket.emit('guestLogin', newUser);
@@ -93,13 +94,61 @@ function listen(io) {
             var authSucess = db.authenticate(data.username, data.password);
 
             if (authSucess) {
-                console.log("suc");
-                socket.emit("loginSucceeded");
+
+                // get user data
+                var user = db.getUserData(data.username);
+
+                // init socket id
+                user.setSocketID(socket.id);
+
+                // add user in dictionary
+                addUserInDictionary(user, socket.id);
+
+                // respond
+                socket.emit("loginSucceeded", user);
+
             } else {
                 console.log("login failed. login request:");
                 console.log(data);
                 socket.emit("loginFailed");
             }
+
+        });
+
+
+
+        socket.on('userdataForUsername', function (username) {
+
+//            console.log(username);
+            var user = onlineUsers[username];
+
+            if (user === undefined) {
+                socket.emit("_error", "sessionExpired");
+            } else {
+                user.setSocketID(socket.id);
+
+                user.setIsOnline(true);
+                updateDictionary(username, socket.id);
+
+                socket.emit("userdataForUsername", user);
+//                broadcastOnlinePlayers(socket);
+            }
+
+//            var oldSocketID = data;
+//            var username = socketIDtoUsername[oldSocketID];
+//            var user = onlineUsers[username];
+//            var newSocketID = socket.id;
+//
+//            if (user === undefined) {
+//                socket.emit("_error", "sessionExpired");
+//            } else {
+//                user.setIsOnline(true);
+//                updateDictionary(username, newSocketID);
+//
+//                socket.emit("userdata", user);
+//                broadcastOnlinePlayers(socket);
+//            }
+
 
         });
 
@@ -209,6 +258,16 @@ function listen(io) {
 
 
 
+        socket.on('updateSocketIDForUser', function (data) {
+            console.log("data <<");
+            console.log(data);
+            console.log(">> data");
+            updateDictionary(data, socket.id);
+            console.log(onlineUsers);
+        });
+
+
+
         // Socket.io Event: Disconnect
         socket.on('disconnect', function () {
 
@@ -234,12 +293,27 @@ function listen(io) {
 }
 
 
-function addUserOnDictionary(user, socketid) {
+function addUserInDictionary(user, socketid) {
+
+    if (verbose_updateDictionary) {
+        console.log("befoer add");
+        console.log(onlineUsers);
+    }
+
     onlineUsers[user.getUsername()] = user;
     socketIDtoUsername[socketid] = user.getUsername();
+
+    if (verbose_updateDictionary) {
+        console.log("after add");
+        console.log(onlineUsers);
+    }
 }
 
 function updateDictionary(username, newSocketid) {
+    if (verbose_updateDictionary) {
+        console.log("before update");
+        console.log(onlineUsers);
+    }
 
     var user = onlineUsers[username];
     var oldSocketID = user.getSocketID();
@@ -249,9 +323,18 @@ function updateDictionary(username, newSocketid) {
     delete(socketIDtoUsername[oldSocketID]);
     socketIDtoUsername[newSocketid] = user.getUsername();
 
+    if (verbose_updateDictionary) {
+        console.log("after update");
+        console.log(onlineUsers);
+    }
+
 }
 
 function removeUserFromDictionary(username) {
+    if (verbose_updateDictionary) {
+        console.log("before remove");
+        console.log(onlineUsers);
+    }
 
     if (onlineUsers[username] === undefined) {
         console.log("user left after server restart");
@@ -263,6 +346,11 @@ function removeUserFromDictionary(username) {
 
         delete(socketIDtoUsername[socketid]);
         delete(onlineUsers[username]);
+    }
+
+    if (verbose_updateDictionary) {
+        console.log("after remove");
+        console.log(onlineUsers);
     }
 
 }

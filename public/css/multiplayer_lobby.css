@@ -2,19 +2,6 @@ body {
     margin: 0px;
 }
 
-#screenLock {
-    background: gray;
-    opacity: 0.5;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    display: none;
-}
-
 .clearFloat{
     clear: both;
 }
@@ -243,36 +230,3 @@ body {
 #notificationCenter{
 
 }
-
-
-
-/*********************** Notification : user is in game ***********************/
-
-.leftGameInProgressNotification {
-    width: 200px;
-    margin: 0px auto;
-    margin-top: 32px;
-    box-shadow: 0px 0px 8px -0.5px grey;
-    padding: 12px;
-    background: white;
-}
-
-.leftGameInProgressNotification-button {
-
-}
-
-.leftGameInProgressNotification-button:hover {
-    box-shadow: 0px 0px 16px -0.5px grey;
-}
-
-
-
-
-
-/********************************/
-
-
-
-
-
-

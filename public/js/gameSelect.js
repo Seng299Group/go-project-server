@@ -1,70 +1,37 @@
-// Guest log in
-
-// call server
 
 var socket = io();
+
 var user;
 
-if (sessionStorage.sessionID === undefined) { // new user
-
-    (function () { // for pacakaging
-        socket.emit('guestLogin', 'guest login');
-
-        socket.on('guestLogin', function (data) {
-            console.log(data);
-            sessionStorage.sessionID = data.__socketid;
-            user = data;
-        });
-    })();
 
 
-} else { // 
 
-    (function () { // for pacakaging
-        socket.emit("userdata", sessionStorage.sessionID);
 
-        socket.on('userdata', function (data) {
-//        sessionStorage.sessionID = data.__socketid;
-            user = data;
+if (sessionStorage.isGuest === "true") {
 
-            if (user.__isInGame === true) {
+    if (sessionStorage.username === undefined) {
+        // Guest and first time landing on this page
+        // therefore, do a guest login
+        requestNewGuestLogin();
+    } else {
+        // Redirected to this page or refresh
+        // therefore, request user data
+        requestUserData(sessionStorage.username);
+    }
 
-                var nfBuilder = new NotificationBuilder();
-
-                var nf;
-
-                var title = "You are currently in a game";
-                var msg = "Please return to the game";
-                var button = nfBuilder.makeNotificationButton("Return to the game", function () {
-                    window.location.href = "/GameView.html";
-                });
-                button.addClass("leftGameInProgressNotification-button");
-
-                nf = nfBuilder.makeNotification(title, msg, button);
-                nf.addClass("leftGameInProgressNotification");
-
-                nf.appendTo("body");
-            }
-
-        });
-    })();
-
+} else if (sessionStorage.isGuest === "false") {
+    // user logged in using username and password
+    // therefore, request user data
+    requestUserData(sessionStorage.username);
 }
 
+
+
+
+
+/******************************** Button clicks *******************************/
+
 $("#button-hotseat").click(function () {
-
-
-
-
-//
-//    var nf = (new NotificationBuilder()).getBoardSizePickerNotification();
-//    $("#notificationCenter").append(nf);
-//
-//    $("#notification-screenLock").css("display", "block");
-//
-//    sessionStorage.gameMode = "hotseat";
-//    sessionStorage.boardSize = "hotseat";
-
     sessionStorage.gameMode = "hotseat";
     showBoardSizePickerNotification();
 });
@@ -81,15 +48,10 @@ $("#button-network").click(function () {
 
 
 
-function applyScreenLock() {
-    $("#notification-screenLock").css("display", "block");
-}
-
-function removeScreenLock() {
-    $("#notification-screenLock").css("display", "none");
-}
+/************************* DOM Manipulating functions *************************/
 
 function showBoardSizePickerNotification() {
+
     var nfBuilder = new NotificationBuilder();
 
     var notification;
@@ -116,4 +78,46 @@ function showBoardSizePickerNotification() {
     applyScreenLock();
     $("#notificationCenter").append(notification);
 
+}
+
+function applyScreenLock() {
+    $("#notification-screenLock").css("display", "block");
+}
+
+function removeScreenLock() {
+    $("#notification-screenLock").css("display", "none");
+}
+
+function violatingFlow() {
+    console.log("viloating flow. session isStorage is undefined");
+    alert("viloating flow"); // for dev purposes // todo remove
+    // todo session expired
+}
+
+function requestNewGuestLogin() {
+    socket.emit('guestLogin', 'guest login');
+    socket.on('guestLogin', function (data) {
+        console.log(data);
+        user = data;
+        sessionStorage.username = user.__username;
+        sessionStorage.sessionID = user.__socketid;
+    });
+}
+
+function requestUserData(username) {
+
+    socket.emit("userdataForUsername", username);
+
+    socket.on('userdataForUsername', function (data) {
+        sessionStorage.sessionID = data.__socketid; // todo clean
+        user = data;
+
+        if (user.__isInGame === true) {
+            applyScreenLock();
+            var nfBuilder = new NotificationBuilder();
+            var nf = nfBuilder.getInGameNotification();
+            $("#notificationCenter").append(nf);
+        }
+
+    });
 }

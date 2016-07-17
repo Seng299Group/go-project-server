@@ -103,8 +103,7 @@ function onReceivedPlayerList(playerList) {
 /**
  * Creates a button to challenge a user
  *
- * @param {object} forUser - User object (follows server-side
- *											User object standards)
+ * @param {object} forUser - User object (follows server-side User object standards)
  */
 function makeInvitationButton(forUser) {
 
@@ -154,9 +153,6 @@ function makeInvitationButton(forUser) {
 
         $("#notificationCenter").append(notification);
 
-        // Updating UI to notify the user that the game invitation was sent
-//        $(this).replaceWith(getInvitationSentButton());
-
     });
 
     return reqButton;
@@ -171,11 +167,11 @@ function showLobbyBody() {
 }
 
 function applyScreenLock() {
-    $("#screenLock").css("display", "block");
+    $("#notification-screenLock").css("display", "block");
 }
 
 function removeScreenLock() {
-    $("#screenLock").css("display", "none");
+    $("#notification-screenLock").css("display", "none");
 }
 
 function getInvitationSentButton(toUser) {
@@ -292,22 +288,6 @@ function showPendingGameRequests() {
     console.log("pending game requests"); // todo show pending game requests here
 }
 
-//function notifySessionExpired() {
-//
-//    var nf;
-//    var title = "Session Expired";
-//    var msg = "Please return to the homepage";
-//    var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
-//        delete(sessionStorage.sessionID);
-//        window.location.href = "/";
-//    });
-//    button.addClass("sessionExpiredNotification-button");
-//
-//    nf = nfBuilder.makeNotification(title, msg, button);
-//    nf.addClass("sessionExpiredNotification");
-//
-//    $("#notificationCenter").append(nf);
-//}
 
 
 
@@ -326,6 +306,13 @@ function showPendingGameRequests() {
 socket.on('userdata', function (data) {
     user = data;
     sessionStorage.sessionID = user.__socketid;
+    
+    if(user.__isInGame){
+        applyScreenLock();
+        var nf = nfBuilder.getInGameNotification();
+        $("#notificationCenter").append(nf);
+    }
+    
     decorateProfile();
     showPendingGameRequests();
 });
@@ -367,11 +354,9 @@ socket.on('_error', function (data) {
     } else if (data === "sessionExpired") {
         hideLobbyBody();
 
-        var nfBuilder = new NotificationBuilder();
+        
         var nf = nfBuilder.getSessionExpiredNotification();
         nf.appendTo("body");
-
-//        notifySessionExpired();
     } else {
         console.log(data);
     }
@@ -379,13 +364,6 @@ socket.on('_error', function (data) {
 
 
 /********************************* Functions **********************************/
-
-/**
- * @param {object} data - { toUser: username, fromUser: username}
- */
-//function inviteToGame(data) {
-//    socket.emit("gameRequest", data);
-//}
 
 /**
  * This function requests server for user data
