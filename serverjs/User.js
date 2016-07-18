@@ -39,6 +39,7 @@ class User {
         this.__isOnline = true;
         this.__boardSize = 0;
         this.__isInGame = false;
+        this.__playerNumber = null;
     }
 
         getUsername(){
@@ -95,6 +96,14 @@ class User {
 
         getIsInGame(){
             return this.__isInGame;
+        }
+
+        setPlayerNumber(number){
+            this.__playerNumber = number;
+        }
+
+        getPlayerNumber(){
+            return this.__playerNumber;
         }
 
 }
