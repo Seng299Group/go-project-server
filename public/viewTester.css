@@ -1,16 +1,88 @@
+#sideBar{
+  
+	background: orange;
+	width: 350px;
+	height: 100%;
+	position: absolute;
+	right: 0;
+	box-shadow: 0px 0px 20px #000000;
+	border-left: solid;
+}
 #settingsBar {
+	
 	height: 80%;
 	width: 25%;
-	position: fixed;
 	z-index: 1;
-}
+	position: absolute;
+    right: 30px;
+	top:130px;
 
+}
+#canvas {
+	
+	position: absolute;
+    left: 180px;
+	top:10px;
+  
+}
+#pass{
+	
+	position: absolute;
+    left: 213px;
+	top:620px;
+}
+#c2{
+	position: absolute;
+    left: 0px;
+	top:20px;
+	
+}
+#p2{
+	position: absolute;
+    left: 20px;
+	top:50px;
+}
+#c1{
+	position: absolute;
+    left: 780px;
+	top:390px;
+}
+#p1{
+	position: absolute;
+    left: 800px;
+	top:420px;
+}
 #showBar {
 	background-color: green;
 	height: 15%;
 	width: 100%;
 	border-radius: 25px;
 	text-align: center;
+}
+.circle1{
+	width: 160px;
+	height: 140px;
+	border-radius: 80px;
+	-webkit-border-radius: 80px;
+	-moz-border-radius: 80px;
+	background: url("black-go-bowl.png") no-repeat;
+	}
+.circle2{
+	width: 160px;
+	height: 140px;
+	border-radius: 80px;
+	-webkit-border-radius: 80px;
+	-moz-border-radius: 80px;
+	background: url("white-go-bowl.png") no-repeat;
+	}
+.bowl{
+ 
+	width:  150px;
+    height: 131.25px;
+    background-position: 50% 50%;
+    background-repeat:   no-repeat;
+    background-size:     cover;
+	
 }
 .colourButton{
 	background-color: gray;
