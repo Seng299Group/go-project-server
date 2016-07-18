@@ -66,7 +66,7 @@ if (sessionStorage.gameMode === "hotseat") {
 
     (function () {
 
-        var boardSize = sessionStorage.boardSize;
+        var boardSize = parseInt(sessionStorage.boardSize);
         delete(sessionStorage.gameMode);
         delete(sessionStorage.boardSize);
 

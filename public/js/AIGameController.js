@@ -37,7 +37,7 @@ class AIGameController extends GameController {
 					var aiValid = _this.__gameSpace.placeToken(aiMove.c, aiMove.y, aiMove.x); // temporary fix: x=y and y=x
 					if (!aiValid){
 						// AI's move was not accepted by the placeToken() method
-						log("AI made an invalid move");
+						console.log("AI made an invalid move");
 					}
 				}
 				
