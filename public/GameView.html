@@ -1,6 +1,7 @@
 <html>
     <head>
-        <title></title>
+        <title>Go</title>
+        <link href="css/NotificationBuilder.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
 
@@ -10,116 +11,21 @@
             </div>
         </div>
 
-        <script src="js/utils.js" type="text/javascript"></script>
         <script src="js/jquery.min.js" type="text/javascript"></script>
         <script src="/socket.io/socket.io.js"></script>
+        <script src="js/NotificationBuilder.js" type="text/javascript"></script>
         <script src="js/svgFactory.js" type="text/javascript"></script>
         <script src="js/GameController.js" type="text/javascript"></script>
+        <script src="js/NetworkAdapter.js" type="text/javascript"></script>
+        <!--todo add the network game controller here-->
+        <script src="js/AIGameController.js" type="text/javascript"></script>
         <script src="js/HotSeatGameController.js" type="text/javascript"></script>
         <script src="js/gameboard.js" type="text/javascript"></script>
         <script src="js/gamespace.js" type="text/javascript"></script>
         <script src="js/View.js" type="text/javascript"></script>
 
-        <script>
-
-            if (sessionStorage.gameMode === "hotseat") {
-                // Model - The board
-                var myGameSpace = new GameSpace(9);
-                var player = 1;
-
-                // Controller - Game controller
-                var gameController = new HotSeatGameController();
-
-                // View
-                var view = new View();
-
-                view.setGameSpace(myGameSpace);
-                view.setController(gameController);
-                view.init();
-                view.draw(); // Draws the empty board
-
-                gameController.setGameSpace(myGameSpace);
-                gameController.setView(view);
-
-                $("#canvas").click(function (e) {
-                    // Clicked coordinates
-                    var x = e.pageX - $(this).offset().left;
-                    var y = e.pageY - $(this).offset().top;
-
-                    view.onBoardClick(x, y);
-                });
-
-
-
-
-
-            } else if (sessionStorage.gameMode === "ai") {
-                console.log("ai game play");
-
-
-
-
-
-            } else if (sessionStorage.gameMode === "network") {
-
-                var socket = io();
-                var user;
-
-                (function requestUserdata() {
-                    socket.emit("userdata", sessionStorage.sessionID);
-                })();
-
-                socket.on('userdata', function (data) {
-                    user = data;
-                    sessionStorage.sessionID = user.__socketid;
-
-                    render();
-                });
-
-
-                function render() {
-                    // todo fixme
-                    // change from hotseat to network
-
-                    // fixme note: the "user" variable has __username and __opponent
-
-                    // Model - The board
-                    console.log(user);
-                    var myGameSpace = new GameSpace(user.__boardSize);
-                    var player = 1;
-
-                    // Controller - Game controller
-                    var gameController = new HotSeatGameController();
-
-
-                    // View
-                    var view = new View();
-
-                    view.setGameSpace(myGameSpace);
-                    view.setController(gameController);
-                    view.init();
-                    view.draw(); // Draws the empty board
-
-                    gameController.setGameSpace(myGameSpace);
-                    gameController.setView(view);
-
-                    $("#canvas").click(function (e) {
-                        // Clicked coordinates
-                        var x = e.pageX - $(this).offset().left;
-                        var y = e.pageY - $(this).offset().top;
-
-                        view.onBoardClick(x, y);
-                    });
-                }
-
-
-
-
-            } else {
-                console.log("gamemode not specified. Reasons: bookmarked or manually typed in the url");
-            }
-
-        </script>
+        <!--Different game modes are controlled from here-->
+        <script src="js/GameViewPage.js" type="text/javascript"></script>
 
     </body>
 </html>

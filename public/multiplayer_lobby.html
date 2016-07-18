@@ -1,40 +1,41 @@
 <html>
 
     <head>
-        <title>MP Lobby</title>
-        <link href="multiplayer_lobby.css" rel="stylesheet" type="text/css"/>
+        <title>Multiplayer Lobby</title>
+        <link href="css/multiplayer_lobby.css" rel="stylesheet" type="text/css"/>
+        <link href="css/NotificationBuilder.css" rel="stylesheet" type="text/css"/>
     </head>
 
     <body>
 
-        <div id="notificationCenter">
-
-        </div>
+        <div id="notificationCenter"></div>
+        
+        <!--
+        the gray screen on top of which the notification appears
+        this div also prevents clicks to the body when active
+        --> 
+        <div id="notification-screenLock"></div>
 
         <div id="lobbyBody">
 
             <!-- Profile section -->
             <div id="profile-wrapper" class="profile-wrapper">
-                Logged in as:
-                <div id="profile-username"></div>
-                <br>
-                <button id="button_logout" onclick="onLogoutButtonPress()">Logout</button>
+                Logged in as: <div id="profile-username"></div>
             </div>
+
+
 
             <!-- Game request section -->
             <div id="gameRequests-wrapper" class="gameRequests-wrapper">
-                <h1>Game Requests</h1>
-                <div id="gameRequests-list">
 
-                </div>
             </div>
+
+
 
             <!-- Online players' section -->
             <div id="onlinePlayers-wrapper" class="onlinePlayers-wrapper">
                 <h1>Online Players</h1>
-                <div id="onlinePlayers-list">
-
-                </div>
+                <div id="onlinePlayers-list"></div>
             </div>
 
         </div>

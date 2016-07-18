@@ -1,0 +1,148 @@
+body {
+    margin: 0px;
+}
+
+.clearFloat{
+    clear: both;
+}
+
+
+
+
+
+/******************************* Profile section ******************************/
+
+.profile-wrapper {
+    margin: 16px auto;
+    padding: 16px;
+    box-shadow: 0px 0px 8px -0.5px grey;
+    text-align: center;
+    width: 500px;
+}
+
+#profile-username {
+    display: inline;
+
+}
+
+
+
+/**************************** Game request section ****************************/
+
+.gameRequests-wrapper {
+    text-align: center;
+}
+
+.gameRequestsNotification {
+    margin: 16px auto;
+    width: 500px;
+    box-shadow: 0px 0px 8px -0.5px grey;
+    padding: 8px 16px;
+}
+
+.gameRequestsNotification h1 {
+    font-size: 14pt;
+    margin: 0px;
+}
+
+.gameRequestsNotification p {
+    margin-top: 0px;
+    margin-bottom: 8px;
+}
+
+.button_acceptRequest {
+    color: white;
+    background: green;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px;
+    text-align: center;
+    width: 100px;
+    margin: 0px 4px;
+}
+
+.button_acceptRequest:hover {
+    background: darkgreen;
+}
+
+.button_declineRequest {
+    color: white;
+    background: red;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px;
+    text-align: center;
+    width: 100px;
+    margin: 0px 4px;
+}
+
+.button_declineRequest:hover {
+    background: darkred;
+}
+
+
+
+/******************************* Online Players *******************************/
+
+.onlinePlayers-wrapper {
+    width: 500px;
+
+    margin: 16px auto;
+    padding: 16px;
+
+    box-shadow: 0px 0px 8px -0.5px grey;
+}
+
+.onlinePlayers-wrapper h1 {
+    font-size: 16pt;
+}
+
+.onlinePlayers-row {
+    display: block;
+    padding: 8px;
+}
+
+.onlinePlayers-username {
+    display: inline-block;
+    float: left;
+    padding: 8px;
+}
+
+.button_sendRequest {
+    color: white;
+    background: green;
+    cursor: pointer;
+    display: inline-block;
+    padding: 8px;
+    text-align: center;
+    width: 120px;
+    float: right;
+}
+
+.button_sendRequest:hover {
+    background: darkgreen;
+}
+
+/*
+* JavaScript changes to this class after the "Send request" button is clicked.
+*/
+.button_requestSent {
+    background: yellow;
+    border: 1px solid black;
+    cursor: default;
+    display: inline-block;
+    float: right;
+    padding: 8px;
+    text-align: center;
+    width: 120px;
+}
+
+.button_requestDecliend {
+    background: red;
+    color: white;
+    display: inline-block;
+    float: right;
+    padding: 8px;
+    text-align: center;
+    width: 120px;
+}
