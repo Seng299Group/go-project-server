@@ -132,7 +132,7 @@ if (sessionStorage.gameMode === "hotseat") {
             var player = 1;
 
             // Controller - Game controller
-            var gameController = new HotSeatGameController();
+            var gameController = new NetworkGameController(socket);
 
 
             // View
