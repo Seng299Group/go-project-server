@@ -8,10 +8,10 @@ var verbose_updateDictionary = false;
 
 
 /************************ The Online Users' Dictionary *************************
- * Variables: 
+ * Variables:
  *      onlineUsers             - List that maintains users that are online
  *      socketIDtoUsername      - List to lookup username given socketID
- * 
+ *
  * functions:
  *      addUserInDictionary()       - Adds a new user in the dictionary
  *      updateDictionary()          - Updates relevant data to maintain the structure
@@ -20,10 +20,10 @@ var verbose_updateDictionary = false;
 
 /*
  * List of users that are currently online.
- * 
+ *
  * The variable should only contain "User" instances.
  * See the User data structure in "./serverjs/User.js"
- * 
+ *
  * var onlineUsers = {
  *		{string} username1: {object} User1,
  *		{string} username2: {object} User2,
@@ -51,7 +51,7 @@ var socketIDtoUsername = {};
 
 /**
  * This function adds a User object instance to the data structure.
- * 
+ *
  * @param {object} user - a User object
  * @param {string} socketid
  */
@@ -73,7 +73,7 @@ function addUserInDictionary(user, socketid) {
 
 /**
  * This function updates all relationships between variables to maintain the data structure
- * 
+ *
  * @param {string} username
  * @param {string} newSocketid
  */
@@ -100,7 +100,7 @@ function updateDictionary(username, newSocketid) {
 
 /**
  * This function removes relationships and user from the server
- * 
+ *
  * @param {string} username
  */
 function removeUserFromDictionary(username) {
@@ -143,34 +143,34 @@ function removeUserFromDictionary(username) {
  *******************************************************************************
  *
  * -------------------- List of events triggered on server ---------------------
- * 
+ *
  *  newPlayer       - when client connects and sends its username
  *  gameRequest     - when the server receives a game request from a client
  *  move            - when user makes a move
  *  disconnect      - Socket.io event. When a user disconnects
- * 
+ *
  *  guestLogin               - user did not logged in (i.e. guest)
  *  accountLogin             - user logged in with username and password
  *  userdataForUsername      - user data request given username
  *  userdata                 - user data request given socketid
- * 
+ *
  *  gameRequest
  * 	sendRequest         - when a client sends a game request to another client
  * 	requestAccepted     - when a client accepts a game request
  * 	requestDeclined     - when a client declines a game request
- * 	
+ *
  *  move                     - relay moves during network game
  *  updateSocketIDForUser    - called when socket id needs to be updates. (see more doc below)
- * 
- * 
- * 
+ *
+ *
+ *
  * ------------ List of events triggered by the server to the client -----------
  *
  *  gameRequest             - to let client know
  *      sendRequest
  *      requestAccepted
  *      requestDeclined
- *  
+ *
  *  loginSucceeded          - when user login is successful
  *  loginFailed             - when user login fails
  *  playerList              - to send client(s) all users that are in mp-lobby
@@ -181,7 +181,7 @@ function removeUserFromDictionary(username) {
  *                              Reasons: bookmarked page or data loss (fast frequent refreshes)
  *  	notInMpLobby        - when user is no longer in the lobby.
  *                              Reasons: went back to other pages or left the server completely
- * 
+ *
  *******************************************************************************/
 
 function listen(io) {
@@ -218,32 +218,32 @@ function listen(io) {
              */
 
             // Authenticate login
-            var authSucess = db.authenticate(data.username, data.password);
+            db.authenticate(data.username, data.password, function(authSucess) {
+              if (authSucess) {
+                  // get user data
+                  var user = db.getUserData(data.username);
 
-            if (authSucess) {
+                  // init socket id
+                  user.setSocketID(socket.id);
 
-                // get user data
-                var user = db.getUserData(data.username);
+                  // add user in dictionary
+                  addUserInDictionary(user, socket.id);
 
-                // init socket id
-                user.setSocketID(socket.id);
+                  // respond
+                  socket.emit("loginSucceeded", user);
 
-                // add user in dictionary
-                addUserInDictionary(user, socket.id);
-
-                // respond
-                socket.emit("loginSucceeded", user);
-
-            } else {
-                // respond that login failed
-                console.log("login failed. login request:");
-                console.log(data);
-                socket.emit("loginFailed");
-            }
-
+              } else {
+                  // respond that login failed
+                  console.log("login failed. login request:");
+                  console.log(data);
+                  socket.emit("loginFailed");
+              }
+            });
         });
 
-
+        socket.on('newAccount',  function(data){
+          //implement
+        });
 
         /**
          * Currently used from the game selection page
@@ -269,7 +269,7 @@ function listen(io) {
 
         /**
          * Currently used in multiplayer lobby
-         * 
+         *
          * Sends user data to requester, updates dictionary,
          * and finally sends online users' list to all active users in lobby.
          */
@@ -427,9 +427,9 @@ function listen(io) {
 
 
 /**
- * This function send the list of all online players (the onlineUsers variable) to 
+ * This function send the list of all online players (the onlineUsers variable) to
  * all sockets that are connected.
- * 
+ *
  * @param {object} socket - SocketIO object
  */
 function broadcastOnlinePlayers(socket) {

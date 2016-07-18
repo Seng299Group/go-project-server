@@ -6,7 +6,7 @@ function login() {
     // jquery's  .val() sanitizes inputs
 
     if (username === "" || password === "") {
-        alert("Please enter your username and password");
+      $('#login-err').html("Please enter your username and password");
     } else {
 
         (new NetworkAdapter()).login(username, password, onRes);
@@ -23,7 +23,7 @@ function login() {
                 window.location.href = "/gameSelect.html";
             } else {
                 // Login failed
-                alert("Incorrect username or password");
+                $("#login-err").html('Invalid username or password');
             }
         }
 
@@ -33,7 +33,7 @@ function login() {
 
 /**
  * This function is called when the user clicks the Quick play button
- * 
+ *
  * called from the onclick attribute of the button in index.html file
  */
 function quickplay() {
