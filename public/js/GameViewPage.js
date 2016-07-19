@@ -44,7 +44,7 @@ if (sessionStorage.gameMode === "hotseat") {
         view.setController(gameController);
         view.init();
         view.draw(); // Draws the empty board
-		//view.drawButtons();
+		view.drawButtons();
 
         gameController.setGameSpace(myGameSpace);
         gameController.setView(view);
