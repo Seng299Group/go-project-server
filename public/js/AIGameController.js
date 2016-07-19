@@ -31,8 +31,8 @@ class AIGameController extends GameController {
 				
 				if(aiMove.pass){
 					// AI passed
-					// todo: handle passes
-					log("The AI passed (did not place any token)");
+					this.__pass = true;
+					alert("The AI passed");
 				} else {
 					var aiValid = _this.__gameSpace.placeToken(aiMove.c, aiMove.y, aiMove.x); // temporary fix: x=y and y=x
 					if (!aiValid){
@@ -46,13 +46,37 @@ class AIGameController extends GameController {
 			});
 			
 		} else {
-			// todo: notify user that the move was not accepted
-			// and ask to try again.
+			alert("Invalid Move!");
 		}
 	}
 	
 	pass(){
-		console.log("unimplemented method call");
+		var _this = this;
+		if(this.__pass){
+			this.__gameSpace.declareWinner();
+			window.location.href = "winnerPage.html";
+		}else{
+			this.__gameSpace.__lastMove.pass = true;
+			this.__networkAdapter.getAIMove(this.__gameSpace.size, this.__gameSpace.getGrid(), this.__gameSpace.getLastMove(), function(res){
+				
+				var aiMove = JSON.parse(res);
+				console.log(aiMove);
+				
+				if(aiMove.pass){
+					_this.__gameSpace.declareWinner();
+					window.location.href = "winnerPage.html";
+				} else {
+					var aiValid = _this.__gameSpace.placeToken(aiMove.c, aiMove.y, aiMove.x); // temporary fix: x=y and y=x
+					if (!aiValid){
+						// AI's move was not accepted by the placeToken() method
+						log("AI made an invalid move");
+					}
+				}
+				
+				// Draw the AI made move
+				_this.__view.draw();
+			});
+		};
 	}
 	
 	resign(){

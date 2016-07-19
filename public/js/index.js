@@ -7,6 +7,7 @@ function login() {
 
     if (username === "" || password === "") {
       $('#login-err').html("Please enter your username and password");
+
     } else {
 
         (new NetworkAdapter()).login(username, password, onRes);
@@ -23,7 +24,9 @@ function login() {
                 window.location.href = "/gameSelect.html";
             } else {
                 // Login failed
+
                 $("#login-err").html('Invalid username or password');
+
             }
         }
 
@@ -33,10 +36,18 @@ function login() {
 
 /**
  * This function is called when the user clicks the Quick play button
+<<<<<<< HEAD
  *
+=======
+ * 
+>>>>>>> master
  * called from the onclick attribute of the button in index.html file
  */
 function quickplay() {
     sessionStorage.isGuest = true;
     window.location.href = "/gameSelect.html";
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

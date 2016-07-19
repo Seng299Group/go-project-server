@@ -5,8 +5,16 @@ var express = require("express");
 var bodyParser = require("body-parser");
 
 var app = express();
+var server = http.createServer(app);
+var io = require("socket.io").listen(server);
+
 app.use(express.static("public"));
 app.use(bodyParser.json());
+
+
+
+var User = require("./serverjs/User.js");
+var NetworkAdapter = require("./serverjs/NetworkAdapter.js");
 
 
 
@@ -24,67 +32,51 @@ app.get("/ai", function (req, res) {
     res.sendfile("public/aiTester.html");
 });
 
+app.get("/mp", function (req, res) {
+    res.sendfile("public/multiplayer_lobby.html");
+});
+
+
+
+
+
 app.post("/ai", function (req, res) {
-	
-	var userid = req.body.userid; // for user specific actions
 	
 	var postData = {
         "size": req.body.size,
         "board": req.body.board,
         "last": req.body.last
     };
-
-    var option = {
-        host: "roberts.seng.uvic.ca",
-        port: "30000",
-        path: "/ai/maxLibs",
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    };
-
-    var cb_onGOAIServerResponse = function (response) {
-        var str = "";
-		
-        response.on('data', function (chunk) {
-            str += chunk;
-        });
-
-        response.on("end", function () {
-			// if the response is "Invalid request format."
-            if (str === "Invalid request format.") {
-                // Log and respond with an error
-				console.log("Invalid request format. Request: \n" + JSON.stringify(postData) + "\n");
-                res.status(400).json(postData);
-            } else {
-				// callback with the full response
-                res.json(str);
-            }
-        });
-    };
-
-    var myreq = http.request(option, cb_onGOAIServerResponse);
 	
-    myreq.on("error", function (e) {
-        console.log("\nproblem with request \n\n " + e.toString() + "\n");
-    });
-
-    myreq.write(JSON.stringify(postData));
-	
-    myreq.end();
+	NetworkAdapter.getAIMove(postData, function(aiRes){
+		// if the response is "Invalid request format."
+		if (aiRes === "Invalid request format.") {
+			// Log and respond with an error
+			console.log("Invalid request format. Request: \n" + JSON.stringify(postData) + "\n");
+			res.status(400).json(postData);
+		} else {
+			// callback with the full response
+			res.json(aiRes);
+		}
+	});
 	
 });
+
+
+
+
+
+var socketioAdapter = require("./serverjs/SocketIOAdapter.js");
+socketioAdapter.listen(io);
 
 
 
 
 
 /******************************** Port assignment *****************************/
-app.listen(3000, function () {
-    console.log("Listening on port 3000\n");
+server.listen(30154, function(){
+	log("Listening on port 30154");
 });
-/******************************* End of Express *******************************/
 
 
 
