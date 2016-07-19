@@ -147,10 +147,29 @@ class View {
     setPlayer(player){
         this.__currentPlayer = player;
     }
-        
-    showReplayOptions(){
+    //Antiquated Function
+    /*showReplayOptions(){
             var buttonString = "<button id=\"StartReplay\" class=\"button\" onclick=\"gameController.restartReplay()\">Start Replay</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.rewind()\">Back</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.replay()\">Next</button>";
             var replayBar = document.getElementById("replayOptions");
             replayBar.innerHTML = buttonString;
-    }
+    }*/
+	drawButtons(){
+		var buttonBar = document.getElementById('buttonBarWrapper');
+		buttonBar.innerHTML = "<div id=leftButton><img src =img/pass.png /></div>\
+									<div id=middleButton><img src =img/exit.png /></div>\
+									<div id=rightButton><img src =img/resign.png /></div>";	
+	}
+	changeToReplayButtons(){
+		console.log("Changing to replay");
+		var leftButton = document.getElementById('leftButton');
+		var rightButton = document.getElementById('rightButton');
+		leftButton.innerHTML = "<img src =img/restart.png />";
+		rightButton.innerHTML = "";
+	}
+	changeToControlButtons(){
+		console.log("Changing to control");
+		var buttonBar = document.getElementById('buttonBarWrapper');
+		buttonBar.innerHTML = "<div id=leftButton>Forward</div>\
+								<div id=rightButton>Backward</div>";
+	}
 }
