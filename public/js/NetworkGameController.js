@@ -62,20 +62,36 @@ class NetworkGameController extends GameController {
 
     pass () {
 
-        var data = {
-            //FIXME: player is the name of the local player's account
-            fromUser: user.__username,
-            toUser: user.__opponent,
-            move: {
-                x: 0,
-                y: 0,
-                c: 0,
-                pass: 'true'
-            }
-        };
+        if (this.__pass) {
 
-        //call socket function that sends move to server
-        this.__socket.emit('move', data);
+            var data = {
+                fromUser: user.__username,
+                toUser: user.__opponent
+            };
+
+            this.declareWinner();
+			this.__view.showReplayOptions();
+            this.__socket.emit('move', data);
+
+        } else {
+            this.__gameSpace.pass();
+
+            var data = {
+                //FIXME: player is the name of the local player's account
+                fromUser: user.__username,
+                toUser: user.__opponent,
+                move: {
+                    x: 0,
+                    y: 0,
+                    c: 0,
+                    pass: 'true'
+                }
+            };
+
+            //call socket function that sends move to server
+            this.__socket.emit('move', data);
+
+        }
     }
 
     resign () {
@@ -98,6 +114,22 @@ class NetworkGameController extends GameController {
         };
 
         console.log("unimplemented method call");
+    }
+
+    declareWinner () {
+        var scores = this.__gameSpace.getScores();
+
+        var displayPackage = {
+            p1Username: user.__username,
+            p2Username: user.__opponent,
+            p1Score: scores.p1Score,
+            p2Score: scores.p2Score,
+            winnner: null
+        };
+
+        displayPackage.winner = scores.winner === this.__localPlayer ? user.__username : user.__opponent;
+
+        showWinnerNotification(displayPackage);
     }
 
 }
