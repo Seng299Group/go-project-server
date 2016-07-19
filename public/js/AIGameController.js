@@ -64,7 +64,7 @@ class AIGameController extends GameController {
 				
 				if(aiMove.pass){
 					_this.__gameSpace.declareWinner();
-					_this.__view.changeButtons();
+					_this.__view.changeToReplayButtons();
 				} else {
 					var aiValid = _this.__gameSpace.placeToken(aiMove.c, aiMove.y, aiMove.x); // temporary fix: x=y and y=x
 					if (!aiValid){
