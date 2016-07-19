@@ -30,11 +30,18 @@ class NetworkAdapter {
 		});
 	}
 
-	createAccount(username, password, security){
+	createAccount(username, password, security, callback) {
 		var socket = io();
 
 		// sending data to server to authenticate
 		socket.emit("newAccount", {username: username, password: password, security: security});
+
+		socket.on("regSuccess", function() {
+				callback(true);
+		});
+		socket.on("regFail", function() {
+				callback(false);
+		});
 	}
 
 	updateAccount(){
@@ -62,5 +69,4 @@ class NetworkAdapter {
                 callback(false, null);
             });
 	}
-
 }

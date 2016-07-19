@@ -242,7 +242,17 @@ function listen(io) {
         });
 
         socket.on('newAccount',  function(data){
-          //implement
+          db.register(data.username, data.password, data.security, function(regSuc) {
+            if(regSuc) {
+              socket.emit("regSuccess");
+            }
+            else {
+              //Reg faild
+              console.log('Registration failed. Registration request:');
+              console.log(data);
+              socket.emit("regFail");
+            }
+          });
         });
 
         /**

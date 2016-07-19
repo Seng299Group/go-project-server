@@ -8,7 +8,7 @@ mongoose.connect('mongodb://localhost:27017/my_database_name');
 
 //define Model for User entity. This model represents a collection in the database.
 //define the possible schema of User document and data types of each field.
-var Userdb = mongoose.model('Userdb', {username: String, password: String});
+var Userdb = mongoose.model('Userdb', {username: String, password: String, security: String});
 
 /**
  *
@@ -40,6 +40,27 @@ function getUserData(username) {
     return u;
 }
 
+function registerUser(username, password, security, fn) {
+    var new_user = new Userdb({username: username, password: password, security: security});
+
+    new_user.save(function (err, userObj) {
+      if (err) {
+        console.log(err);
+        fn(false);
+      } else {
+        console.log('saved successfully:', userObj);
+        fn(true);
+      }
+    });
+}
+// to do :
+function uniqueUser(username, fn) {
+  Userdb.findOne({username: username}, function (err, userObj) {
+    if(err)
+      console.log(err);
+      userObj ? fn(true) : fn(false)
+  });
+}
 /*
  * other functions to query the database as needed
  * /
@@ -53,7 +74,8 @@ function getUserData(username) {
 
 module.exports = {
     authenticate: authenticateUser,
-    getUserData: getUserData // ,
+    getUserData: getUserData,
+    register: registerUser // ,
             // example : example
             // ...
 
