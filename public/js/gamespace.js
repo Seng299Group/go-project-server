@@ -31,7 +31,7 @@ class GameSpace {
         this.p2Captured = 0;
         this.p1Score = 0;
         this.p2Score = 0;
-		
+
         this.__gameOver = false;
 		this.history.push(this.board);
     }
@@ -54,7 +54,7 @@ class GameSpace {
 	getLastMove(){
 		return this.__lastMove;
 	}
-	
+
 	//	getHistory
 	//		Returns the History of the Board
 	getHistory(){
@@ -72,6 +72,16 @@ class GameSpace {
         else {
             return 1;
         }
+    }
+
+    pass () {
+        this.__lastMove = {"x":0, "y":0, "c":0, "pass":true};
+        this.board = this.board.clone();
+        this.history.push(this.board);
+
+        //
+        console.log();
+        console.log(this);
     }
 
     // placeToken
@@ -139,11 +149,12 @@ class GameSpace {
     //          True if this board is different to last turn's
     //          False otherwise
     __koRule (tempBoard) {
-        //handles edge case of first move
-        if (this.history.length === 0) {
+        // prevents checking invalid indecies of history[], ko rule can't occur
+        // during the first 3 moves
+        if (this.history.length < 3) {
             return true;
         }
-        return !GameBoard.equal(tempBoard, this.history[this.history.length - 1]);
+        return !GameBoard.equal(tempBoard, this.history[this.history.length - 2]);
     }
 
     //  evaluationTest
@@ -203,6 +214,7 @@ class GameSpace {
         return this.__evaluationTest(player, x, y);
 
     }
+
     //ASSUMES P1 IS WHITE (NOT SURE IF THIS IS ALWAYS TRUE OR NOT **AI GAMES and NETWORK??**)
     //
     //  hasOccupiedNeighbours
@@ -290,6 +302,21 @@ class GameSpace {
         this.p1Score += this.p1Captured + this.board.count(1);
         this.p2Score += this.p2Captured + this.board.count(2) + 6.5;
     }
+
+    getScores(){
+        this.__score();
+
+        var scores = {
+            p1Score: this.p1Score,
+            p2Score: this.p2Score,
+            winner: null
+        }
+
+        scores.winner = this.p1Score > this.p2Score ? 1 : 2;
+
+        return scores;
+    }
+
     declareWinner(){
         this.__score();
         if(this.p1Score > this.p2Score){
