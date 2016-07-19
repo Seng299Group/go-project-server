@@ -218,32 +218,42 @@ function listen(io) {
              */
 
             // Authenticate login
-            var authSucess = db.authenticate(data.username, data.password);
+            db.authenticate(data.username, data.password, function(authSucess) {
+              if (authSucess) {
+                  // get user data
+                  var user = db.getUserData(data.username);
 
-            if (authSucess) {
+                  // init socket id
+                  user.setSocketID(socket.id);
 
-                // get user data
-                var user = db.getUserData(data.username);
+                  // add user in dictionary
+                  addUserInDictionary(user, socket.id);
 
-                // init socket id
-                user.setSocketID(socket.id);
+                  // respond
+                  socket.emit("loginSucceeded", user);
 
-                // add user in dictionary
-                addUserInDictionary(user, socket.id);
-
-                // respond
-                socket.emit("loginSucceeded", user);
-
-            } else {
-                // respond that login failed
-                console.log("login failed. login request:");
-                console.log(data);
-                socket.emit("loginFailed");
-            }
-
+              } else {
+                  // respond that login failed
+                  console.log("login failed. login request:");
+                  console.log(data);
+                  socket.emit("loginFailed");
+              }
+            });
         });
 
-
+        socket.on('newAccount',  function(data){
+          db.register(data.username, data.password, data.security, function(regSuc) {
+            if(regSuc) {
+              socket.emit("regSuccess");
+            }
+            else {
+              //Reg faild
+              console.log('Registration failed. Registration request:');
+              console.log(data);
+              socket.emit("regFail");
+            }
+          });
+        });
 
         /**
          * Currently used from the game selection page
