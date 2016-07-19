@@ -9,7 +9,7 @@ body{
 #sideBar{
   
 	background: #EEEEEE;
-	width: 330px;
+	width: 300px;
 	height: 100%;
 	position: absolute;
 	right: 0;
@@ -30,36 +30,37 @@ body{
 #canvas {
 	
 	position: absolute;
-    left: 180px;
+    left: 205px;
 	top:10px;
   
 }
 #pass{
 	
 	position: absolute;
-    left: 213px;
+    left: 240px;
 	top:620px;
 }
 
 #c2{
 	position: absolute;
-    left: 0px;
+    left: 3px;
 	top:20px;
-	
+	overflow: visible;
 }
 #p2{
 	position: absolute;
-    left: 20px;
+    left: 23px;
 	top:50px;
 }
 #c1{
 	position: absolute;
-    left: 780px;
+    left: 820px;
 	top:390px;
+	overflow: visible;
 }
 #p1{
 	position: absolute;
-    left: 800px;
+    left: 840px;
 	top:420px;
 }
 #showBar {
@@ -69,15 +70,14 @@ body{
 	width: 50%;
 	border-radius: 25px;
 	text-align: center;
+	float:right;
 }
 .playerid { 
     height: 65px; 
     width: 100%; 
     background-color: green;  
-    border-style: solid;  
-    border-color: black; 
     outline:0; 
-	font-size:18pt;
+	font-size:34pt;
 	
   } 
 
