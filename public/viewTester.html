@@ -7,13 +7,13 @@
 	
 		
         <div>
-			<svg height="200" width="200" id="c2">
-				<circle cx="100" cy="100" r="90" stroke="black" stroke-width="3" fill="red" />
+			<svg height="200" width="200" id="c2" >
+				<ellipse cx="100" cy="135" rx="100" ry="50" stroke="gray" stroke-width="3" fill="lightgray" />
 			</svg>
 				<div class="circle1" id="p2"></div>
 				
 			<svg height="200" width="200" id="c1">
-				<circle cx="100" cy="100" r="90" stroke="black" stroke-width="3" fill="red" />
+				<ellipse cx="100" cy="135" rx="100" ry="50" stroke="gray" stroke-width="3" fill="lightgray" />
 			</svg>	
 				<div class ="circle2" id="p1"></div>
 				
@@ -21,8 +21,11 @@
 
 			</div>
 			<div id="sideBar" >
+				<input type="text" class="playerid" id="player1" readonly="readonly" ><br>
+				<hr style="height: 0pt; visibility:hidden; margin-bottom:-1px; " />
+				<input type="text" class="playerid" id="player2" readonly="readonly" ><br>				
 				<div id="settingsBar">
-					<div id="showBar" onclick="view.showBar();">Show/Hide</div>
+					<img id="showBar" onclick="view.showBar();" src="http://evergreenrv.mobi/evergreenrv.com/images/icons/menubar/gear512_108.png"/>
 					<table id="colourButtonTable">
 						<tr>
 							<td><div class="colourButton" style="background-color: red" onclick="view.changeColour(&quot;red&quot;);"></div></td>
