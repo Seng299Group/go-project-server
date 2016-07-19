@@ -65,7 +65,7 @@
 
 .leftGameInProgressNotification {
     width: 450px;
-    height: 150px;
+    height: 160px;
 
     padding: 16px;
     margin: auto;
@@ -82,7 +82,12 @@
     z-index: 2;
 }
 
+.leftGameInProgressNotification h1 {
+    font-size: 14pt;
+}
+
 .leftGameInProgressNotification-button {
+    background: white;
     text-align: center;
     width: 150px;    
     padding: 16px 16px;
