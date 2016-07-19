@@ -3,7 +3,12 @@ sessionStorage.gameMode = "network";
 
 var socket = io();
 
+
+// Notification objects
 var nfBuilder = new NotificationBuilder();
+var notification;
+
+
 
 /**
  * This object must be retrieved from the server using getUserData.
@@ -15,6 +20,27 @@ var nfBuilder = new NotificationBuilder();
 var user;
 
 socket.emit("userdata", sessionStorage.sessionID);
+
+
+
+
+
+/**
+ * Triggered on keyboard button press
+ * 
+ * @param {object} event
+ */
+document.onkeydown = function (event) {
+
+    /**
+     * if the user pressed escape, remove the notification
+     */
+    if (event.key === "Escape") {
+        notification.remove();
+        removeScreenLock();
+    }
+};
+
 
 
 
@@ -109,8 +135,12 @@ function onReceivedPlayerList(playerList) {
 
             applyScreenLock();
 
-            // asking for board size
-            var notification;
+            var emphasis = "<div style='color:green; display: inline-block /*styled from multiplayer_lobby.js*/ ' > ";
+            emphasis += forUser.__username;
+            emphasis += "</div>";
+
+            var title = "Sending a game request to " + emphasis;
+            var msg = "Please select a board size.";
 
             var buttons = [
                 nfBuilder.makeNotificationButton("9x9", function () {
@@ -119,14 +149,14 @@ function onReceivedPlayerList(playerList) {
                     notification.remove();
                     reqButton.replaceWith(getInvitationSentButton(forUser));
                 }).attr("class", "notification_button_general")
-                        ,
+                ,
                 nfBuilder.makeNotificationButton("13x13", function () {
                     sendGameRequest(forUser.__username, 13);
                     removeScreenLock();
                     notification.remove();
                     reqButton.replaceWith(getInvitationSentButton(forUser));
                 }).attr("class", "notification_button_general")
-                        ,
+                ,
                 nfBuilder.makeNotificationButton("19x19", function () {
                     sendGameRequest(forUser.__username, 19);
                     removeScreenLock();
@@ -135,7 +165,12 @@ function onReceivedPlayerList(playerList) {
                 }).attr("class", "notification_button_general")
             ];
 
-            notification = nfBuilder.makeNotification("Please select A board Size", "", buttons).attr("class", "boardSizeNotification");
+            function onCancel() {
+                notification.remove();
+                removeScreenLock();
+            }
+
+            notification = nfBuilder.makeNotification(title, msg, buttons, onCancel).attr("class", "boardSizeNotification-forOnlinePlayers");
 
             $("#notificationCenter").append(notification);
 
