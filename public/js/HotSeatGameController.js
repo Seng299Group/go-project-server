@@ -38,7 +38,7 @@ class HotSeatGameController extends GameController {
 	pass(){
 		if(this.__pass){
 			this.__gameSpace.declareWinner();
-			this.__view.showReplayOptions();
+			this.__view.changeToReplayButtons();
 			//window.location.href = "winnerPage.html";//TODO: Change to Game Selection
 		}else{
 			this.__pass = true;
@@ -46,7 +46,7 @@ class HotSeatGameController extends GameController {
 	}
 	
 	resign(){
-		console.log("unimplemented method call");
+		console.log("unimplemented method call: RESIGN");
 	}
 	
 	end(){
