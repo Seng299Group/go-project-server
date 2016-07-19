@@ -65,7 +65,7 @@
 
 .leftGameInProgressNotification {
     width: 450px;
-    height: 160px;
+    height: 200px;
 
     padding: 16px;
     margin: auto;
@@ -75,6 +75,7 @@
     bottom: 0px;
     left: 0px;
     right: 0px;
+    text-align: center;
 
     box-shadow: 0px 0px 8px -0.5px grey;
     background: white;
