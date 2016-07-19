@@ -46,6 +46,7 @@ class HotSeatGameController extends GameController {
 	}
 	
 	resign(){
+		this.__gameSpace.__gameOver = true;
 		console.log("unimplemented method call: RESIGN");
 	}
 	
