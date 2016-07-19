@@ -29,16 +29,46 @@ if (sessionStorage.isGuest === "true") {
 
 
 
+/**
+ * Triggered on keyboard button press
+ * 
+ * @param {object} event
+ */
+document.onkeydown = function (event) {
+
+    /**
+     * if the user pressed escape, remove the notification
+     */
+    if (event.key === "Escape") {
+        notification.remove();
+        removeScreenLock();
+    }
+};
+
+
+
+
+
 /******************************** Button clicks *******************************/
 
 $("#button-hotseat").click(function () {
-    sessionStorage.gameMode = "hotseat";
-    showBoardSizePickerNotification();
+    var gameMode = "hotseat";
+
+    // Storing for this session
+    sessionStorage.gameMode = gameMode;
+
+    // Prompt for board size
+    showBoardSizePickerNotification(gameMode);
 });
 
 $("#button-ai").click(function () {
-    sessionStorage.gameMode = "ai";
-    showBoardSizePickerNotification();
+    var gameMode = "ai";
+
+    // Storing for this session
+    sessionStorage.gameMode = gameMode;
+
+    // Prompt for board size
+    showBoardSizePickerNotification(gameMode);
 });
 
 $("#button-network").click(function () {
@@ -50,30 +80,54 @@ $("#button-network").click(function () {
 
 /************************* DOM Manipulating functions *************************/
 
-function showBoardSizePickerNotification() {
+var notification;
+
+/**
+ * This function shows a notification to the user and asks to pick a board size
+ * @param {string} gameMode - the game mode. "hotseat" or "ai"
+ */
+function showBoardSizePickerNotification(gameMode) {
 
     var nfBuilder = new NotificationBuilder();
 
-    var notification;
+    // Title of the notification
+    var title = "Starting ";
+    var emphasisStyle = "color: green; display: inline-block;";
+
+    if (gameMode === "hotseat") {
+        title += "a <div style=' " + emphasisStyle + " '>Hotseat</div>";
+    } else if (gameMode === "ai") {
+        title += "an <div style=' " + emphasisStyle + " '>AI</div>";
+    }
+    title += " game";
+
+
+
+    var msg = "Please select a board size.";
 
     var buttons = [
         nfBuilder.makeNotificationButton("9x9", function () {
             sessionStorage.boardSize = 9;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
-                ,
+        ,
         nfBuilder.makeNotificationButton("13x13", function () {
             sessionStorage.boardSize = 13;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
-                ,
+        ,
         nfBuilder.makeNotificationButton("19x19", function () {
             sessionStorage.boardSize = 19;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
     ];
 
-    notification = nfBuilder.makeNotification("Please select A board Size", "", buttons).attr("class", "boardSizeNotification");
+    function onCancel() {
+        notification.remove();
+        removeScreenLock();
+    }
+
+    notification = nfBuilder.makeNotification(title, msg, buttons, onCancel).attr("class", "boardSizeNotification-forGameMode");
 
     applyScreenLock();
     $("#notificationCenter").append(notification);

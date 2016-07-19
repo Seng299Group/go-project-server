@@ -31,7 +31,7 @@ class GameSpace {
         this.p2Captured = 0;
         this.p1Score = 0;
         this.p2Score = 0;
-		
+
         this.__gameOver = false;
 		this.history.push(this.board);
     }
@@ -54,7 +54,7 @@ class GameSpace {
 	getLastMove(){
 		return this.__lastMove;
 	}
-	
+
 	//	getHistory
 	//		Returns the History of the Board
 	getHistory(){
@@ -139,11 +139,12 @@ class GameSpace {
     //          True if this board is different to last turn's
     //          False otherwise
     __koRule (tempBoard) {
-        //handles edge case of first move
-        if (this.history.length === 0) {
+        // prevents checking invalid indecies of history[], ko rule can't occur
+        // during the first 3 moves
+        if (this.history.length < 3) {
             return true;
         }
-        return !GameBoard.equal(tempBoard, this.history[this.history.length - 1]);
+        return !GameBoard.equal(tempBoard, this.history[this.history.length - 2]);
     }
 
     //  evaluationTest

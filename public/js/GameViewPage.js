@@ -44,6 +44,7 @@ if (sessionStorage.gameMode === "hotseat") {
         view.setController(gameController);
         view.init();
         view.draw(); // Draws the empty board
+		view.drawButtons();
 
         gameController.setGameSpace(myGameSpace);
         gameController.setView(view);
@@ -54,6 +55,31 @@ if (sessionStorage.gameMode === "hotseat") {
             var y = e.pageY - $(this).offset().top;
 
             view.onBoardClick(x, y);
+        });
+		$("#leftButton").click(function () {
+			var leftButton = document.getElementById('leftButton');
+			var rightButton = document.getElementById('rightButton');
+			
+			if(myGameSpace.__gameOver && leftButton.innerHTML == "<img src=\"img/restart.png\">"){
+				leftButton.innerHTML = "<img src =img/rewind.png />";
+				rightButton.innerHTML = "<img src =img/forward.png />";
+				gameController.startReplay();
+			}else if(myGameSpace.__gameOver){
+				gameController.rewind();
+			}else{
+				gameController.pass();
+			}
+        });
+		$("#rightButton").click(function () {
+			if(myGameSpace.__gameOver){
+				gameController.replay();
+			}else{
+				gameController.resign();
+				view.changeToReplayButtons();
+			}
+        });
+		$("#middleButton").click(function () {
+			window.location.href = "/gameSelect.html";
         });
     })();
 
@@ -66,7 +92,7 @@ if (sessionStorage.gameMode === "hotseat") {
 
     (function () {
 
-        var boardSize = sessionStorage.boardSize;
+        var boardSize = parseInt(sessionStorage.boardSize);
         delete(sessionStorage.gameMode);
         delete(sessionStorage.boardSize);
 
@@ -84,6 +110,7 @@ if (sessionStorage.gameMode === "hotseat") {
         view.setController(gameController);
         view.init();
         view.draw(); // Draws the empty board
+		view.drawButtons();
 
         gameController.setGameSpace(myGameSpace);
         gameController.setView(view);
@@ -94,6 +121,31 @@ if (sessionStorage.gameMode === "hotseat") {
             var y = e.pageY - $(this).offset().top;
 
             view.onBoardClick(x, y);
+        });
+		$("#leftButton").click(function () {
+			var leftButton = document.getElementById('leftButton');
+			var rightButton = document.getElementById('rightButton');
+			
+			if(myGameSpace.__gameOver && leftButton.innerHTML == "<img src=\"img/restart.png\">"){
+				leftButton.innerHTML = "<img src =img/rewind.png />";
+				rightButton.innerHTML = "<img src =img/forward.png />";
+				gameController.startReplay();
+			}else if(myGameSpace.__gameOver){
+				gameController.rewind();
+			}else{
+				gameController.pass();
+			}
+        });
+		$("#rightButton").click(function () {
+			if(myGameSpace.__gameOver){
+				gameController.replay();
+			}else{
+				gameController.resign();
+				view.changeToReplayButtons();
+			}
+        });
+		$("#middleButton").click(function () {
+			window.location.href = "/gameSelect.html";
         });
     })();
 
@@ -132,7 +184,7 @@ if (sessionStorage.gameMode === "hotseat") {
             var player = 1;
 
             // Controller - Game controller
-            var gameController = new HotSeatGameController();
+            var gameController = new NetworkGameController(socket);
 
 
             // View
@@ -142,6 +194,7 @@ if (sessionStorage.gameMode === "hotseat") {
             view.setController(gameController);
             view.init();
             view.draw(); // Draws the empty board
+			view.drawButtons();
 
             gameController.setGameSpace(myGameSpace);
             gameController.setView(view);
@@ -153,6 +206,31 @@ if (sessionStorage.gameMode === "hotseat") {
 
                 view.onBoardClick(x, y);
             });
+			$("#leftButton").click(function () {
+			var leftButton = document.getElementById('leftButton');
+			var rightButton = document.getElementById('rightButton');
+			
+			if(myGameSpace.__gameOver && leftButton.innerHTML == "<img src=\"img/restart.png\">"){
+				leftButton.innerHTML = "<img src =img/rewind.png />";
+				rightButton.innerHTML = "<img src =img/forward.png />";
+				gameController.startReplay();
+			}else if(myGameSpace.__gameOver){
+				gameController.rewind();
+			}else{
+				gameController.pass();
+			}
+			});
+			$("#rightButton").click(function () {
+				if(myGameSpace.__gameOver){
+					gameController.replay();
+				}else{
+					gameController.resign();
+					view.changeToReplayButtons();
+				}
+			});
+			$("#middleButton").click(function () {
+				window.location.href = "/gameSelect.html";
+			});
         }
 
         // todo update __isOnline flag on the server when the game is over

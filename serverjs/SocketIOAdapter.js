@@ -352,6 +352,9 @@ function listen(io) {
                     onlineUsers[data.fromUser].setIsInGame(true);
                     onlineUsers[data.toUser].setIsInGame(true);
 
+                    onlineUsers[data.fromUser].setPlayerNumber(2);
+                    onlineUsers[data.toUser].setPlayerNumber(1);
+
                     // Signal both users that the game has been approved by the server
                     io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
                     io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
@@ -392,7 +395,7 @@ function listen(io) {
             // ... todo fixme make moves
 
             var toUserSocketID = onlineUsers[toUser].getSocketID();
-            io.sockets.connected[toUserSocketID].emit("move", "someMove"); // second param can be an object
+            io.sockets.connected[toUserSocketID].emit("move", data); // second param can be an object
 
         });
 
