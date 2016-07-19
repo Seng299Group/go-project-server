@@ -147,12 +147,7 @@ class View {
     setPlayer(player){
         this.__currentPlayer = player;
     }
-    //Antiquated Function
-    /*showReplayOptions(){
-            var buttonString = "<button id=\"StartReplay\" class=\"button\" onclick=\"gameController.restartReplay()\">Start Replay</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.rewind()\">Back</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.replay()\">Next</button>";
-            var replayBar = document.getElementById("replayOptions");
-            replayBar.innerHTML = buttonString;
-    }*/
+
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
 		buttonBar.innerHTML = "<div id=leftButton><img src =img/pass.png /></div>\
