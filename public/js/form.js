@@ -2,9 +2,38 @@ function register() {
   var username = $("#user-name").val();
   var password = $("#password").val();
   var passwordCheck = $("#password-check").val();
-  var security = $("#security-question").val();
+
+  var answer = $("#security-question").val();
 
   // todo, redo broken register system.
+  if(!checkUser(username) || !checkPass(password) || !confirmPass(passwordCheck)) {
+    return;
+  }
+
+  else {
+
+    (new NetworkAdapter()).createAccount(username, password, answer, onRes);
+
+    /**
+     * @param {boolean} success
+     */
+    function onRes(success) {
+      if (success) {
+        $("#user-name").html('');
+        $("#password").html('');
+        $("#password-check").html('');
+        $("#security-question").html('');
+
+        $("#reg-status").html('Account Created, redirecting to login page...');
+        //inform user resitration was successful
+            window.location.href = "/index.html";
+      } else {
+        $("#reg-status").html('Account Creation Failed, redirecting to login page...');
+
+      }
+    }
+  }
+
 }
 
 //validates username against a regex and ensures it is unique in the database.
@@ -54,7 +83,21 @@ function confirmPass(confirm) {
     return false;
   }
   else if(confirm === password) {
-    $('#confirm-err').html(' ');
+
+    $('#confirm-err').html('');
     return true;
   }
+
+// This is showing as undefined for some reason?
+function checkSec(answer) {
+  if(answer.length < 3) {
+    $("#security-err").html("Secuirty answer must be atleast 3 characters long");
+    return false;
+  }
+  else {
+    $("#security-err").html('');
+    return true;
+  }
+}
+
 }

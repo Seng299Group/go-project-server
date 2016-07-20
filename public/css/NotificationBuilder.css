@@ -59,64 +59,13 @@
 
 
 
-/*********************** Board Size Notificaiton Styles ***********************/
-
-
-/*************************** Board Size Notification **************************/
-
-.boardSizeNotification{
-    width: 450px;
-    height: 125px;
-
-    padding: 16px;
-    margin: auto;
-
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-
-    background: white;
-    box-shadow: 0px 0px 8px -0.5px grey;
-
-    z-index: 2;
-}
-
-.boardSizeNotification h1{
-    font-size: 14pt;
-    color: black;
-}
-
-.notification_button_general {
-    width: 100px;    
-
-    padding: 16px 16px;
-    margin: 8px;
-
-    display: inline-block; 
-    box-shadow: 0px 0px 8px -0.5px grey;
-
-    text-align: center;
-}
-
-.notification_button_general:hover {
-    box-shadow: 0px 0px 16px -0.5px grey;
-}
-
-.notification_button_general:active {
-    box-shadow: 0px 0px 4px -0.5px grey;
-}
-
-
-
 
 
 /*********************** Game in Progress Notification  ***********************/
 
 .leftGameInProgressNotification {
     width: 450px;
-    height: 150px;
+    height: 200px;
 
     padding: 16px;
     margin: auto;
@@ -126,6 +75,7 @@
     bottom: 0px;
     left: 0px;
     right: 0px;
+    text-align: center;
 
     box-shadow: 0px 0px 8px -0.5px grey;
     background: white;
@@ -133,7 +83,12 @@
     z-index: 2;
 }
 
+.leftGameInProgressNotification h1 {
+    font-size: 14pt;
+}
+
 .leftGameInProgressNotification-button {
+    background: white;
     text-align: center;
     width: 150px;    
     padding: 16px 16px;
@@ -158,4 +113,9 @@
 /******************************************************************************/
 .clearFloat{
     clear: both;
+}
+
+.cancelButton {
+    width: 20px;
+    float: right;
 }

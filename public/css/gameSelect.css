@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 img {
@@ -16,4 +17,55 @@ img {
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+
+
+
+
+/******************* Board Size Notification for Game Modes *******************/
+
+.boardSizeNotification-forGameMode {
+    width: 460px;
+    height: 150px;
+
+    padding: 16px;
+    margin: auto;
+
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    background: white;
+    box-shadow: 0px 0px 8px -0.5px grey;
+
+    z-index: 2;
+}
+
+.boardSizeNotification-forGameMode h1{
+    font-size: 14pt;
+    color: black;
+}
+
+.notification_button_general {
+    width: 100px;    
+
+    padding: 16px 16px;
+    margin: 8px;
+
+    background: white;
+    display: inline-block;
+    box-shadow: 0px 0px 8px -0.5px grey;
+
+    text-align: center;
+}
+
+.notification_button_general:hover {
+    box-shadow: 0px 0px 16px -0.5px grey;
+}
+
+.notification_button_general:active {
+    box-shadow: 0px 0px 4px -0.5px grey;
 }
