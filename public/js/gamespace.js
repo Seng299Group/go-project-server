@@ -74,6 +74,16 @@ class GameSpace {
         }
     }
 
+    pass () {
+        this.__lastMove = {"x":0, "y":0, "c":0, "pass":true};
+        this.board = this.board.clone();
+        this.history.push(this.board);
+
+        
+        console.log();
+        console.log(this);
+    }
+
     // placeToken
     //
     //      Places a token on the space after checking that the move is legal
@@ -90,8 +100,7 @@ class GameSpace {
             var captured;
 
             if (this.checkLegal(player, x, y)) {
-                // console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
-    			this.__lastMove = {"x":y, "y":x, "c":player, "pass":false}; // temporary fix: x=y and y=x
+   		this.__lastMove = {"x":x, "y":y, "c":player, "pass":false};
                 this.board = this.board.clone();
                 this.board.evaluateMove(player, x, y);
                 this.__addCapturedArmies(player);
@@ -204,6 +213,7 @@ class GameSpace {
         return this.__evaluationTest(player, x, y);
 
     }
+
     //ASSUMES P1 IS WHITE (NOT SURE IF THIS IS ALWAYS TRUE OR NOT **AI GAMES and NETWORK??**)
     //
     //  hasOccupiedNeighbours
@@ -291,6 +301,21 @@ class GameSpace {
         this.p1Score += this.p1Captured + this.board.count(1);
         this.p2Score += this.p2Captured + this.board.count(2) + 6.5;
     }
+
+    getScores(){
+        this.__score();
+
+        var scores = {
+            p1Score: this.p1Score,
+            p2Score: this.p2Score,
+            winner: null
+        }
+
+        scores.winner = this.p1Score > this.p2Score ? 1 : 2;
+
+        return scores;
+    }
+
     declareWinner(){
         this.__score();
         if(this.p1Score > this.p2Score){

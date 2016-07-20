@@ -130,9 +130,9 @@ class View {
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
             document.getElementById("colourButtonTable").style.visibility = "visible";
-	}else{
+		}else{
             document.getElementById("colourButtonTable").style.visibility = "hidden";
-            }
+		}
 	}
         
     changeColour(colour){
@@ -147,29 +147,26 @@ class View {
     setPlayer(player){
         this.__currentPlayer = player;
     }
-    //Antiquated Function
-    /*showReplayOptions(){
-            var buttonString = "<button id=\"StartReplay\" class=\"button\" onclick=\"gameController.restartReplay()\">Start Replay</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.rewind()\">Back</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.replay()\">Next</button>";
-            var replayBar = document.getElementById("replayOptions");
-            replayBar.innerHTML = buttonString;
-    }*/
+
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><img src =img/pass.png /></div>\
-									<div id=middleButton><img src =img/exit.png /></div>\
-									<div id=rightButton><img src =img/resign.png /></div>";	
+		buttonBar.innerHTML = "<div id=leftButton><i style=\"font-size: 35px;\" class=\"fa fa-thumbs-down\" aria-hidden=\"true\"><br>Pass</i></div>\
+									<div id=middleButton><i style=\"font-size: 35px;\" class=\"fa fa-sign-in\" aria-hidden=\"true\"><br>Leave Page</i></div>\
+									<div id=rightButton><i style=\"font-size: 35px;\" class=\"fa fa-hand-paper-o\" aria-hidden=\"true\"><br>Resign</i></div>";
+		document.getElementById('middleButton').style.visibility = "hidden";
 	}
 	changeToReplayButtons(){
+		document.getElementById('middleButton').style.visibility = "visible";
 		console.log("Changing to replay");
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
-		leftButton.innerHTML = "<img src =img/restart.png />";
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
 		rightButton.innerHTML = "";
 	}
 	changeToControlButtons(){
 		console.log("Changing to control");
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton>Forward</div>\
-								<div id=rightButton>Backward</div>";
+		buttonBar.innerHTML = "<div id=leftButton><br>Forward</div>\
+								<div id=rightButton><br>Backward</div>";
 	}
 }
