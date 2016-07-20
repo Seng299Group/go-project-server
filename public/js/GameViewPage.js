@@ -283,6 +283,8 @@ function showWinnerNotification(data) {
 //    };
     // todo dev purpose todo delete
 
+    $("#notification-screenLock").css("display", "block");
+
     var title = "Game over";
 
     var msg = data.p1Username + " : " + data.p1Score;
@@ -294,6 +296,9 @@ function showWinnerNotification(data) {
     }
 
     function onReplay() {
+        // Removing the gray screen lock
+        $("#notification-screenLock").css("display", "none");
+        
         // todo Travis 
     }
 
