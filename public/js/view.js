@@ -160,13 +160,13 @@ class View {
 		console.log("Changing to replay");
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
-		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start From Beginning</i>";
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
 		rightButton.innerHTML = "";
 	}
 	changeToControlButtons(){
 		console.log("Changing to control");
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton>Forward</div>\
-								<div id=rightButton>Backward</div>";
+		buttonBar.innerHTML = "<div id=leftButton><br>Forward</div>\
+								<div id=rightButton><br>Backward</div>";
 	}
 }
