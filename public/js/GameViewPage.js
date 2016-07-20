@@ -283,6 +283,8 @@ function showWinnerNotification(data) {
 //    };
     // todo dev purpose todo delete
 
+	var nf;
+	
     $("#notification-screenLock").css("display", "block");
 
     var title = "Game over";
@@ -298,8 +300,12 @@ function showWinnerNotification(data) {
     function onReplay() {
         // Removing the gray screen lock
         $("#notification-screenLock").css("display", "none");
-        
-        // todo Travis 
+		nf.remove();
+		
+		var leftButton = document.getElementById('leftButton');
+		var rightButton = document.getElementById('rightButton');
+		leftButton.innerHTML = "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>";
+		rightButton.innerHTML = "";
     }
 
     var buttons = [
