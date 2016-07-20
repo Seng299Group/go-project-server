@@ -47,7 +47,7 @@ class HotSeatGameController extends GameController {
             console.log(this);
             this.__gameSpace.pass();
 			this.__pass = true;
-			this.swapturn();
+			this.swapTurn();
 		}
 	}
 

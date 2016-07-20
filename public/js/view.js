@@ -150,15 +150,15 @@ class View {
 
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-thumbs-down fa-6\" aria-hidden=\"true\"><br>Pass</i></div>\
-									<div id=middleButton><i class=\"fa fa-sign-in fa-6\" aria-hidden=\"true\"><br>Leave Game</i></div>\
-									<div id=rightButton><i class=\"fa fa-hand-paper-o fa-6\" aria-hidden=\"true\"><br>Resign</i></div>";	
+		buttonBar.innerHTML = "<div id=leftButton><i style=\"font-size: 44px;\" class=\"fa fa-thumbs-down\" aria-hidden=\"true\"><br>Pass</i></div>\
+									<div id=middleButton><i style=\"font-size: 44px;\" class=\"fa fa-sign-in\" aria-hidden=\"true\"><br>Leave Game</i></div>\
+									<div id=rightButton><i style=\"font-size: 44px;\" class=\"fa fa-hand-paper-o\" aria-hidden=\"true\"><br>Resign</i></div>";	
 	}
 	changeToReplayButtons(){
 		console.log("Changing to replay");
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
-		leftButton.innerHTML = "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>";
+		leftButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-refresh\" aria-hidden=\"true\">Start From Beginning</i>";
 		rightButton.innerHTML = "";
 	}
 	changeToControlButtons(){
