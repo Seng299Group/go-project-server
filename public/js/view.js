@@ -84,6 +84,9 @@ class View {
         // 2. Clearing SVG
         this.__svg.empty();
 
+		//
+		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "white");
+		this.__svg.append(canvas);
         // 3. Drawing lines (intersections)
         for (var i = 0; i < boardArray.length; i++) {
             var line_v = makeLine((this.__scale * i) + this.__offset, this.__offset, (this.__scale * i) + this.__offset, this.__H - this.__offset, "black", "black");
@@ -151,8 +154,10 @@ class View {
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
             document.getElementById("sideBar").style.visibility = "visible";
             document.getElementById("colourButtonTable").style.visibility = "visible";
+			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
 			document.getElementById("colourButtonTable").style.visibility = "hidden";
+			document.getElementById("backgroundTable").style.visibility = "hidden";
 			document.getElementById("showBar").style.visibility = "visible";
          }
 	}
@@ -179,7 +184,10 @@ class View {
 			playerTwoButton.style.backgroundColor = "0F8B8D";	
 		}
     }
-
+	setPageBackround(){
+		var page = document;
+		page.backgroundImage = "img/go.jpg"
+	}
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
 		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-thumbs-down fa-6\" aria-hidden=\"true\"><br>Pass</i></div>\

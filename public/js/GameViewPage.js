@@ -119,6 +119,15 @@ if (sessionStorage.gameMode === "hotseat") {
 		$("#showBar").click(function () {
 			view.showBar()
         });
+		$("#backOne").click(function () {
+			document.body.style.backgroundImage = "url(\"/img/backOne.jpg\")";
+        });
+		$("#backTwo").click(function () {
+			document.body.style.backgroundImage = "url(\"/img/backTwo.jpg\")";
+        });
+		$("#backThree").click(function () {
+			document.body.style.backgroundImage = "url(\"/img/backThree.jpg\")";
+        });
     })();
 
 
