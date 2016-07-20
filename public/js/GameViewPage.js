@@ -86,7 +86,36 @@ if (sessionStorage.gameMode === "hotseat") {
         $("#middleButton").click(function () {
             window.location.href = "/gameSelect.html";
         });
-
+		$("#colourOne").click(function () {
+            view.changeColour("2EC4B6");
+        });
+		$("#colourTwo").click(function () {
+            view.changeColour("533A71");
+        });
+		$("#colourThree").click(function () {
+            view.changeColour("26547C");
+        });
+		$("#colourFour").click(function () {
+            view.changeColour("EF476F");
+        });
+		$("#colourFive").click(function () {
+            view.changeColour("918EF4");
+        });
+		$("#colourSix").click(function () {
+            view.changeColour("B09398");
+        });
+		$("#colourSeven").click(function () {
+            view.changeColour("A1E8AF");
+        });
+		$("#colourEight").click(function () {
+            view.changeColour("DBD56E");
+        });
+		$("#playerOne").click(function () {
+            view.setPlayer(1);
+        });
+		$("#playerTwo").click(function () {
+            view.setPlayer(2);
+        });
     })();
 
 
@@ -153,6 +182,36 @@ if (sessionStorage.gameMode === "hotseat") {
         });
         $("#middleButton").click(function () {
             window.location.href = "/gameSelect.html";
+        });
+		$("#colourOne").click(function () {
+            view.changeColour("2EC4B6");
+        });
+		$("#colourTwo").click(function () {
+            view.changeColour("533A71");
+        });
+		$("#colourThree").click(function () {
+            view.changeColour("26547C");
+        });
+		$("#colourFour").click(function () {
+            view.changeColour("EF476F");
+        });
+		$("#colourFive").click(function () {
+            view.changeColour("918EF4");
+        });
+		$("#colourSix").click(function () {
+            view.changeColour("B09398");
+        });
+		$("#colourSeven").click(function () {
+            view.changeColour("A1E8AF");
+        });
+		$("#colourEight").click(function () {
+            view.changeColour("DBD56E");
+        });
+		$("#playerOne").click(function () {
+            view.setPlayer(1);
+        });
+		$("#playerTwo").click(function () {
+            view.setPlayer(2);
         });
     })();
 
@@ -240,6 +299,36 @@ if (sessionStorage.gameMode === "hotseat") {
             $("#middleButton").click(function () {
                 window.location.href = "/gameSelect.html";
             });
+			$("#colourOne").click(function () {
+            view.changeColour("2EC4B6");
+        });
+			$("#colourTwo").click(function () {
+				view.changeColour("533A71");
+			});
+			$("#colourThree").click(function () {
+				view.changeColour("26547C");
+			});
+			$("#colourFour").click(function () {
+				view.changeColour("EF476F");
+			});
+			$("#colourFive").click(function () {
+				view.changeColour("918EF4");
+			});
+			$("#colourSix").click(function () {
+				view.changeColour("B09398");
+			});
+			$("#colourSeven").click(function () {
+				view.changeColour("A1E8AF");
+			});
+			$("#colourEight").click(function () {
+				view.changeColour("DBD56E");
+			});
+			$("#playerOne").click(function () {
+				view.setPlayer(1);
+			});
+			$("#playerTwo").click(function () {
+				view.setPlayer(2);
+			});
         }
 
         // todo update __isOnline flag on the server when the game is over

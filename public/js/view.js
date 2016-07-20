@@ -108,7 +108,7 @@ class View {
         }
 		
 		this.indicatePlayer();
-		this.playerNames();
+		//this.playerNames();
     }
 
 	indicatePlayer(){
@@ -166,6 +166,7 @@ class View {
         
     setPlayer(player){
         this.__currentPlayer = player;
+		console.log(player);
     }
 
 	drawButtons(){
