@@ -40,7 +40,7 @@ class HotSeatGameController extends GameController {
 	pass(){
 		if(this.__pass){
 			this.declareWinner();
-			this.__view.showReplayOptions();
+			this.__view.changeToReplayButtons();
                         // todo Travis causing errors. "showReplayOptions" dont seem to be a thing
                         // another similar call is being made from the NetworkGameController.js
                         
