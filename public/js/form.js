@@ -1,3 +1,18 @@
+/**
+ * Triggered on keyboard button press
+ *
+ * @param {object} event
+ */
+document.onkeydown = function (event) {
+
+    /**
+     * if the user pressed escape, remove the notification
+     */
+    if (event.key === "Enter") {
+        register();
+    }
+};
+
 function register() {
   var username = $("#user-name").val();
   var password = $("#password").val();
