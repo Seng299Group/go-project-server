@@ -83,7 +83,7 @@ if (sessionStorage.gameMode === "hotseat") {
             }
         });
         $("#middleButton").click(function () {
-			if(doc.getElementById('middleButton').style.visibility == "visible"){
+			if(document.getElementById('middleButton').style.visibility == "visible"){
 				window.location.href = "/gameSelect.html";
 			}
         });
@@ -153,7 +153,9 @@ if (sessionStorage.gameMode === "hotseat") {
             }
         });
         $("#middleButton").click(function () {
-            window.location.href = "/gameSelect.html";
+            if(document.getElementById('middleButton').style.visibility == "visible"){
+				window.location.href = "/gameSelect.html";
+			}
         });
     })();
 
@@ -239,7 +241,9 @@ if (sessionStorage.gameMode === "hotseat") {
                 }
             });
             $("#middleButton").click(function () {
-                window.location.href = "/gameSelect.html";
+                if(document.getElementById('middleButton').style.visibility == "visible"){
+				window.location.href = "/gameSelect.html";
+			}
             });
         }
 
