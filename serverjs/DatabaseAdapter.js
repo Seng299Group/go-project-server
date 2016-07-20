@@ -1,25 +1,31 @@
-
 var User = require("./User.js");
 
+//load the mongoose module
+var mongoose = require('mongoose');
+
+//connect to database using the DB server URL.
+mongoose.connect('mongodb://localhost:27017/my_database_name');
+
+//define Model for User entity. This model represents a collection in the database.
+//define the possible schema of User document and data types of each field.
+var Userdb = mongoose.model('Userdb', {username: String, password: String, security: String});
+
 /**
+ *
  * @param {string} username
  * @param {string} password
  * @returns {boolean} true if username and password is correct
  */
-function authenticateUser(username, password) {
-
-    // todo delete
-    // for dev purposes
-    if (username === password) {
-        return true;
-    } else {
-        return false;
-    }
-
+function authenticateUser(username, password, fn) {
+    Userdb.findOne({username: username, password: password}, function (err, userObj) {
+    if (err)
+      console.log(err);
+    userObj ? fn(true) : fn(false)
+  });
 }
 
 /**
- * 
+ *
  * @param {string} username
  * @returns {object} user's data from the db (must abide the server side User data structure)
  */
@@ -34,20 +40,42 @@ function getUserData(username) {
     return u;
 }
 
+function registerUser(username, password, security, fn) {
+    var new_user = new Userdb({username: username, password: password, security: security});
+
+    new_user.save(function (err, userObj) {
+      if (err) {
+        console.log(err);
+        fn(false);
+      } else {
+        console.log('saved successfully:', userObj);
+        fn(true);
+      }
+    });
+}
+// to do :
+function uniqueUser(username, fn) {
+  Userdb.findOne({username: username}, function (err, userObj) {
+    if(err)
+      console.log(err);
+      userObj ? fn(true) : fn(false)
+  });
+}
 /*
  * other functions to query the database as needed
  * /
- 
+
  /*
  * function example(){
  *      ...
  * }
- *  
+ *
  */
 
 module.exports = {
     authenticate: authenticateUser,
-    getUserData: getUserData // ,
+    getUserData: getUserData,
+    register: registerUser // ,
             // example : example
             // ...
 

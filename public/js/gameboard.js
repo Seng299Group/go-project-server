@@ -241,7 +241,6 @@ class GameBoard {
 
         var visited = new GameBoard(this.size);
 
-        visited.print();
         return this.__countArmyLibertiesDFS(player, x, y, visited);
     }
 

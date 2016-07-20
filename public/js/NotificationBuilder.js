@@ -33,19 +33,34 @@ class NotificationBuilder {
      * @param {string} title - Title of the notification
      * @param {string} bodyText - Body of the notification
      * @param {div} buttons - one or an array of buttons made with the makeNotificationButton() function
+     * @param {function} onClose - function that is called when the user closes a notification
      * @returns {DOM object} - Div element: notification
      */
-    makeNotification(title, bodyText, buttons) {
+    makeNotification(title, bodyText, buttons, onClose) {
         var notification = $(document.createElement('div'));
-
+        
+        // Adding a cancel button
+        if (typeof onClose === "function"){
+            var cancelButton = $(document.createElement('img'));
+            cancelButton.attr("src", "img/icon_close.png");
+            cancelButton.attr("class", "cancelButton");
+            cancelButton.click(onClose);
+            notification.append(cancelButton);
+        } else {
+            console.log("No 'onClose' function is provided. Omitting the close button");
+        }
+        
+        // Title
         var headline = $(document.createElement('h1'));
-        headline.html(title);
+        headline.append(title);
         notification.append(headline);
 
+        // Body
         var body = $(document.createElement('p'));
         body.html(bodyText);
         notification.append(body);
 
+        // Buttons
         var buttonWrapper = $(document.createElement('div'));
         buttonWrapper.css("text-align","center");
         if (buttons.length == 1) {
@@ -91,7 +106,7 @@ class NotificationBuilder {
         });
         button.addClass("sessionExpiredNotification-button");
 
-        nf = nfBuilder.makeNotification(title, msg, button); // todo remove nfBuilder and replace with this
+        nf = this.makeNotification(title, msg, button);
         nf.addClass("sessionExpiredNotification");
 
         return nf;

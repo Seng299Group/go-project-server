@@ -147,10 +147,24 @@ class View {
     setPlayer(player){
         this.__currentPlayer = player;
     }
-        
-    showReplayOptions(){
-            var buttonString = "<button id=\"StartReplay\" class=\"button\" onclick=\"gameController.restartReplay()\">Start Replay</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.rewind()\">Back</button>\n<button id=\"Replay\" class=\"button\" onclick=\"gameController.replay()\">Next</button>";
-            var replayBar = document.getElementById("replayOptions");
-            replayBar.innerHTML = buttonString;
-    }
+
+	drawButtons(){
+		var buttonBar = document.getElementById('buttonBarWrapper');
+		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-thumbs-down fa-6\" aria-hidden=\"true\"><br>Pass</i></div>\
+									<div id=middleButton><i class=\"fa fa-sign-in fa-6\" aria-hidden=\"true\"><br>Leave Game</i></div>\
+									<div id=rightButton><i class=\"fa fa-hand-paper-o fa-6\" aria-hidden=\"true\"><br>Resign</i></div>";	
+	}
+	changeToReplayButtons(){
+		console.log("Changing to replay");
+		var leftButton = document.getElementById('leftButton');
+		var rightButton = document.getElementById('rightButton');
+		leftButton.innerHTML = "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>";
+		rightButton.innerHTML = "";
+	}
+	changeToControlButtons(){
+		console.log("Changing to control");
+		var buttonBar = document.getElementById('buttonBarWrapper');
+		buttonBar.innerHTML = "<div id=leftButton>Forward</div>\
+								<div id=rightButton>Backward</div>";
+	}
 }
