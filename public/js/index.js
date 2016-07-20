@@ -32,6 +32,21 @@ function login() {
 }
 
 /**
+ * Triggered on keyboard button press
+ *
+ * @param {object} event
+ */
+document.onkeydown = function (event) {
+
+    /**
+     * if the user pressed escape, remove the notification
+     */
+    if (event.key === "Enter") {
+        login();
+    }
+};
+
+/**
  * This function is called when the user clicks the Quick play button
  *
  * called from the onclick attribute of the button in index.html file

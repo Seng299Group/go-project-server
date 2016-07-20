@@ -53,7 +53,7 @@ function registerUser(username, password, security, fn) {
       }
     });
 }
-// to do :
+// to do : all this down hurr
 function uniqueUser(username, fn) {
   Userdb.findOne({username: username}, function (err, userObj) {
     if(err)
