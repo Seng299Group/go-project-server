@@ -130,9 +130,9 @@ class View {
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
             document.getElementById("colourButtonTable").style.visibility = "visible";
-	}else{
+		}else{
             document.getElementById("colourButtonTable").style.visibility = "hidden";
-            }
+		}
 	}
         
     changeColour(colour){
