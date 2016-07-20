@@ -116,6 +116,9 @@ if (sessionStorage.gameMode === "hotseat") {
 		$("#playerTwo").click(function () {
             view.setPlayer(2);
         });
+		$("#showBar").click(function () {
+			view.showBar()
+        });
     })();
 
 
@@ -212,6 +215,9 @@ if (sessionStorage.gameMode === "hotseat") {
         });
 		$("#playerTwo").click(function () {
             view.setPlayer(2);
+        });
+		$("#showBar").click(function () {
+			view.showBar()
         });
     })();
 
@@ -328,6 +334,9 @@ if (sessionStorage.gameMode === "hotseat") {
 			});
 			$("#playerTwo").click(function () {
 				view.setPlayer(2);
+			});
+			$("#showBar").click(function () {
+				view.showBar()
 			});
         }
 

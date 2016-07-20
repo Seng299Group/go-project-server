@@ -149,10 +149,12 @@ class View {
 
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
+            document.getElementById("sideBar").style.visibility = "visible";
             document.getElementById("colourButtonTable").style.visibility = "visible";
-	}else{
-            document.getElementById("colourButtonTable").style.visibility = "hidden";
-            }
+		}else{
+			document.getElementById("colourButtonTable").style.visibility = "hidden";
+			document.getElementById("showBar").style.visibility = "visible";
+         }
 	}
         
     changeColour(colour){
@@ -166,7 +168,16 @@ class View {
         
     setPlayer(player){
         this.__currentPlayer = player;
-		console.log(player);
+		var playerOneButton = document.getElementById("playerOne");
+		var playerTwoButton = document.getElementById("playerTwo");
+
+		if(player == 1){
+			playerOneButton.style.backgroundColor = "0F8B8D";
+			playerTwoButton.style.backgroundColor = "BFC3BA";
+		}else{
+			playerOneButton.style.backgroundColor = "BFC3BA";
+			playerTwoButton.style.backgroundColor = "0F8B8D";	
+		}
     }
 
 	drawButtons(){

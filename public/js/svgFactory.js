@@ -38,6 +38,8 @@ function makeLine(x1, y1, x2, y2, color, stroke) {
  * @return {object} 
  */
 function makeRectangle(x, y, w, h, c) {
+	//make bacgroud whiteSpac
+	//TODO
     var rect = document.createElementNS(SVGNameSpace, "rect");
     rect.setAttribute("x", x);
     rect.setAttribute("y", y);
