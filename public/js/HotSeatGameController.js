@@ -3,7 +3,9 @@
 class HotSeatGameController extends GameController {
 
 	/* Inherited Variables:
-	* __gameSpace, __view, and __playerTurn
+	* __gameSpace
+        * __view
+        * __playerTurn
 	* See GameController for details
 	*
 	*/
@@ -30,9 +32,9 @@ class HotSeatGameController extends GameController {
 		}
 
 	}
+        
 	/*
 	*	Function Called When a Player Passes
-	*
 	* 	Will End Game If Two Consecutive Passes
 	*/
 	pass(){
@@ -41,17 +43,19 @@ class HotSeatGameController extends GameController {
 			this.__view.showReplayOptions();
 			//window.location.href = "winnerPage.html";//TODO: Change to Game Selection
 		}else{
-            this.__gamespace.pass();
+                        console.log(this);
+                        this.__gameSpace.pass();
 			this.__pass = true;
 		}
 	}
 
 	resign(){
-		console.log("unimplemented method call");
+		this.__gameSpace.__gameOver = true;
+		console.log("unimplemented method call: RESIGN"); // todo
 	}
 
 	end(){
-		console.log("unimplemented method call");
+		console.log("unimplemented method call"); // todo
 	}
 
     declareWinner () {
