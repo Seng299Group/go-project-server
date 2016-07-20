@@ -64,9 +64,9 @@ if (sessionStorage.gameMode === "hotseat") {
             var leftButton = document.getElementById('leftButton');
             var rightButton = document.getElementById('rightButton');
 
-            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 44px;\" class=\"fa fa-refresh\" aria-hidden=\"true\">Start From Beginning</i>") {
-                leftButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
+            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start From Beginning</i>") {
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
                 gameController.startReplay();
             } else if (myGameSpace.__gameOver) {
                 gameController.rewind();
@@ -132,9 +132,9 @@ if (sessionStorage.gameMode === "hotseat") {
             var leftButton = document.getElementById('leftButton');
             var rightButton = document.getElementById('rightButton');
 
-            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 44px;\" class=\"fa fa-refresh\" aria-hidden=\"true\">Start From Beginning</i>") {
-                leftButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-chevron-circle-right \" aria-hidden=\"true\">Forward</i>";
+            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start From Beginning</i>") {
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right \" aria-hidden=\"true\">Forward</i>";
                 gameController.startReplay();
             } else if (myGameSpace.__gameOver) {
                 gameController.rewind();
@@ -218,9 +218,9 @@ if (sessionStorage.gameMode === "hotseat") {
                 var leftButton = document.getElementById('leftButton');
                 var rightButton = document.getElementById('rightButton');
 
-                if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 44px;\" class=\"fa fa-refresh\" aria-hidden=\"true\">Start From Beginning</i>") {
-                leftButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
+                if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start From Beginning</i>") {
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
                 gameController.startReplay();
                 } else if (myGameSpace.__gameOver) {
                     gameController.rewind();
@@ -304,7 +304,7 @@ function showWinnerNotification(data) {
 		
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
-		leftButton.innerHTML = "<i style=\"font-size: 44px;\" class=\"fa fa-refresh\" aria-hidden=\"true\">Start From Beginning</i>";
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start From Beginning</i>";
 		rightButton.innerHTML = "";
     }
 
