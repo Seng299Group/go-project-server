@@ -156,6 +156,7 @@ class View {
             document.getElementById("colourButtonTable").style.visibility = "visible";
 			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
+			
 			document.getElementById("colourButtonTable").style.visibility = "hidden";
 			document.getElementById("backgroundTable").style.visibility = "hidden";
 			document.getElementById("showBar").style.visibility = "visible";
