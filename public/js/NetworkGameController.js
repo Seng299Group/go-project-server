@@ -25,7 +25,8 @@ class NetworkGameController extends GameController {
         if (moveAccepted) {
 
             this.__gameSpace.getBoard().print();
-
+			
+			this.swapTurn();
             data = {
                 //FIXME: player is the name of the local player's account
                 fromUser: user.__username,
@@ -54,6 +55,7 @@ class NetworkGameController extends GameController {
 
         this.__gameSpace.placeToken(this.__remotePlayer, x, y);
 
+		this.swapTurn();
         this.__view.draw();
 
         //TODO: UNLOCK INTERFACE!

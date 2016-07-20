@@ -6,6 +6,11 @@ body{
     background-size: cover;
     background-position: 50% 0%;
 }
+/* #screen{
+	height:100%;
+	width:100%;
+	overflow:hidden;
+} */ 
 #sideBar{
   
 	background: #EEEEEE;
@@ -13,7 +18,7 @@ body{
 	height: 100%;
 	position: absolute;
 	right: 0;
-	 box-shadow: 0px 0px 8px -0.5px #000000; 
+	box-shadow: 0px 0px 8px -0.5px #000000; 
 
 }
 
@@ -34,13 +39,24 @@ body{
 	top:10px;
   
 }
-#pass{
-	
+#buttonBarWrapper{
+	font-size:20pt;
 	position: absolute;
     left: 240px;
-	top:620px;
+	/* top:595px; */
+	bottom:0px;
+	height:52px;
+	margin:-1px;
 }
-
+/* #leftButton{
+	height: 52px;
+}
+#middlebutton{
+	
+}
+#rightbutton{
+	
+} */
 #c2{
 	position: absolute;
     left: 3px;

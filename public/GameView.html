@@ -3,13 +3,27 @@
         <title>Go</title>
         <link href="css/NotificationBuilder.css" rel="stylesheet" type="text/css"/>
         <link href="css/buttonBar.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" type="text/css" href="viewTester.css">
 		<script src="https://use.fontawesome.com/8e20c928f5.js"></script>
     </head>
-    <body>
-
+    <body style="margin:0">
+	<div id="screen">
         <div id="notificationCenter"></div>
 
         <div id="notification-screenLock"></div>
+		
+			<svg height="200" width="300" id="c2" >
+				<ellipse cx="100" cy="135" rx="100" ry="50" stroke="gray" stroke-width="3" fill="lightgray" />
+
+			</svg>
+				<div class="circle1" id="p2"></div>
+				
+			<svg height="200" width="300" id="c1">
+
+				<ellipse cx="100" cy="135" rx="100" ry="50" stroke="gray" stroke-width="3" fill="lightgray" />
+
+			</svg>	
+				<div class ="circle2" id="p1"></div>
 
         <div >
             <div id="canvas" style="margin: 0px auto 0px auto;">
@@ -21,7 +35,41 @@
                 <div id="rightButton"></div>
             </div>
         </div>
+		
+			<div id="sideBar" >
 
+				<div type="text" class="playerid" id="player1" readonly="readonly"></div><br>
+				<hr style="height: 0pt; visibility:hidden; margin-bottom:-1px; " />
+				<div type="text" class="playerid" id="player2" readonly="readonly" ></div><br>				
+				<div id="settingsBar">
+					<img id="showBar" onclick="view.showBar();" src="http://evergreenrv.mobi/evergreenrv.com/images/icons/menubar/gear512_108.png"/>
+
+					<table id="colourButtonTable">
+						<tr>
+							<td><div class="colourButton" style="background-color: red" onclick="view.changeColour(&quot;red&quot;);"></div></td>
+							<td><div class="colourButton" style="background-color: orange"onclick="view.changeColour(&quot;orange&quot;);"></div></td>
+						</tr>
+						<tr>
+							<td><div class="colourButton" style="background-color: pink"onclick="view.changeColour(&quot;pink&quot;);"></div></td>
+							<td><div class="colourButton" style="background-color: purple"onclick="view.changeColour(&quot;purple&quot;);"></div></td>
+						</tr>
+						<tr>
+							<td><div class="colourButton" style="background-color: green"onclick="view.changeColour(&quot;green&quot;);"></div></td>
+							<td><div class="colourButton" style="background-color: blue"onclick="view.changeColour(&quot;blue&quot;);"></div></td>
+						</tr>
+						<tr>
+							<td><div class="colourButton" style="background-color: brown"onclick="view.changeColour(&quot;brown&quot;);"></div></td>
+							<td><div class="colourButton" style="background-color: black"onclick="view.changeColour(&quot;black&quot;);"></div></td>
+						</tr>
+						<tr>
+							<td><div class="playerButton" onclick="view.setPlayer(1)">Player One</div></td>
+							<td><div class="playerButton" onclick="view.setPlayer(2)">Player Two</div></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+		</div>
         <script src="js/jquery.min.js" type="text/javascript"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="js/NotificationBuilder.js" type="text/javascript"></script>

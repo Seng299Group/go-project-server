@@ -19,7 +19,7 @@ socket.on('userdataForUsername', function (data) {
     user = data;
 });
 
-
+// var globalController;
 
 // Game modes
 if (sessionStorage.gameMode === "hotseat") {
@@ -37,6 +37,7 @@ if (sessionStorage.gameMode === "hotseat") {
 
         // Controller - Game controller
         var gameController = new HotSeatGameController();
+		// globalController = gameController;
 
         // View
         var view = new View();
