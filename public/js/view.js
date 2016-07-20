@@ -150,15 +150,15 @@ class View {
 
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><img src =img/pass.png /></div>\
-									<div id=middleButton><img src =img/exit.png /></div>\
-									<div id=rightButton><img src =img/resign.png /></div>";	
+		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-thumbs-down fa-6\" aria-hidden=\"true\"><br>Pass</i></div>\
+									<div id=middleButton><i class=\"fa fa-sign-in fa-6\" aria-hidden=\"true\"><br>Leave Game</i></div>\
+									<div id=rightButton><i class=\"fa fa-hand-paper-o fa-6\" aria-hidden=\"true\"><br>Resign</i></div>";	
 	}
 	changeToReplayButtons(){
 		console.log("Changing to replay");
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
-		leftButton.innerHTML = "<img src =img/restart.png />";
+		leftButton.innerHTML = "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>";
 		rightButton.innerHTML = "";
 	}
 	changeToControlButtons(){

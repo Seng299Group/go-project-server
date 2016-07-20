@@ -19,16 +19,19 @@
 	width: 33%;
 	height: 100%;
 	float: left;
+	text-align: center;
 }
 #rightButton{
 	width: 33%;
 	height: 100%;
 	float: left;
+	text-align: center;
 }
 #middleButton{
 	width: 33%;
 	height: 100%;
 	float: left;
+	text-align: center;
 }
 img{
 	max-width:100%;
