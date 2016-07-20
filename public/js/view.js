@@ -166,7 +166,7 @@ class View {
 	changeToControlButtons(){
 		console.log("Changing to control");
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton>Forward</div>\
-								<div id=rightButton>Backward</div>";
+		buttonBar.innerHTML = "<div id=leftButton><br>Forward</div>\
+								<div id=rightButton><br>Backward</div>";
 	}
 }
