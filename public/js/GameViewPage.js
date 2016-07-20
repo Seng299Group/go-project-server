@@ -65,8 +65,8 @@ if (sessionStorage.gameMode === "hotseat") {
             var rightButton = document.getElementById('rightButton');
 
             if (myGameSpace.__gameOver && leftButton.innerHTML == "<img src=\"img/restart.png\">") {
-                leftButton.innerHTML = "<img src =img/rewind.png />";
-                rightButton.innerHTML = "<img src =img/forward.png />";
+                leftButton.innerHTML = "<i class=\"fa fa-chevron-circle-left fa-6\" aria-hidden=\"true\">Reverse</i>";
+                rightButton.innerHTML = "<i class=\"fa fa-chevron-circle-right fa-6\" aria-hidden=\"true\">Forward</i>";
                 gameController.startReplay();
             } else if (myGameSpace.__gameOver) {
                 gameController.rewind();
