@@ -282,7 +282,7 @@ function showWinnerNotification(data) {
 //        winner: "Bob"
 //    };
     // todo dev purpose todo delete
-
+	
 	var nf;
 	
     $("#notification-screenLock").css("display", "block");
