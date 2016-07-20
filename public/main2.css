@@ -12,9 +12,8 @@ h3{
 }
 p{
 	text-align: left;
-
-	
-	
+	height:auto;
+	display: table-cell;
 }
 
 	
@@ -29,18 +28,19 @@ p{
 	font-size: 17px;
 	
   } 
+
 #container{
-  
+	display:table;
 	background: white;
 	width: 300px;
-	height: 380px;
 	text-align: center;
 	margin: auto;
 	position: absolute;
 	top: 0; left: 0; bottom: 0; right: 0;
 	box-shadow: 0px 0px 20px #000000;
-	
-	
+	min-height:340px;
+	height:auto;
+
 }
 
 #title{
