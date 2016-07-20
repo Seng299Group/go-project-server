@@ -160,7 +160,7 @@ class View {
 		console.log("Changing to replay");
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
-		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start From Beginning</i>";
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
 		rightButton.innerHTML = "";
 	}
 	changeToControlButtons(){
