@@ -150,7 +150,7 @@ class View {
 
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><img src =img/pass.png /></div>\
+		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-check-square\" aria-hidden=\"true\">abc</i></div>\
 									<div id=middleButton><img src =img/exit.png /></div>\
 									<div id=rightButton><img src =img/resign.png /></div>";	
 	}
