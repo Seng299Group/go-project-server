@@ -100,8 +100,7 @@ class GameSpace {
             var captured;
 
             if (this.checkLegal(player, x, y)) {
-                // console.log('Player ' + player + ' placing token at (' + x + ',' + y +')');
-    			this.__lastMove = {"x":y, "y":x, "c":player, "pass":false}; // temporary fix: x=y and y=x
+   		this.__lastMove = {"x":x, "y":y, "c":player, "pass":false};
                 this.board = this.board.clone();
                 this.board.evaluateMove(player, x, y);
                 this.__addCapturedArmies(player);
