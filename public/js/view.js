@@ -150,9 +150,9 @@ class View {
 
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-thumbs-down fa-3\" aria-hidden=\"true\">Pass</i></div>\
-									<div id=middleButton><i class=\"fa fa-sign-in fa-3\" aria-hidden=\"true\">Leave Game</i></div>\
-									<div id=rightButton><i class=\"fa fa-hand-paper-o fa-6\" aria-hidden=\"true\">Resign</i></div>";	
+		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-thumbs-down fa-6\" aria-hidden=\"true\"><br>Pass</i></div>\
+									<div id=middleButton><i class=\"fa fa-sign-in fa-6\" aria-hidden=\"true\"><br>Leave Game</i></div>\
+									<div id=rightButton><i class=\"fa fa-hand-paper-o fa-6\" aria-hidden=\"true\"><br>Resign</i></div>";	
 	}
 	changeToReplayButtons(){
 		console.log("Changing to replay");
