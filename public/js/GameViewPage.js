@@ -83,7 +83,9 @@ if (sessionStorage.gameMode === "hotseat") {
             }
         });
         $("#middleButton").click(function () {
-            window.location.href = "/gameSelect.html";
+			if(doc.getElementById('middleButton').style.visibility == "visible"){
+				window.location.href = "/gameSelect.html";
+			}
         });
 
     })();

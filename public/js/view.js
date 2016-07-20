@@ -152,9 +152,11 @@ class View {
 		var buttonBar = document.getElementById('buttonBarWrapper');
 		buttonBar.innerHTML = "<div id=leftButton><i style=\"font-size: 35px;\" class=\"fa fa-thumbs-down\" aria-hidden=\"true\"><br>Pass</i></div>\
 									<div id=middleButton><i style=\"font-size: 35px;\" class=\"fa fa-sign-in\" aria-hidden=\"true\"><br>Leave Game</i></div>\
-									<div id=rightButton><i style=\"font-size: 35px;\" class=\"fa fa-hand-paper-o\" aria-hidden=\"true\"><br>Resign</i></div>";	
+									<div id=rightButton><i style=\"font-size: 35px;\" class=\"fa fa-hand-paper-o\" aria-hidden=\"true\"><br>Resign</i></div>";
+		document.getElementById('middleButton').style.visibility = "hidden";
 	}
 	changeToReplayButtons(){
+		document.getElementById('middleButton').style.visibility = "visible";
 		console.log("Changing to replay");
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
