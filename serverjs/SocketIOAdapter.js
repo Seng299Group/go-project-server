@@ -242,7 +242,7 @@ function listen(io) {
         });
 
         socket.on('newAccount',  function(data){
-          db.register(data.username, data.password, data.security, function(regSuc) {
+          db.register(data.username, data.password, data.security, function(wlHistory,regSuc) {
             if(regSuc) {
               socket.emit("regSuccess");
             }
@@ -253,6 +253,21 @@ function listen(io) {
               socket.emit("regFail");
             }
           });
+        });
+
+        socket.on('getWinLoss' function(data) {
+            db.winLoss(data.username, function(reqSuc) {
+              if(reqSuc) {
+                //request Successful
+                socket.emit("requestSuccess", wlHistory);
+              }
+              else {
+                //request Failed
+                console.log('User Win Loss history request failed for user:');
+                console.log(data);
+                socket.emit("requestFail");
+              }
+            });
         });
 
         /**

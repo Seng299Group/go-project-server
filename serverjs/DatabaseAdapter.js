@@ -61,6 +61,14 @@ function uniqueUser(username, fn) {
       userObj ? fn(true) : fn(false)
   });
 }
+
+function getWinLoss(username, fn) {
+  Userdb.findone({username: username} function(err, userObj) {
+    if(err)
+      console.log(err);
+
+  }
+}
 /*
  * other functions to query the database as needed
  * /
@@ -75,7 +83,8 @@ function uniqueUser(username, fn) {
 module.exports = {
     authenticate: authenticateUser,
     getUserData: getUserData,
-    register: registerUser // ,
+    register: registerUser,
+    winLoss: getWinLoss// ,
             // example : example
             // ...
 

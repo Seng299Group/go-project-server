@@ -69,4 +69,18 @@ class NetworkAdapter {
                 callback(false, null);
             });
 	}
+
+	userWinLoss(username, callback) {
+			var socket = io();
+
+			socket.emit("getWinLoss", {username: username});
+
+			socket.on("requestSuccess" function(wlHistory) {
+				callback(true, wlHistory);
+			});
+
+			socket.on("requestFail" function() {
+				callback(false, null);
+			});
+	}
 }
