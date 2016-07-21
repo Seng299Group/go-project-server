@@ -18,47 +18,49 @@ class AIGameController extends GameController {
 
 	placeToken(player, x, y){
 
-		var _this = this;
+        var _this = this;
 
-		var moveAccepted = this.__gameSpace.placeToken(this.__playerTurn, x, y);
+        var moveAccepted = this.__gameSpace.placeToken(this.__playerTurn, x, y);
 
-		if (moveAccepted){
+        if (moveAccepted){
 
-                        // Fixing for the AI coordinates
-                        var lastMove = this.convertToAICoordinate( this.__gameSpace.getLastMove() );
+            this.swapTurn()
 
-			//  request server for AI move
-			this.__networkAdapter.getAIMove(this.__gameSpace.size, this.__gameSpace.getGrid(), lastMove, function(res){
+            // Fixing for the AI coordinates
+            var lastMove = this.convertToAICoordinate( this.__gameSpace.getLastMove() );
 
-				var aiMove = JSON.parse(res);
-                                
-                                // Fixing for the AI coordinates
-                                var aiMove = _this.convertToLocalCoordinate( aiMove );
-                                
-				if(aiMove.pass){
-					// AI passed
-					_this.__pass = true;
-					alert("The AI passed");
-                                        console.log("The AI passed"); // todo the ai passed. notify the user
-				} else {
+            //  request server for AI move
+            this.__networkAdapter.getAIMove(this.__gameSpace.size, this.__gameSpace.getGrid(), lastMove, function(res){
 
-                                var aiValid = _this.__gameSpace.placeToken(aiMove.c, aiMove.x, aiMove.y);
-					
-                                        if (!aiValid){
-						// AI's move was not accepted by the placeToken() method
-						console.log("AI made an invalid move");
-                                                console.log(aiMove);
-					}
-				}
+                var aiMove = JSON.parse(res);
 
-				// Draw the AI made move
-				_this.__view.draw();
-			});
+                // Fixing for the AI coordinates
+                var aiMove = _this.convertToLocalCoordinate( aiMove );
 
-		} else {
-			alert("Invalid Move!");
-		}
-	}
+                if(aiMove.pass){
+                    // AI passed
+                    _this.__pass = true;
+                    alert("The AI passed");
+                    console.log("The AI passed"); // todo the ai passed. notify the user
+                } else {
+
+                    var aiValid = _this.__gameSpace.placeToken(aiMove.c, aiMove.x, aiMove.y);
+
+                    if (!aiValid){
+                        // AI's move was not accepted by the placeToken() method
+                        console.log("AI made an invalid move");
+                        console.log(aiMove);
+                    }
+                }
+
+                // Draw the AI made move
+                _this.__view.draw();
+            });
+
+        } else {
+            alert("Invalid Move!");
+        }
+    }
 
 	pass(){
 		var _this = this;
@@ -116,8 +118,8 @@ class AIGameController extends GameController {
     /**
      * This function takes the last move and convert coordinates to match the AI server.
      * For the current implementation of the AI server: x and y are flipped
-     * 
-     * @param {object} lastMove - the last made move. 
+     *
+     * @param {object} lastMove - the last made move.
      * lastMove = {
      *      x: number,
      *      y: number,
@@ -131,27 +133,27 @@ class AIGameController extends GameController {
         var temp = lastMove.x;
         lastMove.x = lastMove.y;
         lastMove.y = temp;
-        
+
         return lastMove;
     }
-    
+
     /**
      * This function converts the received move from the AI server
      * to match the local board implementation.
-     * 
+     *
      * For the current implementation of the AI server: x and y are flipped
-     * 
+     *
      * @param {object} receivedMove - the move object that is received from the AI server
      */
     convertToLocalCoordinate(receivedMove){
-        
+
          // Swapping (x,y) coordinate to match AI server
         var temp = receivedMove.x;
         receivedMove.x = receivedMove.y;
         receivedMove.y = temp;
-        
+
         return receivedMove;
-        
+
     }
-    
+
 }

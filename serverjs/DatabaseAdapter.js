@@ -8,7 +8,7 @@ mongoose.connect('mongodb://localhost:27017/my_database_name');
 
 //define Model for User entity. This model represents a collection in the database.
 //define the possible schema of User document and data types of each field.
-var Userdb = mongoose.model('Userdb', {username: String, password: String, security: String});
+var Userdb = mongoose.model('Userdb', {username: String, password: String, security: String, wins: Number, losses: Number});
 
 /**
  *
@@ -40,8 +40,62 @@ function getUserData(username) {
     return u;
 }
 
+function incrementWins(username) {
+
+    console.log('--incrementing wins...');
+
+    var query = {username: username}
+
+    Userdb.findOne(query, function (err, userObj) {
+
+        if (err){
+            console.log(err);
+        }
+
+        console.log('--found user')
+        console.log(userObj)
+
+        if (userObj) {
+
+            Userdb.update(query, { $set: { wins: userObj.wins + 1 }}, function(){
+
+                console.log("--updated " + username + "'s wins");
+
+            });
+
+        }
+    });
+}
+
+function incrementLosses(username) {
+
+    console.log('--incrementing losses...');
+
+    var query = {username: username}
+
+    Userdb.findOne(query, function (err, userObj) {
+
+        if (err){
+            console.log(err);
+        }
+
+        console.log('--found user')
+        console.log(userObj)
+
+        if (userObj) {
+
+            Userdb.update(query, { $set: { losses: userObj.losses + 1 }}, function(){
+
+                console.log("--updated " + username + "'s losses");
+
+            });
+
+        }
+    });
+}
+
 function registerUser(username, password, security, fn) {
-    var new_user = new Userdb({username: username, password: password, security: security});
+    var new_user = new Userdb({username: username, password: password, security: security, wins: 0, losses: 0});
 
     new_user.save(function (err, userObj) {
       if (err) {
@@ -84,7 +138,12 @@ module.exports = {
     authenticate: authenticateUser,
     getUserData: getUserData,
     register: registerUser,
+<<<<<<< HEAD
     winLoss: getWinLoss// ,
+=======
+    addWin: incrementWins,
+    addLoss: incrementLosses // ,
+>>>>>>> master
             // example : example
             // ...
 
