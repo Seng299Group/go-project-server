@@ -1,5 +1,5 @@
 body{
-	
+
 	background: url("");
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -8,32 +8,33 @@ body{
 }
 
 #sideBar{
-  
+
 	background: #EEEEEE;
 	width: 300px;
 	height: 100%;
 	position: absolute;
 	right: 0;
-	box-shadow: 0px 0px 8px -0.5px #000000; 
+	box-shadow: 0px 0px 8px -0.5px #000000;
+    z-index: 1;
 
 }
 
 #settingsBar {
-	
+
 	height: 80%;
 	width: 75%;
-	z-index: 1;
+	z-index: 2;
 	position: absolute;
     right: 30px;
 	top:140px;
-	
+
 }
 #canvas {
-	
+
 	position: absolute;
     left: 205px;
 	top:10px;
-  
+
 }
 #buttonBarWrapper{
 	font-size:20pt;
@@ -42,7 +43,7 @@ body{
 	top: 625px;
 	height:52px;
 	margin:-1px;
-	z-index:-1;
+	z-index:0;
 }
 
 #c2{
@@ -69,7 +70,7 @@ body{
 }
 #showBar {
 
-	
+
 	height: 15%;
 	width: 50%;
 	border-radius: 25px;
@@ -97,16 +98,16 @@ body{
 	cursor:pointer;
 	width:160px;
 }
-.playerid { 
-    height: 65px; 
-    width: 100%; 
-    background-color: green;  
-    outline:0; 
+.playerid {
+    height: 65px;
+    width: 100%;
+    background-color: green;
+    outline:0;
 	font-size:25pt;
 	white-space:nowrap;
 	vertical-align:center;
-	
-  } 
+
+  }
 
 .circle1{
 	width: 160px;
@@ -125,13 +126,13 @@ body{
 	background: url("white-go-bowl.png") no-repeat;
 	}
 .bowl{
- 
+
 	width:  150px;
     height: 131.25px;
     background-position: 50% 50%;
     background-repeat:   no-repeat;
     background-size:     cover;
-	
+
 }
 .colourButton{
 	background-color: gray;

@@ -23,14 +23,10 @@ class NetworkGameController extends GameController {
 
         if (moveAccepted) {
 
-//<<<<<<< HEAD
             this.__gameSpace.getBoard().print();
-			
+
 			this.swapTurn();
-//=======
-//            this.swapTurn();
-//
-//>>>>>>> master
+
             data = {
                 move: {
                     x: x,

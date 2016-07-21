@@ -326,11 +326,16 @@ function listen(io) {
          */
         socket.on('gameRequest', function (data) {
             if (onlineUsers[data.toUser] === undefined) {
-                    var resData = {
-                        type: "notInMpLobby",
-                        username: data.toUser
-                    };
-                    socket.emit("_error", resData);
+
+                // removing request
+                onlineUsers[data.fromUser].removeFromRequestReceivedList(data.toUser);
+
+                // signalling error
+                var resData = {
+                    type: "notInMpLobby",
+                    username: data.toUser
+                };
+                socket.emit("_error", resData);
 
             } else {
                 

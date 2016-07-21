@@ -11,7 +11,7 @@ class View {
      * __W			- width of the canvas
      * __H			- height of the canvas
      * __svg			- A SVG object under the canvas object.
-     * 
+     *
      * __scale		- A scaling factor. (Pixel between lines on the board)
      * __radius		- The radius of the stone. (Unit: px)
      * __offset		- Offset to account for borders of the board. (Unit: px)
@@ -31,7 +31,7 @@ class View {
 
     /**
      * Sets the controller for this instance.
-     * 
+     *
      * @param {object} controller - A GameController object.
      */
     setController(controller){
@@ -40,7 +40,7 @@ class View {
 
     /**
      * This function initializes the View.
-     * 
+     *
      * Precondition: the setGameSpace() method must be called before calling
      * 		this method.
      */
@@ -66,6 +66,9 @@ class View {
         this.__p1Colour = "black";
         this.__p2Colour = "white";
         this.__currentPlayer = 1; //Player Who's Colour is to be Changed
+
+        //init player indicater
+        this.indicatePlayer();
     }
 
     /**
@@ -110,12 +113,12 @@ class View {
                 }
             }
         }
-		
-		this.indicatePlayer();
+
+		// this.indicatePlayer();
 
     }
-	
-	
+
+
 
 	indicatePlayer(){
 		if(this.__controller.__playerTurn === 1){
@@ -127,7 +130,7 @@ class View {
 			document.getElementById("c1").style.visibility = "visible";
 		}
 	}
-	
+
 
     /**
      * This method should be called when the view is clicked.
@@ -143,7 +146,7 @@ class View {
 
         // Placing the stone
 	this.__controller.placeToken(this.__controller.getPlayerTurn(), posx, posy);
-		
+
 	// Drawing the board
 	this.draw();
     }
@@ -154,13 +157,13 @@ class View {
             document.getElementById("colourButtonTable").style.visibility = "visible";
 			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
-			
+
 			document.getElementById("colourButtonTable").style.visibility = "hidden";
 			document.getElementById("backgroundTable").style.visibility = "hidden";
 			document.getElementById("showBar").style.visibility = "visible";
          }
 	}
-        
+
     changeColour(colour){
         if(this.__currentPlayer == 1){
                 this.__p1Colour = colour;
@@ -169,7 +172,7 @@ class View {
         }
         this.draw();
     }
-        
+
     setPlayer(player){
         this.__currentPlayer = player;
 		var playerOneButton = document.getElementById("playerOne");
@@ -180,7 +183,7 @@ class View {
 			playerTwoButton.style.backgroundColor = "BFC3BA";
 		}else{
 			playerOneButton.style.backgroundColor = "BFC3BA";
-			playerTwoButton.style.backgroundColor = "0F8B8D";	
+			playerTwoButton.style.backgroundColor = "0F8B8D";
 		}
     }
 	setPageBackround(){
