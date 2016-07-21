@@ -386,6 +386,11 @@ function showUserResignedNotification() {
  * @param {int} boardSize - the size of the board
  */
 function sendGameRequest(toUser, boardSize) {
+    
+    // Adding request to local user data
+    user.__requestSentList[toUser] = "pending";
+
+    // Sending game request
     var data = {
         type: "sendRequest",
         toUser: toUser,
