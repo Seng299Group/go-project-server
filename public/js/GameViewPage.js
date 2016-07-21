@@ -19,7 +19,9 @@ socket.on('userdataForUsername', function (data) {
     user = data;
 });
 
-
+socket.on("userLeftGame", function(){
+    showUserResignedNotification();
+});
 
 // Game modes
 if (sessionStorage.gameMode === "hotseat") {
@@ -274,15 +276,6 @@ if (sessionStorage.gameMode === "hotseat") {
  */
 function showWinnerNotification(data) {
 
-//    var data = {
-//        p1Username: "Tim",
-//        p2Username: "Bob",
-//        p1Score: "10",
-//        p2Score: "20",
-//        winner: "Bob"
-//    };
-    // todo dev purpose todo delete
-
     $("#notification-screenLock").css("display", "block");
 
     var title = "Game over";
@@ -315,6 +308,31 @@ function showWinnerNotification(data) {
 /**
  * This function is called when the opponent leaves a network game
  */
-function showUserLeftNotification() {
-    // todo implement
+function showUserResignedNotification() {
+    $("#notification-screenLock").css("display", "block");
+
+    var title = "Your Opponent Has Resigned";
+
+    var msg = "You win";
+
+    function onClose() {
+        window.location.href = "/gameSelect.html";
+    }
+
+    function onReplay() {
+        // Removing the gray screen lock
+        $("#notification-screenLock").css("display", "none");
+        
+        // todo Travis 
+    }
+
+    var buttons = [
+        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button")
+//        ,
+//        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
+    ];
+
+    nf = nfBuilder.makeNotification(title, msg, buttons).attr("class", "leftGameInProgressNotification");
+
+    $("#notificationCenter").append(nf);
 }

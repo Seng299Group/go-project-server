@@ -319,6 +319,38 @@ function showPendingGameRequests() {
     }
 }
 
+/**
+ * This function is called when the opponent leaves a network game
+ */
+function showUserResignedNotification() {
+    $("#notification-screenLock").css("display", "block");
+
+    var title = "Your Opponent Has Resigned";
+
+    var msg = "You win";
+
+    function onClose() {
+        window.location.href = "/gameSelect.html";
+    }
+
+    function onReplay() {
+        // Removing the gray screen lock
+        $("#notification-screenLock").css("display", "none");
+        
+        // todo Travis 
+    }
+
+    var buttons = [
+        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button")
+//        ,
+//        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
+    ];
+
+    nf = nfBuilder.makeNotification(title, msg, buttons).attr("class", "leftGameInProgressNotification");
+
+    $("#notificationCenter").append(nf);
+}
+
 
 
 
@@ -401,10 +433,10 @@ socket.on('userdata', function (data) {
     user = data;
     sessionStorage.sessionID = user.__socketid;
 
-    if (user.__isInGame) {
-        applyScreenLock();
-        var nf = nfBuilder.getInGameNotification();
-        $("#notificationCenter").append(nf);
+    if (user.__isInGame === true) {
+        socket.emit("userLeftGame", {toUser: user.__opponent, fromUser: user.__username});
+        user.__isInGame = false;
+        user.__opponent = null;
     }
 
     decorateProfile();

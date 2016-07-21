@@ -423,6 +423,23 @@ function listen(io) {
         
         
         
+        socket.on('userLeftGame', function (data) {
+            
+            // todo Brian : data.fromUser left game. treat as resign
+            
+            onlineUsers[data.toUser].setIsInGame(false);
+            onlineUsers[data.fromUser].setIsInGame(false);
+            
+            onlineUsers[data.toUser].setOpponent(null);
+            onlineUsers[data.fromUser].setOpponent(null);
+            
+            // Notify opponent
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
+            io.sockets.connected[toUserSocketID].emit("userLeftGame"); // second param can be an object
+        });
+        
+        
+        
         // Socket.io Event: Disconnect
         socket.on('disconnect', function () {
 
