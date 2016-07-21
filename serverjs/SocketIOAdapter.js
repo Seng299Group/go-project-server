@@ -242,7 +242,7 @@ function listen(io) {
         });
 
         socket.on('newAccount',  function(data){
-          db.register(data.username, data.password, data.security, function(wlHistory,regSuc) {
+          db.register(data.username, data.password, data.security, function(regSuc) {
             if(regSuc) {
               socket.emit("regSuccess");
             }
@@ -255,8 +255,8 @@ function listen(io) {
           });
         });
 
-        socket.on('getWinLoss' function(data) {
-            db.winLoss(data.username, function(reqSuc) {
+        socket.on('getWinLoss', function(data) {
+            db.winLoss(data.username, function(reqSuc, wlHistory) {
               if(reqSuc) {
                 //request Successful
                 socket.emit("requestSuccess", wlHistory);

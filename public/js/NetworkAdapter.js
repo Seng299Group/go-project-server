@@ -75,11 +75,11 @@ class NetworkAdapter {
 
 			socket.emit("getWinLoss", {username: username});
 
-			socket.on("requestSuccess" function(wlHistory) {
+			socket.on("requestSuccess", function(wlHistory) {
 				callback(true, wlHistory);
 			});
 
-			socket.on("requestFail" function() {
+			socket.on("requestFail", function() {
 				callback(false, null);
 			});
 	}

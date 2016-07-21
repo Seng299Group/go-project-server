@@ -18,9 +18,14 @@ var Userdb = mongoose.model('Userdb', {username: String, password: String, secur
  */
 function authenticateUser(username, password, fn) {
     Userdb.findOne({username: username, password: password}, function (err, userObj) {
-    if (err)
+
+    if (err) {
+
       console.log(err);
+    }
+
     userObj ? fn(true) : fn(false)
+
   });
 }
 
@@ -95,33 +100,61 @@ function incrementLosses(username) {
 }
 
 function registerUser(username, password, security, fn) {
+
     var new_user = new Userdb({username: username, password: password, security: security, wins: 0, losses: 0});
 
     new_user.save(function (err, userObj) {
+
       if (err) {
+
         console.log(err);
         fn(false);
+
       } else {
+
         console.log('saved successfully:', userObj);
         fn(true);
+
       }
     });
 }
 // to do : all this down hurr
 function uniqueUser(username, fn) {
+
   Userdb.findOne({username: username}, function (err, userObj) {
+
     if(err)
+
       console.log(err);
+
       userObj ? fn(true) : fn(false)
+
   });
 }
 
 function getWinLoss(username, fn) {
-  Userdb.findone({username: username} function(err, userObj) {
-    if(err)
-      console.log(err);
+  console.log('username passed to getWinLoss ' + username);
 
-  }
+  Userdb.findOne({username: username}, 'wins losses', function(err, userObj) {
+    if(err) {
+
+        console.log(err);
+
+        fn(false, null);
+    }
+
+    else if(userObj){
+
+        console.log('userObj fetched from DatabaseAdapter ' + userObj.wins, userObj.losses);
+
+        var result = {wins: userObj.wins, losses: userObj.losses};
+
+        console.log('result object form DatabaseAdapter: ' + result.wins + result.losses);
+
+        fn(true, result);
+
+    }
+  });
 }
 /*
  * other functions to query the database as needed
@@ -138,12 +171,9 @@ module.exports = {
     authenticate: authenticateUser,
     getUserData: getUserData,
     register: registerUser,
-<<<<<<< HEAD
-    winLoss: getWinLoss// ,
-=======
+    winLoss: getWinLoss,
     addWin: incrementWins,
     addLoss: incrementLosses // ,
->>>>>>> master
             // example : example
             // ...
 

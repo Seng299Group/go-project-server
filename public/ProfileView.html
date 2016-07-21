@@ -12,7 +12,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/NetworkAdapter.js" type="text/javascript"></script>
     <script src="js/profileView.js" type="text/javascript"></script>
-    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
   </head>
   <body>
     <!-- The drawer is always open in large screens. The header is always shown, even in small screens. -->
@@ -50,7 +49,7 @@
 
           <div class="demo-card-wide mdl-card mdl-shadow--2dp">
             <div class="mdl-card__title">
-              <h3 class="mdl-card__title-text welcome-message">Welcome </h2>
+              <h2 class="mdl-card__title-text welcome-message"></h2>
             </div>
             <div class="mdl-card__supporting-text">
               <h6><b>GO Game Stats</b></h6>
@@ -60,7 +59,7 @@
               <p class="wins">
                 Wins:
               </p>
-              <p class="loses">
+              <p class="losses">
                 Loses:
               </p>
               <p class="win-rate">
@@ -71,22 +70,19 @@
             <div class="demo-card-wide mdl-card mdl-shadow--2dp">
               <div class="mdl-card__actions mdl-card--border">
                 <h6 style="color: rgba(0,0,0,.54);"><b>Change Password</b></h6>
+                <!-- Simple Textfield -->
                 <form action="#">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="sample3">
-                    <label class="mdl-textfield__label" for="sample3">Current password</label>
+                  <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="sample1">
+                    <label class="mdl-textfield__label" for="sample1">Text...</label>
                   </div>
                 </form>
+
                 <form action="#">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="sample3">
-                    <label class="mdl-textfield__label" for="sample3">New password</label>
-                  </div>
-                </form>
-                <form action="#">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="sample3">
-                    <label class="mdl-textfield__label" for="sample3">Confirm new password</label>
+                    <input class="mdl-textfield__input" type="text" id="sample3" placeholder="Confirm New Password">
+                    <p class="mdl-textfield__error confirm">Letters and spaces only</p>
+
                   </div>
                 </form>
                 <!-- Accent-colored raised button with ripple -->
