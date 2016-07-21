@@ -94,6 +94,7 @@ function showBoardSizePickerNotification(gameMode) {
     var title = "Starting ";
     var emphasisStyle = "color: green; display: inline-block;";
 
+    // Making title
     if (gameMode === "hotseat") {
         title += "a <div style=' " + emphasisStyle + " '>Hotseat</div>";
     } else if (gameMode === "ai") {
@@ -101,10 +102,10 @@ function showBoardSizePickerNotification(gameMode) {
     }
     title += " game";
 
-
-
+    // Body text
     var msg = "Please select a board size.";
 
+    // Buttons
     var buttons = [
         nfBuilder.makeNotificationButton("9x9", function () {
             sessionStorage.boardSize = 9;
@@ -122,6 +123,7 @@ function showBoardSizePickerNotification(gameMode) {
         }).attr("class", "notification_button_general")
     ];
 
+    // when the notification is canceled
     function onCancel() {
         notification.remove();
         removeScreenLock();
@@ -142,12 +144,6 @@ function removeScreenLock() {
     $("#notification-screenLock").css("display", "none");
 }
 
-function violatingFlow() {
-    console.log("viloating flow. session isStorage is undefined");
-    alert("viloating flow"); // for dev purposes // todo remove
-    // todo session expired
-}
-
 function requestNewGuestLogin() {
     socket.emit('guestLogin', 'guest login');
     socket.on('guestLogin', function (data) {
@@ -166,5 +162,13 @@ function requestUserData(username) {
         sessionStorage.sessionID = data.__socketid; // todo clean
         user = data;
 
+        if (user === undefined) {
+            // Show notification
+            $("#bodyWrapper").remove();
+            var nfBuilder = new NotificationBuilder();
+            var nf = nfBuilder.getSessionExpiredNotification();
+            nf.appendTo("body");
+        }
+
     });
-}
+} 

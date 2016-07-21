@@ -392,13 +392,13 @@ function showUserResignedNotification() {
         // Removing the gray screen lock
         $("#notification-screenLock").css("display", "none");
 
-        // todo Travis 
+        // todo Travis . this should start replay
     }
 
     var buttons = [
         nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button")
-//        ,
-//        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
+        ,
+        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
     ];
 
     nf = nfBuilder.makeNotification(title, msg, buttons).attr("class", "leftGameInProgressNotification");
