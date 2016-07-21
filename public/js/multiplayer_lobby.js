@@ -35,7 +35,7 @@ document.onkeydown = function (event) {
     /**
      * if the user pressed escape, remove the notification
      */
-    if (event.code === "Escape") {
+    if (event.keyCode === 27) { // Escape
         notification.remove();
         removeScreenLock();
     }
@@ -487,8 +487,6 @@ socket.on('_error', function (data) {
         
         // todo 1. notify user that the invited user has left the lobby
         applyScreenLock();
-        
-        
         
         var title = "User is offline";
         var msg = "<b>" + data.username + "</b> is no longer online";
