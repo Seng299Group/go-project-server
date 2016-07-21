@@ -110,7 +110,7 @@ function removeUserFromDictionary(username) {
     }
 
     if (onlineUsers[username] === undefined) {
-        console.log("user left after server restart");
+        console.log("user left after server restarted. removeUserFromDictionary()");
     } else {
 
         // todo save user data before deleting
@@ -473,7 +473,9 @@ function listen(io) {
             var user = onlineUsers[socketIDtoUsername[socket.id]];
 
             if (user === undefined) {
-                console.log("user left after server restarted");
+                
+                console.log("user left after server restarted. socket.on('disconnect')");
+                socket.emit("_error", "sessionExpired");
 
             } else {
                 // set user to ofline

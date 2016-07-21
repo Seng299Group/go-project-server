@@ -1,6 +1,8 @@
 
 var socket = io();
 
+var nfBuilder = new NotificationBuilder();
+
 var user;
 
 
@@ -88,7 +90,7 @@ var notification;
  */
 function showBoardSizePickerNotification(gameMode) {
 
-    var nfBuilder = new NotificationBuilder();
+//    var nfBuilder = new NotificationBuilder();
 
     // Title of the notification
     var title = "Starting ";
@@ -144,31 +146,62 @@ function removeScreenLock() {
     $("#notification-screenLock").css("display", "none");
 }
 
-function requestNewGuestLogin() {
-    socket.emit('guestLogin', 'guest login');
-    socket.on('guestLogin', function (data) {
-        console.log(data);
-        user = data;
-        sessionStorage.username = user.__username;
-        sessionStorage.sessionID = user.__socketid;
-    });
+/**
+ * This function clears the body of the HTML page
+ * and shows a "Session Expired" notification
+ */
+function showSessionExpired() {
+    // Show notification
+    $("#bodyWrapper").remove();
+    var nf = nfBuilder.getSessionExpiredNotification();
+    nf.appendTo("body");
 }
 
+
+
+
+
+/********************************* Socket IO **********************************/
+/**
+ * This function requests user data using uername
+ * @param {type} username - username of the user
+ */
 function requestUserData(username) {
-
     socket.emit("userdataForUsername", username);
+}
 
-    socket.on('userdataForUsername', function (data) {
-        sessionStorage.sessionID = data.__socketid; // todo clean
-        user = data;
+// The response is recieved here
+socket.on('userdataForUsername', function (data) {
+    console.log(data);
+    sessionStorage.sessionID = data.__socketid;
+    user = data;
 
-        if (user === undefined) {
-            // Show notification
-            $("#bodyWrapper").remove();
-            var nfBuilder = new NotificationBuilder();
-            var nf = nfBuilder.getSessionExpiredNotification();
-            nf.appendTo("body");
-        }
+    if (user === undefined) {
+        showSessionExpired();
+    }
 
-    });
-} 
+});
+
+
+
+function requestNewGuestLogin() {
+    socket.emit('guestLogin', 'guest login');
+}
+
+socket.on('guestLogin', function (data) {
+    console.log(data);
+    user = data;
+
+    if (user === undefined) {
+        showSessionExpired();
+    } else {
+        sessionStorage.username = user.__username;
+        sessionStorage.sessionID = user.__socketid;
+    }
+});
+
+socket.on('_error', function (data) {
+    if (data === "sessionExpired") {
+        showSessionExpired();
+    }
+});
