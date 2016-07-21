@@ -244,7 +244,7 @@ function renderNetwork() {
         gameController.setView(view);
 
         //FIXME: This if shouldn't be here, but I see no other place to do it
-        if (gameController.__localPlayer === 2){
+        if (gameController.__localPlayer === 2) {
             view.lockControls();
         }
 
@@ -365,26 +365,30 @@ function showWinnerNotification(data) {
     msg += "<br><br> The winner is: " + data.winner;
 
     function onClose() {
-        window.location.href = "/gameSelect.html";
-    }
+//        window.location.href = "/gameSelect.html";
 
-    function onReplay() {
         // Removing the gray screen lock
         $("#notification-screenLock").css("display", "none");
         nf.remove();
-
-        var leftButton = document.getElementById('leftButton');
-        var rightButton = document.getElementById('rightButton');
-        leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
-        rightButton.innerHTML = "";
     }
 
-    var buttons = [
-        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button"),
-        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
-    ];
+//    function onReplay() { // todo arshi clean up
+//        // Removing the gray screen lock
+//        $("#notification-screenLock").css("display", "none");
+//        nf.remove();
+//
+//        var leftButton = document.getElementById('leftButton');
+//        var rightButton = document.getElementById('rightButton');
+//        leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
+//        rightButton.innerHTML = "";
+//    }
+//
+//    var buttons = [
+//        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button"),
+//        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
+//    ];
 
-    nf = nfBuilder.makeNotification(title, msg, buttons).attr("class", "leftGameInProgressNotification");
+    nf = nfBuilder.makeNotification(title, msg, null, onClose).attr("class", "gameOverNotification");
 
     $("#notificationCenter").append(nf);
 }
