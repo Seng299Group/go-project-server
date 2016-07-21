@@ -20,6 +20,7 @@ socket.on('userdataForUsername', function (data) {
 
 	if (sessionStorage.gameMode === "hotseat") {
 		renderHotSeat();
+		
 
 	} else if (sessionStorage.gameMode === "ai") {
 		
@@ -72,7 +73,8 @@ function renderHotSeat() {
         view.init();
         view.draw(); // Draws the empty board
         view.drawButtons();
-
+		setColourPallet(view);
+		
         gameController.setGameSpace(myGameSpace);
         gameController.setView(view);
 
@@ -118,6 +120,7 @@ function renderHotSeat() {
 	
 	function renderAI() {
 
+
 			
 		document.getElementById("player1").innerHTML = "Player - Black";
 		document.getElementById("player2").innerHTML = "Computer - White";
@@ -140,7 +143,8 @@ function renderHotSeat() {
         view.init();
         view.draw(); // Draws the empty board
         view.drawButtons();
-
+		setColourPallet(view);
+		
         gameController.setGameSpace(myGameSpace);
         gameController.setView(view);
 
@@ -180,6 +184,7 @@ function renderHotSeat() {
 				window.location.href = "/gameSelect.html";
 			}
         });
+
     }
 	
 
@@ -224,6 +229,7 @@ function renderHotSeat() {
             view.init();
             view.draw(); // Draws the empty board
             view.drawButtons();
+			setColourPallet(view);
 
             gameController.setGameSpace(myGameSpace);
             gameController.setView(view);
@@ -264,6 +270,7 @@ function renderHotSeat() {
 				window.location.href = "/gameSelect.html";
 			}
             });
+
         }
 
         // todo update __isOnline flag on the server when the game is over
@@ -271,6 +278,52 @@ function renderHotSeat() {
         // when the game ends, delete session's game mode using the following code
         // delete(sessionStorage.gameMode);
     }
+	
+	function setColourPallet(view){	
+		$("#colourOne").click(function () {
+				view.changeColour("2EC4B6");
+			});
+				$("#colourTwo").click(function () {
+					view.changeColour("533A71");
+				});
+				$("#colourThree").click(function () {
+					view.changeColour("26547C");
+				});
+				$("#colourFour").click(function () {
+					view.changeColour("EF476F");
+				});
+				$("#colourFive").click(function () {
+					view.changeColour("918EF4");
+				});
+				$("#colourSix").click(function () {
+					view.changeColour("B09398");
+				});
+				$("#colourSeven").click(function () {
+					view.changeColour("A1E8AF");
+				});
+				$("#colourEight").click(function () {
+					view.changeColour("DBD56E");
+				});
+				$("#playerOne").click(function () {
+					view.setPlayer(1);
+				});
+				$("#playerTwo").click(function () {
+					view.setPlayer(2);
+				});
+				$("#showBar").click(function () {
+					view.showBar()
+				});
+				$("#backOne").click(function () {
+					document.body.style.backgroundImage = "url(\"/img/backOne.jpg\")";
+				});
+				$("#backTwo").click(function () {
+					document.body.style.backgroundImage = "url(\"/img/backTwo.jpg\")";
+				});
+				$("#backThree").click(function () {
+					document.body.style.backgroundImage = "url(\"/img/backThree.jpg\")";
+				});
+	}
+	
 	
 /**
  * This function creates and shows the winner notification on the screen.

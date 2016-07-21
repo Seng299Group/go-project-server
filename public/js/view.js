@@ -54,6 +54,7 @@ class View {
 
         // HTML SVG object
         this.__svg = $(makeSVG(this.__W, this.__H));
+		this.__
 
         // Drawing variables
         this.__scale = this.__W / this.__gameSpace.size;
@@ -84,6 +85,9 @@ class View {
         // 2. Clearing SVG
         this.__svg.empty();
 
+		//
+		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "white");
+		this.__svg.append(canvas);
         // 3. Drawing lines (intersections)
         for (var i = 0; i < boardArray.length; i++) {
             var line_v = makeLine((this.__scale * i) + this.__offset, this.__offset, (this.__scale * i) + this.__offset, this.__H - this.__offset, "black", "black");
@@ -108,7 +112,7 @@ class View {
         }
 		
 		this.indicatePlayer();
-	
+
     }
 	
 	
@@ -146,10 +150,15 @@ class View {
 
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
+            document.getElementById("sideBar").style.visibility = "visible";
             document.getElementById("colourButtonTable").style.visibility = "visible";
+			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
-            document.getElementById("colourButtonTable").style.visibility = "hidden";
-		}
+			
+			document.getElementById("colourButtonTable").style.visibility = "hidden";
+			document.getElementById("backgroundTable").style.visibility = "hidden";
+			document.getElementById("showBar").style.visibility = "visible";
+         }
 	}
         
     changeColour(colour){
@@ -163,8 +172,21 @@ class View {
         
     setPlayer(player){
         this.__currentPlayer = player;
-    }
+		var playerOneButton = document.getElementById("playerOne");
+		var playerTwoButton = document.getElementById("playerTwo");
 
+		if(player == 1){
+			playerOneButton.style.backgroundColor = "0F8B8D";
+			playerTwoButton.style.backgroundColor = "BFC3BA";
+		}else{
+			playerOneButton.style.backgroundColor = "BFC3BA";
+			playerTwoButton.style.backgroundColor = "0F8B8D";	
+		}
+    }
+	setPageBackround(){
+		var page = document;
+		page.backgroundImage = "img/go.jpg"
+	}
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
 		buttonBar.innerHTML = "<div id=leftButton><i style=\"font-size: 35px;\" class=\"fa fa-thumbs-down\" aria-hidden=\"true\"><br>Pass</i></div>\
