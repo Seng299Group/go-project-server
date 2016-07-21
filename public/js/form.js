@@ -1,3 +1,18 @@
+/**
+ * Triggered on keyboard button press
+ *
+ * @param {object} event
+ */
+document.onkeydown = function (event) {
+
+    /**
+     * if the user pressed escape, remove the notification
+     */
+    if (event.key === "Enter") {
+        register();
+    }
+};
+
 function register() {
   var username = $("#user-name").val();
   var password = $("#password").val();
@@ -84,9 +99,9 @@ function confirmPass(confirm) {
     $('#confirm-err').html('');
     return true;
   }
-
+}
 // This is showing as undefined for some reason?
-function checkSec(answer) {
+function checkSecurity(answer) {
   if(answer.length < 3) {
     $("#security-err").html("Secuirty answer must be atleast 3 characters long");
     return false;
@@ -95,5 +110,4 @@ function checkSec(answer) {
     $("#security-err").html('');
     return true;
   }
-}
 }

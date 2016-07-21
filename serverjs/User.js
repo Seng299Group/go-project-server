@@ -63,6 +63,10 @@ class User {
         addToRequestSentList(username){
             this.__requestSentList[username] = "pending";
         }
+        
+        removeFromRequestSentList(username){
+            delete(this.__requestSentList[username]);
+        }
 
         getRequestSentList(){
             return this.__requestSentList;

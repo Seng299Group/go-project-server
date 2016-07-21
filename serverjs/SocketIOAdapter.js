@@ -367,6 +367,9 @@ function listen(io) {
 
                         onlineUsers[data.fromUser].setPlayerNumber(2);
                         onlineUsers[data.toUser].setPlayerNumber(1);
+                        
+                        onlineUsers[data.fromUser].removeFromRequestReceivedList(data.toUser);
+                        onlineUsers[data.toUser].removeFromRequestSentList(data.fromUser);
 
                         // Signal both users that the game has been approved by the server
                         io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
@@ -396,25 +399,44 @@ function listen(io) {
         // When a user makes a move
         socket.on('move', function (data) {
 
-            /*
-             * The data should include the following:
-             * data = {
-             *      fromUser: username,
-             *      toUser: username,
-             *      move: object (to be decided data structure)
-             *  }
-             */
-
-            var fromUser = data.fromUser;
-            var toUser = data.toUser;
-
-            // ... todo fixme make moves
-
-            var toUserSocketID = onlineUsers[toUser].getSocketID();
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
             io.sockets.connected[toUserSocketID].emit("move", data); // second param can be an object
 
         });
 
+
+
+        // When a user resigns
+        socket.on('resign', function (data) {
+
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
+            io.sockets.connected[toUserSocketID].emit("resign"); // second param can be an object
+
+        });
+
+
+
+        // When the game ends after 2 passes
+        socket.on('gameOver', function (data) {
+
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
+            io.sockets.connected[toUserSocketID].emit("gameOver"); // second param can be an object
+
+        });
+
+        // Add a win to the user's account
+        socket.on('addWin', function (data) {
+
+            db.addWin(data.fromUser);
+
+        });
+
+        // Add a loss to the user's account
+        socket.on('addLoss', function (data) {
+
+            db.addLoss(data.fromUser);
+
+        });
 
 
         socket.on('updateSocketIDForUser', function (data) {
