@@ -20,7 +20,7 @@ function register() {
   var answer = $("#security-question").val();
 
   // todo, redo broken register system.
-  if(!checkUser(username) || !checkPass(password) || !confirmPass(passwordCheck)) {
+  if(!checkUser(username) || !checkPass(password) || !confirmPass(passwordCheck) || !checkSecurity(answer)) {
     return;
   }
 
