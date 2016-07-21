@@ -49,34 +49,27 @@ function userWL(username) {
   }
 }
 
-// validates the password entered against a regex
-function checkPass(pass) {
-  // atleast 6 characters with atleast 1 letter and 1 number
-  var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-  if(!re.test(pass)) {
-      $('#password-check-err').html('Invalid Password, must be atleast 6 characters long with 1 Alphabet and 1 Number');
-      return false;
-  }
-  else {
-    $('#password-check-err').html('');
-    return true;
+
+function changePassword() {
+  password = $('#sample3').val();
+  console.log(password);
+  username = sessionStorage.username;
+  (new NetworkAdapter()).updatePassword(password, username, onRes);
+
+  function onRes(success, data) {
+
+    if(success) {
+      $('#sample3').html('');
+      $('#sample2').html('');
+      alert('Password Updated');
+    }
+    else {
+      $('#sample3').html('');
+      $('#sample2').html('');
+      alert('Password update Failed sorry we are shit programmers');
+    }
   }
 }
-
-// confirms the two passwords entered are the same.
-function confirmPass(confirm) {
-  var password = $('#password').val();
-
-  if(confirm != password) {
-    $('#confirm-err').html('Passwords do not match!');
-    return false;
-  }
-  else if(confirm === password) {
-    $('#confirm-err').html('');
-    return true;
-  }
-}
-
 
 
 

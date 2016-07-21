@@ -83,4 +83,18 @@ class NetworkAdapter {
 				callback(false, null);
 			});
 	}
+
+	updatePassword(password, username, callback) {
+		var socket = io();
+
+		socket.emit("updatePassword", {password: password, username: username});
+
+		socket.on("updateSuc", function() {
+			callback(true);
+		});
+
+		socket.on("updateFail", function () {
+			callback(false);
+		});
+	}
 }

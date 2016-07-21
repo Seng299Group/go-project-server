@@ -125,8 +125,6 @@ function uniqueUser(username, fn) {
 }
 
 function getWinLoss(username, fn) {
-  console.log('username passed to getWinLoss ' + username);
-
   Userdb.findOne({username: username}, 'wins losses', function(err, userObj) {
     if(err) {
 
@@ -137,16 +135,36 @@ function getWinLoss(username, fn) {
 
     else if(userObj){
 
-        console.log('userObj fetched from DatabaseAdapter ' + userObj.wins, userObj.losses);
-
         var result = {wins: userObj.wins, losses: userObj.losses};
-
-        console.log('result object form DatabaseAdapter: ' + result.wins + result.losses);
 
         fn(true, result);
 
     }
   });
+}
+
+function updatePassword(newPassword, username, fn) {
+
+  var query = {username: username}
+
+  Userdb.findOne(query,  function (err, userObj) {
+
+      if (err){
+          console.log(err);
+      }
+
+      if (userObj) {
+
+          Userdb.update(query, { $set: { password: newPassword}}, function(){
+
+              console.log("updated password for: " + username);
+              fn(true);
+
+          });
+
+      }
+  });
+
 }
 /*
  * other functions to query the database as needed
@@ -165,7 +183,8 @@ module.exports = {
     register: registerUser,
     winLoss: getWinLoss,
     addWin: incrementWins,
-    addLoss: incrementLosses // ,
+    addLoss: incrementLosses,
+    updatePass: updatePassword // ,
             // example : example
             // ...
 

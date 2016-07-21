@@ -270,6 +270,21 @@ function listen(io) {
             });
         });
 
+        socket.on('updatePassword', function(data) {
+
+          db.updatePass(data.password, data.username, function(updateSuc) {
+            if(updateSuc) {
+              socket.emit("updateSuc");
+            }
+            else {
+              console.log('Password update failed');
+              socket.emit("updateFail");
+            }
+          });
+
+
+        });
+
         /**
          * Currently used from the game selection page
          * Used to request data given an username
@@ -289,6 +304,8 @@ function listen(io) {
             }
 
         });
+
+
 
 
 
