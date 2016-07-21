@@ -57,24 +57,30 @@ class GameController {
 		this.__historySpot += 1;
 		if(this.__historySpot < gameHistory.length){
 			this.__gameSpace.board = gameHistory[this.__historySpot];
-			this.__view.draw();
 		}else{
 			this.__historySpot = gameHistory.length - 1;
 		}
+		this.__view.draw();
 	}
 	//Rewind
 	//
 	//		Used for Replay Purposes
 	//		to go Back instead of Forward
 	rewind(){
+		console.log("Rewinding");
 		var gameHistory = this.__gameSpace.getHistory();
+		
 		this.__historySpot -= 1;
 		if(this.__historySpot > 0){
 			this.__gameSpace.board = gameHistory[this.__historySpot];
-			this.__view.draw();
+		}else if(this.__historySpot >= gameHistory.length){
+			this.__historySpot = gameHistory.length -1
+			this.__gameSpace.board = gameHistory[this.__historySpot];
 		}else{
 			this.__historySpot = 1;
+			this.__gameSpace.board = gameHistory[this.__historySpot];
 		}
+			this.__view.draw();
 	}
 	startReplay(){
 		var gameHistory = this.__gameSpace.getHistory();
@@ -82,7 +88,5 @@ class GameController {
 		this.__historySpot = 1;
 		this.__gameSpace.board = gameHistory[this.__historySpot];
 		this.__view.draw();
-
-		var startButton = document.getElementById('leftButton');
 	}
 }
