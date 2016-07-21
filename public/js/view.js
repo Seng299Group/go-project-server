@@ -108,8 +108,10 @@ class View {
         }
 		
 		this.indicatePlayer();
-		this.playerNames();
+	
     }
+	
+	
 
 	indicatePlayer(){
 		if(this.__controller.__playerTurn === 1){
@@ -122,12 +124,7 @@ class View {
 		}
 	}
 	
-	playerNames(){
-		document.getElementById("player1").innerHTML = user.__username;
-		document.getElementById("player2").innerHTML = user.__opponent;
-		console.log(user.__username);
-	}
-	
+
     /**
      * This method should be called when the view is clicked.
      * The click event should be handled from here.

@@ -17,15 +17,40 @@ socket.emit("userdataForUsername", sessionStorage.username);
 socket.on('userdataForUsername', function (data) {
     sessionStorage.sessionID = data.__socketid;
     user = data;
+
+	if (sessionStorage.gameMode === "hotseat") {
+		renderHotSeat();
+
+	} else if (sessionStorage.gameMode === "ai") {
+		
+		renderAI();
+
+	} else if (sessionStorage.gameMode === "network") {
+
+		renderNetwork();
+
+	} else {
+	//    console.log("gamemode not specIfied. Reasons: bookmarked or manually typed in the url");
+		console.log("unknow gamemode: " + sessionStorage.gameMode);
+
+		$("#bodyWrapper").remove();
+		
+		var nf = nfBuilder.getSessionExpiredNotification();
+		nf.appendTo("body");
+
+	}
+	
 });
 
 // var globalController;
 
 // Game modes
-if (sessionStorage.gameMode === "hotseat") {
 
-    (function () {
-
+function renderHotSeat() {
+				
+		document.getElementById("player1").innerHTML = "Player 1 - Black";
+		document.getElementById("player2").innerHTML = "Player 2 - White";
+		
         var boardSize = sessionStorage.boardSize;
 
         // cleaning up variables
@@ -87,17 +112,14 @@ if (sessionStorage.gameMode === "hotseat") {
             window.location.href = "/gameSelect.html";
         });
 
-    })();
+    }
+	
+	function renderAI() {
 
-
-
-
-
-
-} else if (sessionStorage.gameMode === "ai") {
-
-    (function () {
-
+			
+		document.getElementById("player1").innerHTML = "Player - Black";
+		document.getElementById("player2").innerHTML = "Computer - White";
+		
         var boardSize = parseInt(sessionStorage.boardSize);
         delete(sessionStorage.gameMode);
         delete(sessionStorage.boardSize);
@@ -154,18 +176,14 @@ if (sessionStorage.gameMode === "hotseat") {
         $("#middleButton").click(function () {
             window.location.href = "/gameSelect.html";
         });
-    })();
+    }
+	
 
-
-
-
-
-
-
-} else if (sessionStorage.gameMode === "network") {
-
-    (function () {
-
+	function renderNetwork() {
+	
+		document.getElementById("player1").innerHTML = user.__username;
+		document.getElementById("player2").innerHTML = user.__opponent;
+	
         console.log("network game acting like hotseat");
 
         // requesting user data
@@ -246,20 +264,8 @@ if (sessionStorage.gameMode === "hotseat") {
 
         // when the game ends, delete session's game mode using the following code
         // delete(sessionStorage.gameMode);
-    })();
-
-
-
-
-} else {
-//    console.log("gamemode not specIfied. Reasons: bookmarked or manually typed in the url");
-    console.log("unknow gamemode: " + sessionStorage.gameMode);
-
-    var nf = nfBuilder.getSessionExpiredNotification();
-    nf.appendTo("body");
-
-}
-
+    }
+	
 /**
  * This function creates and shows the winner notification on the screen.
  * 

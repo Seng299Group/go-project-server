@@ -6,11 +6,7 @@ body{
     background-size: cover;
     background-position: 50% 0%;
 }
-/* #screen{
-	height:100%;
-	width:100%;
-	overflow:hidden;
-} */ 
+
 #sideBar{
   
 	background: #EEEEEE;
@@ -30,7 +26,7 @@ body{
 	position: absolute;
     right: 30px;
 	top:140px;
-
+	
 }
 #canvas {
 	
@@ -42,21 +38,13 @@ body{
 #buttonBarWrapper{
 	font-size:20pt;
 	position: absolute;
-    left: 240px;
-	/* top:595px; */
-	bottom:0px;
+    left: 260px;
+	top: 625px;
 	height:52px;
 	margin:-1px;
+	z-index:-1;
 }
-/* #leftButton{
-	height: 52px;
-}
-#middlebutton{
-	
-}
-#rightbutton{
-	
-} */
+
 #c2{
 	position: absolute;
     left: 3px;
@@ -88,12 +76,35 @@ body{
 	text-align: center;
 	float:right;
 }
+#leftButton{
+	margin:-1px;
+	border:solid;
+	border-width:1px;
+	cursor:pointer;
+	width:160px;
+}
+#middleButton{
+	margin:-1px;
+	border:solid;
+	border-width:1px;
+	cursor:pointer;
+	width:160px;
+}
+#rightButton{
+	margin:-1px;
+	border:solid;
+	border-width:1px;
+	cursor:pointer;
+	width:160px;
+}
 .playerid { 
     height: 65px; 
     width: 100%; 
     background-color: green;  
     outline:0; 
-	font-size:34pt;
+	font-size:25pt;
+	white-space:nowrap;
+	vertical-align:center;
 	
   } 
 
