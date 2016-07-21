@@ -188,7 +188,6 @@ body {
 
 .boardSizeNotification-forOnlinePlayers h1{
     font-size: 14pt;
-    color: black;
 }
 
 .notification_button_general {
@@ -210,5 +209,35 @@ body {
 
 .notification_button_general:active {
     box-shadow: 0px 0px 4px -0.5px grey;
+}
+
+
+/************************/
+
+.notification-userOffline {
+    width: 460px;
+    height: 150px;
+    /*
+    * This height is set under the assumption that username is 32 chars long.
+    * Big username will cause the title to overflow
+    */
+
+    padding: 16px;
+    margin: auto;
+
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    background: white;
+    box-shadow: 0px 0px 8px -0.5px grey;
+
+    z-index: 2;
+}
+
+.notification-userOffline h1 {
+    font-size: 14pt;
 }
 

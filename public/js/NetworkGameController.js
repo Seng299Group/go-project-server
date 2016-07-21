@@ -16,7 +16,6 @@ class NetworkGameController extends GameController {
 
 
     placeToken(player, x, y){
-        //
 
         var data;
 
@@ -24,18 +23,20 @@ class NetworkGameController extends GameController {
 
         if (moveAccepted) {
 
+//<<<<<<< HEAD
             this.__gameSpace.getBoard().print();
 			
 			this.swapTurn();
+//=======
+//            this.swapTurn();
+//
+//>>>>>>> master
             data = {
-                //FIXME: player is the name of the local player's account
-                fromUser: user.__username,
-                toUser: user.__opponent,
                 move: {
                     x: x,
                     y: y,
                     c: this.__localPlayer,
-                    pass: 'false'
+                    pass: false
                 }
             };
 
@@ -51,9 +52,17 @@ class NetworkGameController extends GameController {
 
     }
 
-    receiveMove (x, y) {
+    receiveMove (move) {
 
-        this.__gameSpace.placeToken(this.__remotePlayer, x, y);
+        this.swapTurn();
+
+        if (move.pass === false) {
+            this.__gameSpace.placeToken(this.__remotePlayer, move.x, move.y);
+        }
+        else {
+            this.__pass = true;
+            this.__gameSpace.pass();
+        }
 
 		this.swapTurn();
         this.__view.draw();
@@ -64,29 +73,39 @@ class NetworkGameController extends GameController {
 
     pass () {
 
+        console.log('passing...');
+        console.log('this.pass: ', this.__pass);
+
         if (this.__pass) {
 
-            var data = {
-                fromUser: user.__username,
-                toUser: user.__opponent
+            console.log('2nd consecutive pass')
+
+            this.__socket.emit('gameOver');
+
+            var scores = this.__gameSpace.getScores();
+
+            var results = {
+                p1Username: (this.__localPlayer === 1) ? user.__username : user.__opponent,
+                p2Username: (this.__localPlayer === 2) ? user.__username : user.__opponent,
+                p1Score: scores.p1Score,
+                p2Score: scores.p2Score,
+                winner: (scores.winner === this.__localPlayer) ? user.__username : user.__opponent
             };
 
-            this.declareWinner();
-			this.__view.showReplayOptions();
-            this.__socket.emit('move', data);
+            this.__end(results);
 
         } else {
+
+            this.swapTurn();
+
             this.__gameSpace.pass();
 
             var data = {
-                //FIXME: player is the name of the local player's account
-                fromUser: user.__username,
-                toUser: user.__opponent,
                 move: {
                     x: 0,
                     y: 0,
                     c: 0,
-                    pass: 'true'
+                    pass: true
                 }
             };
 
@@ -98,40 +117,76 @@ class NetworkGameController extends GameController {
 
     resign () {
 
-        var data = {
-            //FIXME: player is the name of the local player's account
-            fromUser: user.__username,
-            toUser: user.__opponent,
-        };
+        console.log('resign');
 
-        console.log("unimplemented method call");
-    }
+        this.__socket.emit('resign');
 
-    end () {
-
-        var data = {
-            //FIXME: player is the name of the local player's account
-            fromUser: user.__username,
-            toUser: user.__opponent,
-        };
-
-        console.log("unimplemented method call");
-    }
-
-    declareWinner () {
         var scores = this.__gameSpace.getScores();
 
-        var displayPackage = {
-            p1Username: user.__username,
-            p2Username: user.__opponent,
+        var results = {
+            p1Username: (this.__localPlayer === 1) ? user.__username : user.__opponent,
+            p2Username: (this.__localPlayer === 2) ? user.__username : user.__opponent,
             p1Score: scores.p1Score,
             p2Score: scores.p2Score,
-            winnner: null
+            winner: user.__opponent
         };
 
-        displayPackage.winner = scores.winner === this.__localPlayer ? user.__username : user.__opponent;
+        this.__end(results);
 
-        showWinnerNotification(displayPackage);
+    }
+
+    receiveResign () {
+
+        console.log('receiveResign');
+
+        var scores = this.__gameSpace.getScores();
+
+        var results = {
+            p1Username: (this.__localPlayer === 1) ? user.__username : user.__opponent,
+            p2Username: (this.__localPlayer === 2) ? user.__username : user.__opponent,
+            p1Score: scores.p1Score,
+            p2Score: scores.p2Score,
+            winner: user.__username
+        };
+
+        this.__end(results);
+
+    }
+
+    receiveGameOver () {
+
+        console.log('receiveGameOver');
+
+        var scores = this.__gameSpace.getScores();
+
+        var results = {
+            p1Username: (this.__localPlayer === 1) ? user.__username : user.__opponent,
+            p2Username: (this.__localPlayer === 2) ? user.__username : user.__opponent,
+            p1Score: scores.p1Score,
+            p2Score: scores.p2Score,
+            winner: (scores.winner === this.__localPlayer) ? user.__username : user.__opponent
+        };
+
+        this.__end(results);
+
+    }
+
+    //sends win/loss data to server
+    __end (results) {
+
+        console.log(results);
+
+        this.__gameSpace.__gameOver = true;
+        showWinnerNotification(results);
+        this.__view.changeToReplayButtons();
+
+        if (results.winner === user.__username) {
+            this.__socket.emit('addWin');
+        }
+        else {
+            this.__socket.emit('addLoss');
+        }
+
     }
 
 }
