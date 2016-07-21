@@ -39,7 +39,7 @@ document.onkeydown = function (event) {
     /**
      * if the user pressed escape, remove the notification
      */
-    if (event.key === "Escape") {
+    if (event.keyCode === 27) { // Escape
         notification.remove();
         removeScreenLock();
     }

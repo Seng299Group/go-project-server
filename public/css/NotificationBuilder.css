@@ -118,4 +118,5 @@
 .cancelButton {
     width: 20px;
     float: right;
+    cursor: pointer;
 }
