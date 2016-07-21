@@ -217,12 +217,14 @@ class View {
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
 		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
-		rightButton.innerHTML = "";
+		rightButton.style.visibility = "hidden";
 	}
 	changeToControlButtons(){
 		console.log("Changing to control");
-		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><br>Forward</div>\
-								<div id=rightButton><br>Backward</div>";
+		var leftButton = document.getElementById('leftButton');
+        var rightButton = document.getElementById('rightButton');
+		
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+        rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
 	}
 }
