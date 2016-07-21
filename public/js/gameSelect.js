@@ -110,12 +110,12 @@ function showBoardSizePickerNotification(gameMode) {
             sessionStorage.boardSize = 9;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
-        ,
+                ,
         nfBuilder.makeNotificationButton("13x13", function () {
             sessionStorage.boardSize = 13;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
-        ,
+                ,
         nfBuilder.makeNotificationButton("19x19", function () {
             sessionStorage.boardSize = 19;
             window.location.href = "/GameView.html";
@@ -165,13 +165,6 @@ function requestUserData(username) {
     socket.on('userdataForUsername', function (data) {
         sessionStorage.sessionID = data.__socketid; // todo clean
         user = data;
-
-        if (user.__isInGame === true) {
-            applyScreenLock();
-            var nfBuilder = new NotificationBuilder();
-            var nf = nfBuilder.getInGameNotification();
-            $("#notificationCenter").append(nf);
-        }
 
     });
 }
