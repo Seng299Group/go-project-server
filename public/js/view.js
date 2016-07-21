@@ -147,9 +147,9 @@ class View {
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
             document.getElementById("colourButtonTable").style.visibility = "visible";
-	}else{
+		}else{
             document.getElementById("colourButtonTable").style.visibility = "hidden";
-            }
+		}
 	}
         
     changeColour(colour){
@@ -167,21 +167,23 @@ class View {
 
 	drawButtons(){
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><i class=\"fa fa-thumbs-down fa-6\" aria-hidden=\"true\"><br>Pass</i></div>\
-									<div id=middleButton><i class=\"fa fa-sign-in fa-6\" aria-hidden=\"true\"><br>Leave Game</i></div>\
-									<div id=rightButton><i class=\"fa fa-hand-paper-o fa-6\" aria-hidden=\"true\"><br>Resign</i></div>";	
+		buttonBar.innerHTML = "<div id=leftButton><i style=\"font-size: 35px;\" class=\"fa fa-thumbs-down\" aria-hidden=\"true\"><br>Pass</i></div>\
+									<div id=middleButton><i style=\"font-size: 35px;\" class=\"fa fa-sign-in\" aria-hidden=\"true\"><br>Leave Page</i></div>\
+									<div id=rightButton><i style=\"font-size: 35px;\" class=\"fa fa-hand-paper-o\" aria-hidden=\"true\"><br>Resign</i></div>";
+		document.getElementById('middleButton').style.visibility = "hidden";
 	}
 	changeToReplayButtons(){
+		document.getElementById('middleButton').style.visibility = "visible";
 		console.log("Changing to replay");
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
-		leftButton.innerHTML = "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>";
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
 		rightButton.innerHTML = "";
 	}
 	changeToControlButtons(){
 		console.log("Changing to control");
 		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton>Forward</div>\
-								<div id=rightButton>Backward</div>";
+		buttonBar.innerHTML = "<div id=leftButton><br>Forward</div>\
+								<div id=rightButton><br>Backward</div>";
 	}
 }

@@ -73,7 +73,8 @@ class AIGameController extends GameController {
 
 				if(aiMove.pass){
 					_this.declareWinner();
-					_this.__view.changeButtons(); // todo throwing errors in the console
+					_this.__view.changeToReplayButtons(); // todo throwing errors in the console
+					_this.__gameSpace.__gameOver = true;
 				} else {
 					var aiValid = _this.__gameSpace.placeToken(aiMove.c, aiMove.y, aiMove.x); // temporary fix: x=y and y=x
 					if (!aiValid){

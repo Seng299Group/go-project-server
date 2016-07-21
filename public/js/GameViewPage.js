@@ -90,9 +90,9 @@ function renderHotSeat() {
             var leftButton = document.getElementById('leftButton');
             var rightButton = document.getElementById('rightButton');
 
-            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>") {
-                leftButton.innerHTML = "<i class=\"fa fa-chevron-circle-left fa-6\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i class=\"fa fa-chevron-circle-right fa-6\" aria-hidden=\"true\">Forward</i>";
+            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
                 gameController.startReplay();
             } else if (myGameSpace.__gameOver) {
                 gameController.rewind();
@@ -109,7 +109,9 @@ function renderHotSeat() {
             }
         });
         $("#middleButton").click(function () {
-            window.location.href = "/gameSelect.html";
+			if(document.getElementById('middleButton').style.visibility == "visible"){
+				window.location.href = "/gameSelect.html";
+			}
         });
 
     }
@@ -155,9 +157,9 @@ function renderHotSeat() {
             var leftButton = document.getElementById('leftButton');
             var rightButton = document.getElementById('rightButton');
 
-            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>") {
-                leftButton.innerHTML = "<i class=\"fa fa-chevron-circle-left fa-6\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i class=\"fa fa-chevron-circle-right fa-6\" aria-hidden=\"true\">Forward</i>";
+            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right \" aria-hidden=\"true\"><br>Forward</i>";
                 gameController.startReplay();
             } else if (myGameSpace.__gameOver) {
                 gameController.rewind();
@@ -174,7 +176,9 @@ function renderHotSeat() {
             }
         });
         $("#middleButton").click(function () {
-            window.location.href = "/gameSelect.html";
+            if(document.getElementById('middleButton').style.visibility == "visible"){
+				window.location.href = "/gameSelect.html";
+			}
         });
     }
 	
@@ -237,9 +241,9 @@ function renderHotSeat() {
                 var leftButton = document.getElementById('leftButton');
                 var rightButton = document.getElementById('rightButton');
 
-                if (myGameSpace.__gameOver && leftButton.innerHTML == "<i class=\"fa fa-refresh fa-6\" aria-hidden=\"true\">Start From Beginning</i>") {
-                leftButton.innerHTML = "<i class=\"fa fa-chevron-circle-left fa-6\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i class=\"fa fa-chevron-circle-right fa-6\" aria-hidden=\"true\">Forward</i>";
+                if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
                 gameController.startReplay();
                 } else if (myGameSpace.__gameOver) {
                     gameController.rewind();
@@ -256,7 +260,9 @@ function renderHotSeat() {
                 }
             });
             $("#middleButton").click(function () {
-                window.location.href = "/gameSelect.html";
+                if(document.getElementById('middleButton').style.visibility == "visible"){
+				window.location.href = "/gameSelect.html";
+			}
             });
         }
 
@@ -289,7 +295,9 @@ function showWinnerNotification(data) {
 //        winner: "Bob"
 //    };
     // todo dev purpose todo delete
-
+	
+	var nf;
+	
     $("#notification-screenLock").css("display", "block");
 
     var title = "Game over";
@@ -305,8 +313,12 @@ function showWinnerNotification(data) {
     function onReplay() {
         // Removing the gray screen lock
         $("#notification-screenLock").css("display", "none");
-        
-        // todo Travis 
+		nf.remove();
+		
+		var leftButton = document.getElementById('leftButton');
+		var rightButton = document.getElementById('rightButton');
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
+		rightButton.innerHTML = "";
     }
 
     var buttons = [

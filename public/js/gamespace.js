@@ -79,7 +79,7 @@ class GameSpace {
         this.board = this.board.clone();
         this.history.push(this.board);
 
-        //
+        
         console.log();
         console.log(this);
     }
