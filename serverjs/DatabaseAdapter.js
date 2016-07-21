@@ -42,7 +42,6 @@ function getUserData(username) {
 
 function incrementWins(username) {
 
-    console.log('--incrementing wins...');
 
     var query = {username: username}
 
@@ -52,14 +51,11 @@ function incrementWins(username) {
             console.log(err);
         }
 
-        console.log('--found user')
-        console.log(userObj)
-
         if (userObj) {
 
             Userdb.update(query, { $set: { wins: userObj.wins + 1 }}, function(){
 
-                console.log("--updated " + username + "'s wins");
+                console.log("updated " + username + "'s wins");
 
             });
 
@@ -69,7 +65,6 @@ function incrementWins(username) {
 
 function incrementLosses(username) {
 
-    console.log('--incrementing losses...');
 
     var query = {username: username}
 
@@ -79,14 +74,11 @@ function incrementLosses(username) {
             console.log(err);
         }
 
-        console.log('--found user')
-        console.log(userObj)
-
         if (userObj) {
 
             Userdb.update(query, { $set: { losses: userObj.losses + 1 }}, function(){
 
-                console.log("--updated " + username + "'s losses");
+                console.log("updated " + username + "'s losses");
 
             });
 
