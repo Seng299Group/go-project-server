@@ -60,7 +60,10 @@ gulp.task('default', function () {
             .pipe(gulp.dest('public/dist'));
 
     gulp.src([
-
+                "public/js/jquery.min.js",
+                "public/js/socket.io.js",
+                "public/js/NetworkAdapter.js",
+                "public/js/profileView.js"
             ])
             .pipe(concat('profile.js'))
             .pipe(gulp.dest('public/dist'));
