@@ -190,8 +190,15 @@ function renderHotSeat() {
 
 	function renderNetwork() {
 	
-		document.getElementById("player1").innerHTML = user.__username;
-		document.getElementById("player2").innerHTML = user.__opponent;
+   	if(user.__playerNumber==1){
+		document.getElementById("player1").innerHTML = user.__username + " - Black";
+		document.getElementById("player2").innerHTML = user.__opponent + " - White";
+	}
+	else{
+		document.getElementById("player1").innerHTML = user.__username + " - White";
+		document.getElementById("player2").innerHTML = user.__opponent + " - Black";
+		
+	}
 	
         console.log("network game acting like hotseat");
 

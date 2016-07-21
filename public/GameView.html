@@ -46,7 +46,12 @@
 					<img id="showBar" src="http://evergreenrv.mobi/evergreenrv.com/images/icons/menubar/gear512_108.png"/>
 
 
-					<table id="colourButtonTable">
+					<table id="colourButtonTable"  style= "visibility:hidden;">
+						<tr>
+							<td class="playerSelectBox"><div class="playerButton" id="playerOne" style="background-color: BFC3BA">Select Player One Colour</div></td>
+							<td class="playerSelectBox"><div class="playerButton" id="playerTwo" style="background-color: BFC3BA">Select Player Two Colour</div></td>
+						</tr>
+
 						<tr>
 							<td><div class="colourButton" id="colourOne" style="background-color: 2EC4B6"></div></td>
 							<td><div class="colourButton" id="colourTwo"style="background-color: 533A71"></div></td>
@@ -63,12 +68,14 @@
 							<td><div class="colourButton" id="colourSeven" style="background-color: A1E8AF"></div></td>
 							<td><div class="colourButton" id="colourEight"style="background-color: DBD56E"></div></td>
 						</tr>
-						<tr>
-							<td><div class="playerButton" id="playerOne" style="background-color: BFC3BA">Player One</div></td>
-							<td><div class="playerButton" id="playerTwo" style="background-color: BFC3BA">Player Two</div></td>
-						</tr>
-					</table>
-					<table id="backgroundTable" style="height: 15%">
+
+					</table><br>
+					<table id="backgroundTable" style="height: 20%; visibility:hidden">
+	<!-- 					<tr height="20%">
+							
+							<td colspan="3" style="padding:0;"><div class="backgroundIntro">Select Background</div></td>
+							
+						</tr> -->
 						<tr>
 							<td class="backgroundButton"><div id="backOne"></div></td>
 							<td class="backgroundButton"><div id="backTwo"></div></td>
