@@ -30,10 +30,8 @@ class User {
         this.__username = username;
         this.__opponent = null
 
-        this.__requestSentList = []; // [ {username: username, status: } , {...} , ... ]
-        // status: pending or declined
-
-        this.__requestReceivedList = [];
+        this.__requestSentList = {};
+        this.__requestReceivedList = {};
 
         this.__socketid = null
         this.__isOnline = true;
@@ -68,6 +66,18 @@ class User {
 
         getRequestSentList(){
             return this.__requestSentList;
+        }
+        
+        addToRequestReceivedList(fromUser, boardSize){
+            this.__requestReceivedList[fromUser] = boardSize;
+        }
+        
+        removeFromRequestReceivedList(fromUser){
+            delete(this.__requestReceivedList[fromUser]);
+        }
+        
+        getRequestReceivedList(){
+            return this.__requestReceivedList;
         }
 
         updateRequestStatus(toUser, newStatus){
