@@ -44,6 +44,16 @@ socket.on("userLeftGame", function () {
     showUserResignedNotification();
 });
 
+// When server sends session expire error
+socket.on('_error', function (data) {
+    if (data === "sessionExpired") {
+        // Show notification
+        $("#bodyWrapper").remove();
+        var nf = nfBuilder.getSessionExpiredNotification();
+        nf.appendTo("body");
+    }
+});
+
 
 
 
@@ -402,7 +412,7 @@ function showUserResignedNotification() {
 
     var buttons = [
         nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button")
-        ,
+                ,
         nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
     ];
 
