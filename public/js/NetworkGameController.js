@@ -16,7 +16,6 @@ class NetworkGameController extends GameController {
 
 
     placeToken(player, x, y){
-        //
 
         var data;
 
@@ -24,7 +23,7 @@ class NetworkGameController extends GameController {
 
         if (moveAccepted) {
 
-            this.__gameSpace.getBoard().print();
+            this.swapTurn();
 
             data = {
                 move: {
@@ -48,6 +47,8 @@ class NetworkGameController extends GameController {
     }
 
     receiveMove (move) {
+
+        this.swapTurn();
 
         if (move.pass === false) {
             this.__gameSpace.placeToken(this.__remotePlayer, move.x, move.y);
@@ -87,6 +88,8 @@ class NetworkGameController extends GameController {
             this.__end(results);
 
         } else {
+
+            this.swapTurn();
 
             this.__gameSpace.pass();
 
