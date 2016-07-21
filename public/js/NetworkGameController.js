@@ -169,6 +169,7 @@ class NetworkGameController extends GameController {
 
         console.log(results);
 
+        this.__gameSpace.__gameOver = true;
         showWinnerNotification(results);
         this.__view.changeToReplayButtons();
 
