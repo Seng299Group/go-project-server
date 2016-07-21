@@ -15,7 +15,7 @@ socket.emit("userdataForUsername", sessionStorage.username);
 
 // onReceive user data
 socket.on('userdataForUsername', function (data) {
-    
+
     // Setting data for session
     sessionStorage.sessionID = data.__socketid;
     user = data;
@@ -42,6 +42,16 @@ socket.on('userdataForUsername', function (data) {
 
 socket.on("userLeftGame", function () {
     showUserResignedNotification();
+});
+
+// When server sends session expire error
+socket.on('_error', function (data) {
+    if (data === "sessionExpired") {
+        // Show notification
+        $("#bodyWrapper").remove();
+        var nf = nfBuilder.getSessionExpiredNotification();
+        nf.appendTo("body");
+    }
 });
 
 
@@ -397,7 +407,7 @@ function showUserResignedNotification() {
 
     var buttons = [
         nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button")
-        ,
+                ,
         nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
     ];
 
