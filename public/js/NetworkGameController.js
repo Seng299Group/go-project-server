@@ -17,42 +17,49 @@ class NetworkGameController extends GameController {
 
     placeToken(player, x, y){
 
-        var data;
+        if (this.__view.isLocked() === false) {
 
-        var moveAccepted = this.__gameSpace.placeToken(this.__localPlayer, x, y);
+            var data;
 
-        if (moveAccepted) {
+            var moveAccepted = this.__gameSpace.placeToken(this.__localPlayer, x, y);
 
-            this.__gameSpace.getBoard().print();
+            if (moveAccepted) {
 
-			this.swapTurn();
+                this.__pass = false;
+                this.__gameSpace.getBoard().print();
 
-            data = {
-                move: {
-                    x: x,
-                    y: y,
-                    c: this.__localPlayer,
-                    pass: false
-                }
-            };
+                this.swapTurn();
 
-            //call socket function that sends move to server
-            this.__socket.emit('move', data);
+                data = {
+                    move: {
+                        x: x,
+                        y: y,
+                        c: this.__localPlayer,
+                        pass: false
+                    }
+                };
 
-            //TODO: LOCK INTERFACE!
+                this.__view.lockControls();
 
+                //call socket function that sends move to server
+                this.__socket.emit('move', data);
+
+                //TODO: LOCK INTERFACE!
+
+            } else {
+                // todo: notify user that the move was not accepted
+                // and ask to try again.
+            }
         } else {
-            // todo: notify user that the move was not accepted
-            // and ask to try again.
+            console.log("Controls are locked, it's not your turn");
         }
 
     }
 
     receiveMove (move) {
 
-        this.swapTurn();
-
         if (move.pass === false) {
+            this.__pass = false;
             this.__gameSpace.placeToken(this.__remotePlayer, move.x, move.y);
         }
         else {
@@ -62,53 +69,60 @@ class NetworkGameController extends GameController {
 
 		this.swapTurn();
         this.__view.draw();
-
-        //TODO: UNLOCK INTERFACE!
+        this.__view.unlockControls();
 
     }
 
     pass () {
 
-        console.log('passing...');
-        console.log('this.pass: ', this.__pass);
+        if (this.__view.isLocked() === false) {
 
-        if (this.__pass) {
+            console.log('passing...');
+            console.log('this.pass: ', this.__pass);
 
-            console.log('2nd consecutive pass')
+            if (this.__pass) {
 
-            this.__socket.emit('gameOver');
+                console.log('2nd consecutive pass')
 
-            var scores = this.__gameSpace.getScores();
+                this.__socket.emit('gameOver');
 
-            var results = {
-                p1Username: (this.__localPlayer === 1) ? user.__username : user.__opponent,
-                p2Username: (this.__localPlayer === 2) ? user.__username : user.__opponent,
-                p1Score: scores.p1Score,
-                p2Score: scores.p2Score,
-                winner: (scores.winner === this.__localPlayer) ? user.__username : user.__opponent
-            };
+                var scores = this.__gameSpace.getScores();
 
-            this.__end(results);
+                var results = {
+                    p1Username: (this.__localPlayer === 1) ? user.__username : user.__opponent,
+                    p2Username: (this.__localPlayer === 2) ? user.__username : user.__opponent,
+                    p1Score: scores.p1Score,
+                    p2Score: scores.p2Score,
+                    winner: (scores.winner === this.__localPlayer) ? user.__username : user.__opponent
+                };
 
+                this.__end(results);
+
+            } else {
+
+                this.swapTurn();
+
+                this.__gameSpace.pass();
+
+                var data = {
+                    move: {
+                        x: 0,
+                        y: 0,
+                        c: 0,
+                        pass: true
+                    }
+                };
+
+                this.__view.lockControls();
+
+                //call socket function that sends move to server
+                this.__socket.emit('move', data);
+
+            }
         } else {
-
-            this.swapTurn();
-
-            this.__gameSpace.pass();
-
-            var data = {
-                move: {
-                    x: 0,
-                    y: 0,
-                    c: 0,
-                    pass: true
-                }
-            };
-
-            //call socket function that sends move to server
-            this.__socket.emit('move', data);
-
+            console.log("Controls are locked, it's not your turn");
         }
+
     }
 
     resign () {
@@ -169,8 +183,6 @@ class NetworkGameController extends GameController {
 
     //sends win/loss data to server
     __end (results) {
-
-        console.log(results);
 
         this.__gameSpace.__gameOver = true;
         showWinnerNotification(results);

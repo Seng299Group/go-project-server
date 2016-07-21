@@ -15,7 +15,7 @@ socket.emit("userdataForUsername", sessionStorage.username);
 
 // onReceive user data
 socket.on('userdataForUsername', function (data) {
-    
+
     // Setting data for session
     sessionStorage.sessionID = data.__socketid;
     user = data;
@@ -233,6 +233,11 @@ function renderNetwork() {
         gameController.setGameSpace(myGameSpace);
         gameController.setView(view);
 
+        //FIXME: This if shouldn't be here, but I see no other place to do it
+        if (gameController.__localPlayer === 2){
+            view.lockControls();
+        }
+
         $("#canvas").click(function (e) {
             // Clicked coordinates
             var x = e.pageX - $(this).offset().left;
@@ -326,9 +331,9 @@ function setColourPallet(view) {
 
 /**
  * This function creates and shows the winner notification on the screen.
- * 
+ *
  * @param {object} data - information to display.
- * Should conform to the following specs: 
+ * Should conform to the following specs:
  * data = {
  *      p1Username: string,
  *      p2Username: string,

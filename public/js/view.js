@@ -16,6 +16,7 @@ class View {
      * __radius		- The radius of the stone. (Unit: px)
      * __offset		- Offset to account for borders of the board. (Unit: px)
      *
+     * __locked     - While True, blocks placing tokens and passing
      */
 
 
@@ -67,8 +68,9 @@ class View {
         this.__p2Colour = "white";
         this.__currentPlayer = 1; //Player Who's Colour is to be Changed
 
-        //init player indicater
+        //init player turn
         this.indicatePlayer();
+        this.__locked = false;
     }
 
     /**
@@ -131,6 +133,18 @@ class View {
 		}
 	}
 
+
+    lockControls () {
+        this.__locked = true;
+    }
+
+    unlockControls () {
+        this.__locked = false;
+    }
+
+    isLocked () {
+        return this.__locked;
+    }
 
     /**
      * This method should be called when the view is clicked.
