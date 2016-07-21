@@ -35,7 +35,7 @@ document.onkeydown = function (event) {
     /**
      * if the user pressed escape, remove the notification
      */
-    if (event.key === "Escape") {
+    if (event.code === "Escape") {
         notification.remove();
         removeScreenLock();
     }
@@ -386,6 +386,11 @@ function showUserResignedNotification() {
  * @param {int} boardSize - the size of the board
  */
 function sendGameRequest(toUser, boardSize) {
+    
+    // Adding request to local user data
+    user.__requestSentList[toUser] = "pending";
+
+    // Sending game request
     var data = {
         type: "sendRequest",
         toUser: toUser,
@@ -487,20 +492,21 @@ socket.on('_error', function (data) {
         
         var title = "User is offline";
         var msg = "<b>" + data.username + "</b> is no longer online";
-        var button = nfBuilder.makeNotificationButton("ok", onClose);
+        var button = nfBuilder.makeNotificationButton("Ok", onClose);
         button.attr("class", "notification_button_general");
 
-        var nf = nfBuilder.makeNotification(title, msg, button, onClose);
-        nf.attr("class", "notification-userOffline");
-        $("#notificationCenter").append(nf);
+        notification = nfBuilder.makeNotification(title, msg, button, onClose);
+        notification.attr("class", "notification-userOffline");
+        $("#notificationCenter").append(notification);
         
         function onClose(){
-            nf.remove();
+            notification.remove();
             removeScreenLock();
         }
 
         // todo 2. remove the game request
         $("div[fromUser='" + data.username + "']").remove();
+        delete(user.__requestReceivedList[data.username]);
 
     } else if (data === "sessionExpired") {
 
