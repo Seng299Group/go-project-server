@@ -1,6 +1,9 @@
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
+    background-image: url("../img/bg.jpg");
+    background-repeat: repeat;
+
 }
 
 img {
@@ -19,6 +22,14 @@ img {
     right: 0;
 }
 
+.account {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 5px;
+  margin-top: 5px;
+  float: right;
+}
 
 
 
@@ -27,7 +38,7 @@ img {
 
 .boardSizeNotification-forGameMode {
     width: 460px;
-    height: 150px;
+    height: 180px;
 
     padding: 16px;
     margin: auto;
@@ -50,7 +61,7 @@ img {
 }
 
 .notification_button_general {
-    width: 100px;    
+    width: 100px;
 
     padding: 16px 16px;
     margin: 8px;
