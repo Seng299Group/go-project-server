@@ -42,6 +42,10 @@
 
 }
 
+.sessionExpiredNotification h1 {
+    font-size: 14pt;
+}
+
 .sessionExpiredNotification-button {
     width: 200px;
     margin: 0px auto;
