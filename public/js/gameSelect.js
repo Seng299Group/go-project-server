@@ -33,7 +33,7 @@ if (sessionStorage.isGuest === "true") {
 
 /**
  * Triggered on keyboard button press
- * 
+ *
  * @param {object} event
  */
 document.onkeydown = function (event) {
@@ -48,7 +48,9 @@ document.onkeydown = function (event) {
 };
 
 
-
+function routeProfile() {
+  window.location.href = "/ProfileView.html";
+}
 
 
 /******************************** Button clicks *******************************/

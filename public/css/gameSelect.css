@@ -1,6 +1,9 @@
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
+    background-image: url("../img/bg.jpg");
+    background-repeat: repeat;
+
 }
 
 img {
@@ -19,6 +22,10 @@ img {
     right: 0;
 }
 
+.account {
+  margin-left: 5px;
+  margin-top: 5px;
+}
 
 
 
@@ -50,7 +57,7 @@ img {
 }
 
 .notification_button_general {
-    width: 100px;    
+    width: 100px;
 
     padding: 16px 16px;
     margin: 8px;
