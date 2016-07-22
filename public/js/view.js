@@ -71,6 +71,9 @@ class View {
         //init player turn
         this.indicatePlayer();
         this.__locked = false;
+		
+		//Background Image Default
+		document.body.style.backgroundImage = "url(\"/img/backOne.jpg\")";
     }
 
     /**
@@ -91,7 +94,7 @@ class View {
         this.__svg.empty();
 
 		//
-		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "white");
+		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "rgba(255, 255, 255, .6)");
 		this.__svg.append(canvas);
         // 3. Drawing lines (intersections)
         for (var i = 0; i < boardArray.length; i++) {
