@@ -17,6 +17,7 @@
 	height: 100%;
 }
 #leftButton{
+	background-color: rgba(255, 255, 255, .6);;
 	cursor: pointer;
 	width: 33%;
 	/* height: 100%; */
@@ -24,6 +25,7 @@
 	text-align: center;
 }
 #rightButton{
+	background-color: rgba(255, 255, 255, .6);;
 	cursor: pointer;
 	width: 33%;
 	/* height: 100%; */
@@ -31,6 +33,7 @@
 	text-align: center;
 }
 #middleButton{
+	background-color: rgba(255, 255, 255, .6);;
 	cursor: pointer;
 	width: 33%;
 	/* height: 100%; */
@@ -50,7 +53,7 @@
 #backOne{
 	cursor: pointer;
 	background-image: url("/img/backOne.jpg");
-background-size: cover;
+	background-size: cover;
 	width: 100%;
 	height: 100%;
 }
@@ -63,7 +66,7 @@ background-size: cover;
 #backThree{
 	cursor: pointer;
 	background-image: url("/img/backThree.jpg");
-background-size: cover;
+	background-size: cover;
 	width: 100%;
 	height: 100%;
 }
