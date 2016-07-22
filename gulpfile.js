@@ -16,7 +16,8 @@ gulp.task('default', function () {
                 "public/js/jquery.min.js",
                 "public/js/socket.io.js",
                 "public/js/NotificationBuilder.js",
-                "public/js/gameSelect.js"
+                "public/js/gameSelect.js",
+                "public/js/material.min.js"
             ])
             .pipe(concat('gameselect.js'))
             .pipe(gulp.dest('public/dist'));
@@ -63,7 +64,8 @@ gulp.task('default', function () {
                 "public/js/jquery.min.js",
                 "public/js/socket.io.js",
                 "public/js/NetworkAdapter.js",
-                "public/js/profileView.js"
+                "public/js/profileView.js",
+                "public/js/material.min.js"
             ])
             .pipe(concat('profile.js'))
             .pipe(gulp.dest('public/dist'));

@@ -7324,6 +7324,34 @@ class NetworkAdapter {
                 callback(false, null);
             });
 	}
+
+	userWinLoss(username, callback) {
+			var socket = io();
+
+			socket.emit("getWinLoss", {username: username});
+
+			socket.on("requestSuccess", function(wlHistory) {
+				callback(true, wlHistory);
+			});
+
+			socket.on("requestFail", function() {
+				callback(false, null);
+			});
+	}
+
+	updatePassword(password, username, callback) {
+		var socket = io();
+
+		socket.emit("updatePassword", {password: password, username: username});
+
+		socket.on("updateSuc", function() {
+			callback(true);
+		});
+
+		socket.on("updateFail", function () {
+			callback(false);
+		});
+	}
 }
 
 
@@ -7335,7 +7363,7 @@ function register() {
   var answer = $("#security-question").val();
 
   // todo, redo broken register system.
-  if(!checkUser(username) || !checkPass(password) || !confirmPass(passwordCheck)) {
+  if(!checkUser(username) || !checkPass(password) || !confirmPass(passwordCheck) || !checkSecurity(answer)) {
     return;
   }
 

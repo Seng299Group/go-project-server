@@ -7316,13 +7316,19 @@ class NotificationBuilder {
         notification.append(body);
 
         // Buttons
-        var buttonWrapper = $(document.createElement('div'));
-        buttonWrapper.css("text-align","center");
-        if (buttons.length == 1) {
-            buttonWrapper.append(buttons);
+        if (buttons === null){
+            // do nothing
+        } else if (buttons === undefined){
+            console.log("undefined buttons. NotificationBuilder.js");
         } else {
-            for (var b in buttons) {
-                buttonWrapper.append(buttons[b]);
+            var buttonWrapper = $(document.createElement('div'));
+            buttonWrapper.css("text-align","center");
+            if (buttons.length == 1) {
+                buttonWrapper.append(buttons);
+            } else {
+                for (var b in buttons) {
+                    buttonWrapper.append(buttons[b]);
+                }
             }
         }
        
@@ -7531,24 +7537,30 @@ class GameController {
 		this.__historySpot += 1;
 		if(this.__historySpot < gameHistory.length){
 			this.__gameSpace.board = gameHistory[this.__historySpot];
-			this.__view.draw();
 		}else{
 			this.__historySpot = gameHistory.length - 1;
 		}
+		this.__view.draw();
 	}
 	//Rewind
 	//
 	//		Used for Replay Purposes
 	//		to go Back instead of Forward
 	rewind(){
+		console.log("Rewinding");
 		var gameHistory = this.__gameSpace.getHistory();
+		
 		this.__historySpot -= 1;
 		if(this.__historySpot > 0){
 			this.__gameSpace.board = gameHistory[this.__historySpot];
-			this.__view.draw();
+		}else if(this.__historySpot >= gameHistory.length){
+			this.__historySpot = gameHistory.length -1
+			this.__gameSpace.board = gameHistory[this.__historySpot];
 		}else{
 			this.__historySpot = 1;
+			this.__gameSpace.board = gameHistory[this.__historySpot];
 		}
+			this.__view.draw();
 	}
 	startReplay(){
 		var gameHistory = this.__gameSpace.getHistory();
@@ -7556,8 +7568,6 @@ class GameController {
 		this.__historySpot = 1;
 		this.__gameSpace.board = gameHistory[this.__historySpot];
 		this.__view.draw();
-
-		var startButton = document.getElementById('leftButton');
 	}
 }
 
@@ -7631,6 +7641,34 @@ class NetworkAdapter {
             socket.on("loginFailed", function(){
                 callback(false, null);
             });
+	}
+
+	userWinLoss(username, callback) {
+			var socket = io();
+
+			socket.emit("getWinLoss", {username: username});
+
+			socket.on("requestSuccess", function(wlHistory) {
+				callback(true, wlHistory);
+			});
+
+			socket.on("requestFail", function() {
+				callback(false, null);
+			});
+	}
+
+	updatePassword(password, username, callback) {
+		var socket = io();
+
+		socket.emit("updatePassword", {password: password, username: username});
+
+		socket.on("updateSuc", function() {
+			callback(true);
+		});
+
+		socket.on("updateFail", function () {
+			callback(false);
+		});
 	}
 }
 
@@ -8994,6 +9032,9 @@ class View {
         //init player turn
         this.indicatePlayer();
         this.__locked = false;
+		
+		//Background Image Default
+		document.body.style.backgroundImage = "url(\"/img/backOne.jpg\")";
     }
 
     /**
@@ -9014,7 +9055,7 @@ class View {
         this.__svg.empty();
 
 		//
-		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "white");
+		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "rgba(255, 255, 255, .6)");
 		this.__svg.append(canvas);
         // 3. Drawing lines (intersections)
         for (var i = 0; i < boardArray.length; i++) {
@@ -9140,13 +9181,15 @@ class View {
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
 		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
-		rightButton.innerHTML = "";
+		rightButton.style.visibility = "hidden";
 	}
 	changeToControlButtons(){
 		console.log("Changing to control");
-		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><br>Forward</div>\
-								<div id=rightButton><br>Backward</div>";
+		var leftButton = document.getElementById('leftButton');
+        var rightButton = document.getElementById('rightButton');
+		
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+        rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
 	}
 }
 
@@ -9196,6 +9239,16 @@ socket.on("userLeftGame", function () {
     showUserResignedNotification();
 });
 
+// When server sends session expire error
+socket.on('_error', function (data) {
+    if (data === "sessionExpired") {
+        // Show notification
+        $("#bodyWrapper").remove();
+        var nf = nfBuilder.getSessionExpiredNotification();
+        nf.appendTo("body");
+    }
+});
+
 
 
 
@@ -9237,6 +9290,7 @@ function renderHotSeat() {
         var y = e.pageY - $(this).offset().top;
 
         view.onBoardClick(x, y);
+        gameController.__historySpot += 1;
     });
 
 
@@ -9245,15 +9299,18 @@ function renderHotSeat() {
         console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
+        var middleButton = document.getElementById('middleButton');
 
         if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
             leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
             rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
-            gameController.startReplay();
+            rightButton.style.visibility = "visible";
+            middleButton.style.visibility = "visible";
         } else if (myGameSpace.__gameOver) {
             gameController.rewind();
         } else {
             gameController.pass();
+            gameController.__historySpot += 1;
         }
     });
     $("#rightButton").click(function () {
@@ -9261,7 +9318,9 @@ function renderHotSeat() {
             gameController.replay();
         } else {
             gameController.resign();
-            view.changeToReplayButtons();
+            view.changeToControlButtons();
+            var middleButton = document.getElementById('middleButton');
+            middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -9305,21 +9364,27 @@ function renderAI() {
         var y = e.pageY - $(this).offset().top;
 
         view.onBoardClick(x, y);
+        gameController.__historySpot += 1;
     });
+
 
     // todo this is repeating 3 times, move to global scope
     $("#leftButton").click(function () {
+        console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
+        var middleButton = document.getElementById('middleButton');
 
         if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
             leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
-            rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right \" aria-hidden=\"true\"><br>Forward</i>";
-            gameController.startReplay();
+            rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+            rightButton.style.visibility = "visible";
+            middleButton.style.visibility = "visible";
         } else if (myGameSpace.__gameOver) {
             gameController.rewind();
         } else {
             gameController.pass();
+            gameController.__historySpot += 1;
         }
     });
     $("#rightButton").click(function () {
@@ -9327,7 +9392,9 @@ function renderAI() {
             gameController.replay();
         } else {
             gameController.resign();
-            view.changeToReplayButtons();
+            view.changeToControlButtons();
+            var middleButton = document.getElementById('middleButton');
+            middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -9358,11 +9425,7 @@ function renderNetwork() {
     });
 
     function render() {
-        // todo fixme
-        // change from hotseat to network
-
-        // fixme note: the "user" variable has __username and __opponent
-
+       
         // Model - The board
         console.log(user);
         var myGameSpace = new GameSpace(user.__boardSize);
@@ -9370,7 +9433,6 @@ function renderNetwork() {
 
         // Controller - Game controller
         var gameController = new NetworkGameController(socket);
-
 
         // View
         var view = new View();
@@ -9386,7 +9448,7 @@ function renderNetwork() {
         gameController.setView(view);
 
         //FIXME: This if shouldn't be here, but I see no other place to do it
-        if (gameController.__localPlayer === 2){
+        if (gameController.__localPlayer === 2) {
             view.lockControls();
         }
 
@@ -9396,21 +9458,27 @@ function renderNetwork() {
             var y = e.pageY - $(this).offset().top;
 
             view.onBoardClick(x, y);
+            gameController.__historySpot += 1;
         });
+
 
         // todo this is repeating 3 times, move to global scope
         $("#leftButton").click(function () {
+            console.log("left button");
             var leftButton = document.getElementById('leftButton');
             var rightButton = document.getElementById('rightButton');
+            var middleButton = document.getElementById('middleButton');
 
             if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
-                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
-                gameController.startReplay();
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+                rightButton.style.visibility = "visible";
+                middleButton.style.visibility = "visible";
             } else if (myGameSpace.__gameOver) {
                 gameController.rewind();
             } else {
                 gameController.pass();
+                gameController.__historySpot += 1;
             }
         });
         $("#rightButton").click(function () {
@@ -9418,7 +9486,9 @@ function renderNetwork() {
                 gameController.replay();
             } else {
                 gameController.resign();
-                view.changeToReplayButtons();
+                view.changeToControlButtons();
+                var middleButton = document.getElementById('middleButton');
+                middleButton.style.visibility = "visible";
             }
         });
         $("#middleButton").click(function () {
@@ -9428,6 +9498,100 @@ function renderNetwork() {
         });
 
     }
+//<<<<<<< HEAD
+//	
+//
+//	function renderNetwork() {
+//	
+//   	if(user.__playerNumber==1){
+//		document.getElementById("player1").innerHTML = user.__username + " - Black";
+//		document.getElementById("player2").innerHTML = user.__opponent + " - White";
+//	}
+//	else{
+//		document.getElementById("player1").innerHTML = user.__username + " - White";
+//		document.getElementById("player2").innerHTML = user.__opponent + " - Black";
+//		
+//	}
+//	
+//        console.log("network game acting like hotseat");
+//
+//        // requesting user data
+//        socket.emit("userdata", sessionStorage.sessionID);
+//
+//        // onReceive user data
+//        socket.on('userdata', function (data) {
+//            user = data;
+//            sessionStorage.sessionID = user.__socketid;
+//
+//            render();
+//        });
+//
+//        function render() {
+//            // todo fixme
+//            // change from hotseat to network
+//
+//            // fixme note: the "user" variable has __username and __opponent
+//
+//            // Model - The board
+//            console.log(user);
+//            var myGameSpace = new GameSpace(user.__boardSize);
+//            var player = 1;
+//
+//            // Controller - Game controller
+//            var gameController = new NetworkGameController(socket);
+//
+//
+//            // View
+//            var view = new View();
+//
+//            view.setGameSpace(myGameSpace);
+//            view.setController(gameController);
+//            view.init();
+//            view.draw(); // Draws the empty board
+//            view.drawButtons();
+//			setColourPallet(view);
+//
+//            gameController.setGameSpace(myGameSpace);
+//            gameController.setView(view);
+//
+//            $("#canvas").click(function (e) {
+//                // Clicked coordinates
+//                var x = e.pageX - $(this).offset().left;
+//                var y = e.pageY - $(this).offset().top;
+//
+//                view.onBoardClick(x, y);
+//            });
+//
+//            // todo this is repeating 3 times, move to global scope
+//            $("#leftButton").click(function () {
+//                var leftButton = document.getElementById('leftButton');
+//                var rightButton = document.getElementById('rightButton');
+//
+//                if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+//                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
+//                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
+//                gameController.startReplay();
+//                } else if (myGameSpace.__gameOver) {
+//                    gameController.rewind();
+//                } else {
+//                    gameController.pass();
+//                }
+//            });
+//            $("#rightButton").click(function () {
+//                if (myGameSpace.__gameOver) {
+//                    gameController.replay();
+//                } else {
+//                    gameController.resign();
+//                    view.changeToReplayButtons();
+//                }
+//            });
+//            $("#middleButton").click(function () {
+//                if(document.getElementById('middleButton').style.visibility == "visible"){
+//				window.location.href = "/gameSelect.html";
+//			}
+//            });
+//=======
+//>>>>>>> master
 
     // todo update __isOnline flag on the server when the game is over
 
@@ -9507,26 +9671,12 @@ function showWinnerNotification(data) {
     msg += "<br><br> The winner is: " + data.winner;
 
     function onClose() {
-        window.location.href = "/gameSelect.html";
-    }
-
-    function onReplay() {
         // Removing the gray screen lock
         $("#notification-screenLock").css("display", "none");
         nf.remove();
-
-        var leftButton = document.getElementById('leftButton');
-        var rightButton = document.getElementById('rightButton');
-        leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
-        rightButton.innerHTML = "";
     }
 
-    var buttons = [
-        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button"),
-        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
-    ];
-
-    nf = nfBuilder.makeNotification(title, msg, buttons).attr("class", "leftGameInProgressNotification");
+    nf = nfBuilder.makeNotification(title, msg, null, onClose).attr("class", "gameOverNotification");
 
     $("#notificationCenter").append(nf);
 }
@@ -9554,7 +9704,7 @@ function showUserResignedNotification() {
 
     var buttons = [
         nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button")
-        ,
+                ,
         nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
     ];
 

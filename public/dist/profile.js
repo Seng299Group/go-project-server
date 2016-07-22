@@ -7253,353 +7253,189 @@ module.exports = yeast;
 },{}]},{},[1])(1)
 });
 
+class NetworkAdapter {
 
-/**
- * CSS independent notification builder.
- * CSS can be added using JavaScript or jquery.
- * See example for user.
- * 
- * 
- * 
- * Example:
- * 
- * // Create the builder object
- * var nfBuilder = new NotificationBuilder();
- * 
- * // Create a button
- * var myButton = nfBuilder.makeNotificationButton("button text", function () {  }); //takes onClick function
- * 
- * // Create the notification
- * var myNotification = nfBuilder.makeNotification("title", "body text", myButton);
- * 
- * // Add CSS
- * myNotification.attr("class", "myClass"); // jquery
- * 
- * // Add to the view
- * $("body").append(myNotification);
- * 
- */
+	constructor(){
 
-class NotificationBuilder {
+	}
 
-    /**
-     * This method returns a notification (DOM object - div)
-     * 
-     * @param {string} title - Title of the notification
-     * @param {string} bodyText - Body of the notification
-     * @param {div} buttons - one or an array of buttons made with the makeNotificationButton() function
-     * @param {function} onClose - function that is called when the user closes a notification
-     * @returns {DOM object} - Div element: notification
-     */
-    makeNotification(title, bodyText, buttons, onClose) {
-        var notification = $(document.createElement('div'));
-        
-        // Adding a cancel button
-        if (typeof onClose === "function"){
-            var cancelButton = $(document.createElement('img'));
-            cancelButton.attr("src", "img/icon_close.png");
-            cancelButton.attr("class", "cancelButton");
-            cancelButton.click(onClose);
-            notification.append(cancelButton);
-        } else {
-            console.log("No 'onClose' function is provided. Omitting the close button");
-        }
-        
-        // Title
-        var headline = $(document.createElement('h1'));
-        headline.append(title);
-        notification.append(headline);
+	sendMove(){
+		console.log("unimplemented method call");
+	}
 
-        // Body
-        var body = $(document.createElement('p'));
-        body.html(bodyText);
-        notification.append(body);
+	getAIMove(size, board, lastMove, callback){
+		var data = {
+			"size": size,
+			"board": board,
+			"last": lastMove
+		};
 
-        // Buttons
-        if (buttons === null){
-            // do nothing
-        } else if (buttons === undefined){
-            console.log("undefined buttons. NotificationBuilder.js");
-        } else {
-            var buttonWrapper = $(document.createElement('div'));
-            buttonWrapper.css("text-align","center");
-            if (buttons.length == 1) {
-                buttonWrapper.append(buttons);
-            } else {
-                for (var b in buttons) {
-                    buttonWrapper.append(buttons[b]);
-                }
-            }
-        }
-       
-        notification.append(buttonWrapper);
+		$.ajax({
+			type: 'POST',
+			url : '/ai',
+			dataType: "json",
+			data : JSON.stringify(data),
+			contentType : "application/json",
+			success : function(res){
+				callback(res);
+			},
+			error : function(res){
+				log(res.responseText);
+			}
+		});
+	}
 
-        return notification;
-    }
+	createAccount(username, password, security, callback) {
+		var socket = io();
 
-    /**
-     * This method returns a notification button (DOM object - div)
-     * 
-     * @param {string} text - Text inside the button
-     * @param {function} onClick - executes when the button is clicked
-     * @returns {DOM object} div
-     */
-    makeNotificationButton(text, onClick) {
-        var b = $(document.createElement('div'));
-        b.html(text);
-        b.css("cursor", "pointer");
-        b.click(onClick);
-        return b;
-    }
-    
-    
-    
-    
-    
-    /************************* Pre-made Notifications *************************/
-    getSessionExpiredNotification() {
-        var nf;
-        var title = "Session Expired";
-        var msg = "Please return to the homepage";
-        var button = nfBuilder.makeNotificationButton("Return to Homepage", function () {
-            sessionStorage.clear();
-            window.location.href = "/";
-        });
-        button.addClass("sessionExpiredNotification-button");
+		// sending data to server to authenticate
+		socket.emit("newAccount", {username: username, password: password, security: security});
 
-        nf = this.makeNotification(title, msg, button);
-        nf.addClass("sessionExpiredNotification");
+		socket.on("regSuccess", function() {
+				callback(true);
+		});
+		socket.on("regFail", function() {
+				callback(false);
+		});
+	}
 
-        return nf;
-    }
-    
-    getInGameNotification(){
-        var nf ;
-        var title = "You are currently in a game";
-        var msg = "Please return to the game";
-        var button = this.makeNotificationButton("Return to the game", function () {
-            window.location.href = "/GameView.html";
-        });
-        button.addClass("leftGameInProgressNotification-button");
+	updateAccount(){
+		console.log("unimplemented method call");
+	}
 
-        nf = this.makeNotification(title, msg, button).attr("class", "boardSizeNotification");
-        nf.addClass("leftGameInProgressNotification");
-        
-        return nf;
-    }
-    
+        /**
+         * @param {string} username
+         * @param {string} password
+         * @param {function} callback - function that is called when server responds with authentication results
+         */
+	login(username, password, callback){
+            var socket = io();
+
+            // sending data to server to authenticate
+            socket.emit("accountLogin", {username: username, password: password});
+
+            // Login succeeded
+            socket.on("loginSucceeded", function(){
+                callback(true, socket.id);
+            });
+
+            // Login failed
+            socket.on("loginFailed", function(){
+                callback(false, null);
+            });
+	}
+
+	userWinLoss(username, callback) {
+			var socket = io();
+
+			socket.emit("getWinLoss", {username: username});
+
+			socket.on("requestSuccess", function(wlHistory) {
+				callback(true, wlHistory);
+			});
+
+			socket.on("requestFail", function() {
+				callback(false, null);
+			});
+	}
+
+	updatePassword(password, username, callback) {
+		var socket = io();
+
+		socket.emit("updatePassword", {password: password, username: username});
+
+		socket.on("updateSuc", function() {
+			callback(true);
+		});
+
+		socket.on("updateFail", function () {
+			callback(false);
+		});
+	}
 }
 
 var socket = io();
 
-var nfBuilder = new NotificationBuilder();
-
 var user;
 
+// Reason for having this: the server will register the socket id
+socket.emit("userdataForUsername", sessionStorage.username);
 
-
-
-
-if (sessionStorage.isGuest === "true") {
-    
-    $("#button_myAccount").css("display", "none");
-
-    if (sessionStorage.username === undefined) {
-        // Guest and first time landing on this page
-        // therefore, do a guest login
-        requestNewGuestLogin();
-    } else {
-        // Redirected to this page or refresh
-        // therefore, request user data
-        requestUserData(sessionStorage.username);
-    }
-
-} else if (sessionStorage.isGuest === "false") {
+if (sessionStorage.isGuest === "false") {
     // user logged in using username and password
     // therefore, request user data
-    requestUserData(sessionStorage.username);
-}
+    userWL(sessionStorage.username);
+} 
+
+function userWL(username) {
 
 
+  (new NetworkAdapter()).userWinLoss(username, onRes);
 
+  function onRes(success, data) {
+    username = 'Welcome, ' + username;
+    $(".welcome-message").append(username);
+    var games =  $(".games-played");
+    var wins = $(".wins");
+    var losses = $(".losses");
+    var winRate = $(".win-rate");
 
+    if(success) {
+      console.log('onRes was successful');
+      console.log(data);
+      var totalGames = (data.wins + data.losses);
+      if(totalGames === 0) {
+        var winRatePercnt = 0
+      }
+      else {
+        var winRatePercnt = (data.wins/totalGames);
+      }
 
-/**
- * Triggered on keyboard button press
- *
- * @param {object} event
- */
-document.onkeydown = function (event) {
+      games.append(totalGames);
+      wins.append(data.wins);
+      losses.append(data.losses);
+      winRate.append(winRatePercnt + '%');
 
-    /**
-     * if the user pressed escape, remove the notification
-     */
-    if (event.keyCode === 27) { // Escape
-        notification.remove();
-        removeScreenLock();
     }
-};
+    else {
+      console.log('onRes was failed');
 
-
-function routeProfile() {
-  window.location.href = "/ProfileView.html";
-}
-
-
-/******************************** Button clicks *******************************/
-
-$("#button-hotseat").click(function () {
-    var gameMode = "hotseat";
-
-    // Storing for this session
-    sessionStorage.gameMode = gameMode;
-
-    // Prompt for board size
-    showBoardSizePickerNotification(gameMode);
-});
-
-$("#button-ai").click(function () {
-    var gameMode = "ai";
-
-    // Storing for this session
-    sessionStorage.gameMode = gameMode;
-
-    // Prompt for board size
-    showBoardSizePickerNotification(gameMode);
-});
-
-$("#button-network").click(function () {
-    sessionStorage.gameMode = "network";
-    window.location.href = "/multiplayer_lobby.html";
-});
-
-
-
-/************************* DOM Manipulating functions *************************/
-
-var notification;
-
-/**
- * This function shows a notification to the user and asks to pick a board size
- * @param {string} gameMode - the game mode. "hotseat" or "ai"
- */
-function showBoardSizePickerNotification(gameMode) {
-
-//    var nfBuilder = new NotificationBuilder();
-
-    // Title of the notification
-    var title = "Starting ";
-//    var emphasisStyle = "color: green; display: inline-block;";
-
-    // Making title
-    if (gameMode === "hotseat") {
-        title += "a <div class='emphasis-hotSeat'>Hotseat</div>";
-    } else if (gameMode === "ai") {
-        title += "an <div class='emphasis-ai'>AI</div>";
+      games.append('n/a');
+      wins.append('n/a');
+      losses.append('n/a');
+      winRate.append('n/a');
     }
-    title += " game";
+  }
+}
 
-    // Body text
-    var msg = "Please select a board size.";
 
-    // Buttons
-    var buttons = [
-        nfBuilder.makeNotificationButton("9x9", function () {
-            sessionStorage.boardSize = 9;
-            window.location.href = "/GameView.html";
-        }).attr("class", "notification_button_general")
-                ,
-        nfBuilder.makeNotificationButton("13x13", function () {
-            sessionStorage.boardSize = 13;
-            window.location.href = "/GameView.html";
-        }).attr("class", "notification_button_general")
-                ,
-        nfBuilder.makeNotificationButton("19x19", function () {
-            sessionStorage.boardSize = 19;
-            window.location.href = "/GameView.html";
-        }).attr("class", "notification_button_general")
-    ];
+function changePassword() {
+  password = $('#sample3').val();
+  console.log(password);
+  username = sessionStorage.username;
+  (new NetworkAdapter()).updatePassword(password, username, onRes);
 
-    // when the notification is canceled
-    function onCancel() {
-        notification.remove();
-        removeScreenLock();
+  function onRes(success, data) {
+
+    if(success) {
+      $('#sample3').html('');
+      $('#sample2').html('');
+      alert('Password Updated');
     }
-
-    notification = nfBuilder.makeNotification(title, msg, buttons, onCancel).attr("class", "boardSizeNotification-forGameMode");
-
-    applyScreenLock();
-    $("#notificationCenter").append(notification);
-
-}
-
-function applyScreenLock() {
-    $("#notification-screenLock").css("display", "block");
-}
-
-function removeScreenLock() {
-    $("#notification-screenLock").css("display", "none");
-}
-
-/**
- * This function clears the body of the HTML page
- * and shows a "Session Expired" notification
- */
-function showSessionExpired() {
-    // Show notification
-    $("#bodyWrapper").remove();
-    var nf = nfBuilder.getSessionExpiredNotification();
-    nf.appendTo("body");
-}
-
-
-
-
-
-/********************************* Socket IO **********************************/
-/**
- * This function requests user data using uername
- * @param {type} username - username of the user
- */
-function requestUserData(username) {
-    socket.emit("userdataForUsername", username);
-}
-
-// The response is recieved here
-socket.on('userdataForUsername', function (data) {
-    console.log(data);
-    sessionStorage.sessionID = data.__socketid;
-    user = data;
-
-    if (user === undefined) {
-        showSessionExpired();
+    else {
+      $('#sample3').html('');
+      $('#sample2').html('');
+      alert('Password update Failed sorry we are shit programmers');
     }
-
-});
-
-
-
-function requestNewGuestLogin() {
-    socket.emit('guestLogin', 'guest login');
+  }
 }
 
-socket.on('guestLogin', function (data) {
-    console.log(data);
-    user = data;
 
-    if (user === undefined) {
-        showSessionExpired();
-    } else {
-        sessionStorage.username = user.__username;
-        sessionStorage.sessionID = user.__socketid;
-    }
-});
 
-socket.on('_error', function (data) {
-    if (data === "sessionExpired") {
-        showSessionExpired();
-    }
-});
+
+function routeGameSelect() {
+  window.location.href = "/gameSelect.html";
+}
 
 /**
  * material-design-lite - Material Design Components in CSS, JS and HTML
