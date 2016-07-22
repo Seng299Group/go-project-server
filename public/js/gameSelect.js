@@ -96,13 +96,13 @@ function showBoardSizePickerNotification(gameMode) {
 
     // Title of the notification
     var title = "Starting ";
-    var emphasisStyle = "color: green; display: inline-block;";
+//    var emphasisStyle = "color: green; display: inline-block;";
 
     // Making title
     if (gameMode === "hotseat") {
-        title += "a <div style=' " + emphasisStyle + " '>Hotseat</div>";
+        title += "a <div class='emphasis-hotSeat'>Hotseat</div>";
     } else if (gameMode === "ai") {
-        title += "an <div style=' " + emphasisStyle + " '>AI</div>";
+        title += "an <div class='emphasis-ai'>AI</div>";
     }
     title += " game";
 
