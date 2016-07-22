@@ -61,13 +61,19 @@ class NotificationBuilder {
         notification.append(body);
 
         // Buttons
-        var buttonWrapper = $(document.createElement('div'));
-        buttonWrapper.css("text-align","center");
-        if (buttons.length == 1) {
-            buttonWrapper.append(buttons);
+        if (buttons === null){
+            // do nothing
+        } else if (buttons === undefined){
+            console.log("undefined buttons. NotificationBuilder.js");
         } else {
-            for (var b in buttons) {
-                buttonWrapper.append(buttons[b]);
+            var buttonWrapper = $(document.createElement('div'));
+            buttonWrapper.css("text-align","center");
+            if (buttons.length == 1) {
+                buttonWrapper.append(buttons);
+            } else {
+                for (var b in buttons) {
+                    buttonWrapper.append(buttons[b]);
+                }
             }
         }
        

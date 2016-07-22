@@ -13,7 +13,7 @@
     left: 0px;
     right: 0px;
     display: none;
-    z-index: 1
+    z-index: 1000
 }
 
 
@@ -40,6 +40,10 @@
     left: 0px;
     right: 0px;
 
+}
+
+.sessionExpiredNotification h1 {
+    font-size: 14pt;
 }
 
 .sessionExpiredNotification-button {
@@ -80,7 +84,7 @@
     box-shadow: 0px 0px 8px -0.5px grey;
     background: white;
 
-    z-index: 2;
+    z-index: 1910;
 }
 
 .leftGameInProgressNotification h1 {
@@ -118,4 +122,5 @@
 .cancelButton {
     width: 20px;
     float: right;
+    cursor: pointer;
 }

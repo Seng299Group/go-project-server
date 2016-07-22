@@ -1,17 +1,3 @@
-/**
- * Triggered on keyboard button press
- *
- * @param {object} event
- */
-document.onkeydown = function (event) {
-
-    /**
-     * if the user pressed escape, remove the notification
-     */
-    if (event.key === "Enter") {
-        register();
-    }
-};
 
 function register() {
   var username = $("#user-name").val();
@@ -21,7 +7,7 @@ function register() {
   var answer = $("#security-question").val();
 
   // todo, redo broken register system.
-  if(!checkUser(username) || !checkPass(password) || !confirmPass(passwordCheck)) {
+  if(!checkUser(username) || !checkPass(password) || !confirmPass(passwordCheck) || !checkSecurity(answer)) {
     return;
   }
 

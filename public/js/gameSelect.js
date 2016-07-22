@@ -1,6 +1,8 @@
 
 var socket = io();
 
+var nfBuilder = new NotificationBuilder();
+
 var user;
 
 
@@ -31,7 +33,7 @@ if (sessionStorage.isGuest === "true") {
 
 /**
  * Triggered on keyboard button press
- * 
+ *
  * @param {object} event
  */
 document.onkeydown = function (event) {
@@ -39,14 +41,16 @@ document.onkeydown = function (event) {
     /**
      * if the user pressed escape, remove the notification
      */
-    if (event.key === "Escape") {
+    if (event.keyCode === 27) { // Escape
         notification.remove();
         removeScreenLock();
     }
 };
 
 
-
+function routeProfile() {
+  window.location.href = "/ProfileView.html";
+}
 
 
 /******************************** Button clicks *******************************/
@@ -88,40 +92,42 @@ var notification;
  */
 function showBoardSizePickerNotification(gameMode) {
 
-    var nfBuilder = new NotificationBuilder();
+//    var nfBuilder = new NotificationBuilder();
 
     // Title of the notification
     var title = "Starting ";
-    var emphasisStyle = "color: green; display: inline-block;";
+//    var emphasisStyle = "color: green; display: inline-block;";
 
+    // Making title
     if (gameMode === "hotseat") {
-        title += "a <div style=' " + emphasisStyle + " '>Hotseat</div>";
+        title += "a <div class='emphasis-hotSeat'>Hotseat</div>";
     } else if (gameMode === "ai") {
-        title += "an <div style=' " + emphasisStyle + " '>AI</div>";
+        title += "an <div class='emphasis-ai'>AI</div>";
     }
     title += " game";
 
-
-
+    // Body text
     var msg = "Please select a board size.";
 
+    // Buttons
     var buttons = [
         nfBuilder.makeNotificationButton("9x9", function () {
             sessionStorage.boardSize = 9;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
-        ,
+                ,
         nfBuilder.makeNotificationButton("13x13", function () {
             sessionStorage.boardSize = 13;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
-        ,
+                ,
         nfBuilder.makeNotificationButton("19x19", function () {
             sessionStorage.boardSize = 19;
             window.location.href = "/GameView.html";
         }).attr("class", "notification_button_general")
     ];
 
+    // when the notification is canceled
     function onCancel() {
         notification.remove();
         removeScreenLock();
@@ -142,36 +148,62 @@ function removeScreenLock() {
     $("#notification-screenLock").css("display", "none");
 }
 
-function violatingFlow() {
-    console.log("viloating flow. session isStorage is undefined");
-    alert("viloating flow"); // for dev purposes // todo remove
-    // todo session expired
+/**
+ * This function clears the body of the HTML page
+ * and shows a "Session Expired" notification
+ */
+function showSessionExpired() {
+    // Show notification
+    $("#bodyWrapper").remove();
+    var nf = nfBuilder.getSessionExpiredNotification();
+    nf.appendTo("body");
 }
+
+
+
+
+
+/********************************* Socket IO **********************************/
+/**
+ * This function requests user data using uername
+ * @param {type} username - username of the user
+ */
+function requestUserData(username) {
+    socket.emit("userdataForUsername", username);
+}
+
+// The response is recieved here
+socket.on('userdataForUsername', function (data) {
+    console.log(data);
+    sessionStorage.sessionID = data.__socketid;
+    user = data;
+
+    if (user === undefined) {
+        showSessionExpired();
+    }
+
+});
+
+
 
 function requestNewGuestLogin() {
     socket.emit('guestLogin', 'guest login');
-    socket.on('guestLogin', function (data) {
-        console.log(data);
-        user = data;
+}
+
+socket.on('guestLogin', function (data) {
+    console.log(data);
+    user = data;
+
+    if (user === undefined) {
+        showSessionExpired();
+    } else {
         sessionStorage.username = user.__username;
         sessionStorage.sessionID = user.__socketid;
-    });
-}
+    }
+});
 
-function requestUserData(username) {
-
-    socket.emit("userdataForUsername", username);
-
-    socket.on('userdataForUsername', function (data) {
-        sessionStorage.sessionID = data.__socketid; // todo clean
-        user = data;
-
-        if (user.__isInGame === true) {
-            applyScreenLock();
-            var nfBuilder = new NotificationBuilder();
-            var nf = nfBuilder.getInGameNotification();
-            $("#notificationCenter").append(nf);
-        }
-
-    });
-}
+socket.on('_error', function (data) {
+    if (data === "sessionExpired") {
+        showSessionExpired();
+    }
+});

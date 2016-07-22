@@ -44,7 +44,7 @@ document.onkeydown = function (event) {
     /**
      * if the user pressed escape, remove the notification
      */
-    if (event.key === "Enter") {
+    if (event.keyCode === 13) { // Enter
         login();
     }
 };

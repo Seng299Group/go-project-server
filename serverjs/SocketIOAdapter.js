@@ -110,17 +110,31 @@ function removeUserFromDictionary(username) {
     }
 
     if (onlineUsers[username] === undefined) {
-        console.log("user left after server restart");
+        console.log("user left after server restarted. removeUserFromDictionary()");
     } else {
 
         // todo save user data before deleting
         console.log("user left. save user data as required. (./SocketIOAdapter.js)");
-
+        
         var user = onlineUsers[username];
         var socketid = user.getSocketID();
 
-        // todo decline all game requests for this user
-
+        // todo Taking up too much server time. do when server is idle
+//        var userThatLeft = onlineUsers[username];
+//        var socketid = userThatLeft.getSocketID();
+//
+        // Working 
+//        var requestSentList = userThatLeft.getRequestSentList();
+//        for (var username in requestSentList){
+//            onlineUsers[username].removeFromRequestReceivedList(userThatLeft.getUsername());
+//        }
+//        
+        // Not sure if working
+//        var requestReceivedList = userThatLeft.getRequestReceivedList();
+//        for (var username in requestReceivedList){
+//            onlineUsers[username].updateRequestStatus(userThatLeft.getUsername(), "declined");
+//        }
+ 
         delete(socketIDtoUsername[socketid]);
         delete(onlineUsers[username]);
     }
@@ -219,40 +233,70 @@ function listen(io) {
 
             // Authenticate login
             db.authenticate(data.username, data.password, function(authSucess) {
-              if (authSucess) {
-                  // get user data
-                  var user = db.getUserData(data.username);
+                if (authSucess) {
+                    // get user data
+                    var user = db.getUserData(data.username);
 
-                  // init socket id
-                  user.setSocketID(socket.id);
+                    // init socket id
+                    user.setSocketID(socket.id);
 
-                  // add user in dictionary
-                  addUserInDictionary(user, socket.id);
+                    // add user in dictionary
+                    addUserInDictionary(user, socket.id);
 
-                  // respond
-                  socket.emit("loginSucceeded", user);
+                    // respond
+                    socket.emit("loginSucceeded", user);
 
-              } else {
-                  // respond that login failed
-                  console.log("login failed. login request:");
-                  console.log(data);
-                  socket.emit("loginFailed");
-              }
+                } else {
+                    // respond that login failed
+                    console.log("login failed. login request:");
+                    console.log(data);
+                    socket.emit("loginFailed");
+                }
             });
         });
 
         socket.on('newAccount',  function(data){
           db.register(data.username, data.password, data.security, function(regSuc) {
             if(regSuc) {
-              socket.emit("regSuccess");
+                    socket.emit("regSuccess");
+                }
+                else {
+                    //Reg faild
+                    console.log('Registration failed. Registration request:');
+                    console.log(data);
+                    socket.emit("regFail");
+                }
+            });
+        });
+
+        socket.on('getWinLoss', function(data) {
+            db.winLoss(data.username, function(reqSuc, wlHistory) {
+              if(reqSuc) {
+                //request Successful
+                socket.emit("requestSuccess", wlHistory);
+              }
+              else {
+                //request Failed
+                console.log('User Win Loss history request failed for user:');
+                console.log(data);
+                socket.emit("requestFail");
+              }
+            });
+        });
+
+        socket.on('updatePassword', function(data) {
+
+          db.updatePass(data.password, data.username, function(updateSuc) {
+            if(updateSuc) {
+              socket.emit("updateSuc");
             }
             else {
-              //Reg faild
-              console.log('Registration failed. Registration request:');
-              console.log(data);
-              socket.emit("regFail");
+              console.log('Password update failed');
+              socket.emit("updateFail");
             }
           });
+
+
         });
 
         /**
@@ -274,6 +318,8 @@ function listen(io) {
             }
 
         });
+
+
 
 
 
@@ -311,68 +357,78 @@ function listen(io) {
          * Server received a game request from a client
          */
         socket.on('gameRequest', function (data) {
+            if (onlineUsers[data.toUser] === undefined) {
 
-            if (data.type === "sendRequest") {
+                // removing request
+                onlineUsers[data.fromUser].removeFromRequestReceivedList(data.toUser);
 
-                // checking if the toUser is in lobby
-                if (onlineUsers[data.toUser] === undefined) {
-                    socket.emit("_error", "notInMpLobby");
+                // signalling error
+                var resData = {
+                    type: "notInMpLobby",
+                    username: data.toUser
+                };
+                socket.emit("_error", resData);
 
-                } else {
-                    // update user data
-                    onlineUsers[data.fromUser].addToRequestSentList(data.toUser);
-                    var newData = {
-                        fromUser: data.fromUser,
-                        boardSize: data.boardSize
-                    };
+            } else {
+                
+                
+                
+                if (data.type === "sendRequest") {
+                        // update user data
+                        onlineUsers[data.fromUser].addToRequestSentList(data.toUser);
+                        onlineUsers[data.toUser].addToRequestReceivedList(data.fromUser, data.boardSize);
 
-                    // send game request signal
-                    io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("gameRequest", newData);
+                        var newData = {
+                            fromUser: data.fromUser,
+                            boardSize: data.boardSize
+                        };
+
+                        // send game request signal
+                        io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("gameRequest", newData);
+                   
+
+
+                } else if (data.type === "requestAccepted") {
+
+                        // todo decline all pending game requests
+
+                        // update data
+                        onlineUsers[data.fromUser].setOpponent(data.toUser);
+                        onlineUsers[data.toUser].setOpponent(data.fromUser);
+
+                        onlineUsers[data.fromUser].setBoardSize(data.boardSize);
+                        onlineUsers[data.toUser].setBoardSize(data.boardSize);
+
+                        onlineUsers[data.fromUser].setIsInGame(true);
+                        onlineUsers[data.toUser].setIsInGame(true);
+
+                        onlineUsers[data.fromUser].setPlayerNumber(2);
+                        onlineUsers[data.toUser].setPlayerNumber(1);
+                        
+                        onlineUsers[data.fromUser].removeFromRequestReceivedList(data.toUser);
+                        onlineUsers[data.toUser].removeFromRequestSentList(data.fromUser);
+
+                        // Signal both users that the game has been approved by the server
+                        io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
+                        io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
+
+                        // Send out online players' list
+                        broadcastOnlinePlayers(socket);
+
+
+
+                } else if (data.type === "requestDeclined") {
+                        // updating status
+                        onlineUsers[data.toUser].updateRequestStatus(data.fromUser, "declined");
+                        onlineUsers[data.fromUser].removeFromRequestReceivedList(data.toUser);
+
+                        // telling the client
+                        io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestDeclined", data.fromUser);
+                        
+                        
+                        
                 }
-
-
-
-            } else if (data.type === "requestAccepted") {
-
-                // checking if the toUser is in lobby
-                if (onlineUsers[data.toUser] === undefined) {
-                    socket.emit("_error", "notInMpLobby");
-
-                } else {
-
-                    // todo decline all pending game requests
-
-                    // update data
-                    onlineUsers[data.fromUser].setOpponent(data.toUser);
-                    onlineUsers[data.toUser].setOpponent(data.fromUser);
-
-                    onlineUsers[data.fromUser].setBoardSize(data.boardSize);
-                    onlineUsers[data.toUser].setBoardSize(data.boardSize);
-
-                    onlineUsers[data.fromUser].setIsInGame(true);
-                    onlineUsers[data.toUser].setIsInGame(true);
-
-                    onlineUsers[data.fromUser].setPlayerNumber(2);
-                    onlineUsers[data.toUser].setPlayerNumber(1);
-
-                    // Signal both users that the game has been approved by the server
-                    io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestAccepted");
-                    io.sockets.connected[onlineUsers[data.fromUser].getSocketID()].emit("requestAccepted");
-
-                    // Send out online players' list
-                    broadcastOnlinePlayers(socket);
-                }
-
-
-
-            } else if (data.type === "requestDeclined") {
-                // updating status
-                onlineUsers[data.toUser].updateRequestStatus(data.fromUser, "declined");
-
-                // telling the client
-                io.sockets.connected[onlineUsers[data.toUser].getSocketID()].emit("requestDeclined", data.fromUser);
             }
-
         });
 
 
@@ -380,40 +436,78 @@ function listen(io) {
         // When a user makes a move
         socket.on('move', function (data) {
 
-            /*
-             * The data should include the following:
-             * data = {
-             *      fromUser: username,
-             *      toUser: username,
-             *      move: object (to be decided data structure)
-             *  }
-             */
-
-            var fromUser = data.fromUser;
-            var toUser = data.toUser;
-
-            // ... todo fixme make moves
-
-            var toUserSocketID = onlineUsers[toUser].getSocketID();
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
             io.sockets.connected[toUserSocketID].emit("move", data); // second param can be an object
 
         });
 
 
 
-        socket.on('updateSocketIDForUser', function (data) {
-            updateDictionary(data, socket.id);
+        // When a user resigns
+        socket.on('resign', function (data) {
+
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
+            io.sockets.connected[toUserSocketID].emit("resign"); // second param can be an object
+
         });
 
 
 
+        // When the game ends after 2 passes
+        socket.on('gameOver', function (data) {
+
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
+            io.sockets.connected[toUserSocketID].emit("gameOver"); // second param can be an object
+
+        });
+
+        // Add a win to the user's account
+        socket.on('addWin', function (data) {
+
+            db.addWin(data.fromUser);
+
+        });
+
+        // Add a loss to the user's account
+        socket.on('addLoss', function (data) {
+
+            db.addLoss(data.fromUser);
+
+        });
+
+
+        socket.on('updateSocketIDForUser', function (data) {
+            updateDictionary(data, socket.id);
+        });
+        
+        
+        
+        socket.on('userLeftGame', function (data) {
+            
+            // todo Brian : data.fromUser left game. treat as resign
+            
+            onlineUsers[data.toUser].setIsInGame(false);
+            onlineUsers[data.fromUser].setIsInGame(false);
+            
+            onlineUsers[data.toUser].setOpponent(null);
+            onlineUsers[data.fromUser].setOpponent(null);
+            
+            // Notify opponent
+            var toUserSocketID = onlineUsers[data.toUser].getSocketID();
+            io.sockets.connected[toUserSocketID].emit("userLeftGame"); // second param can be an object
+        });
+        
+        
+        
         // Socket.io Event: Disconnect
         socket.on('disconnect', function () {
 
             var user = onlineUsers[socketIDtoUsername[socket.id]];
 
             if (user === undefined) {
-                console.log("user left after server restarted");
+                
+                console.log("user left after server restarted. socket.on('disconnect')");
+                socket.emit("_error", "sessionExpired");
 
             } else {
                 // set user to ofline

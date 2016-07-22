@@ -16,12 +16,30 @@ class GameSocket {
         // Event: Client receives a move from the opponent
         this.__socket.on('move', function (data) {
 
-                that.__gameController.receiveMove(data.move.x, data.move.y);
+                that.__gameController.receiveMove(data.move);
+
+        });
+
+        this.__socket.on('resign', function (data) {
+
+            that.__gameController.receiveResign();
+
+        });
+
+        this.__socket.on('gameOver', function (data) {
+
+            that.__gameController.receiveGameOver();
 
         });
     }
 
     emit (channel, data) {
-        this.__socket.emit(channel, data);
+
+        var emitData = data || {};
+
+        emitData.fromUser = user.__username;
+        emitData.toUser = user.__opponent;
+
+        this.__socket.emit(channel, emitData);
     }
 }

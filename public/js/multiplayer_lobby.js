@@ -35,7 +35,7 @@ document.onkeydown = function (event) {
     /**
      * if the user pressed escape, remove the notification
      */
-    if (event.key === "Escape") {
+    if (event.keyCode === 27) { // Escape
         notification.remove();
         removeScreenLock();
     }
@@ -108,7 +108,17 @@ function onReceivedPlayerList(playerList) {
         usernameText.attr("class", "onlinePlayers-username");
 
         // Button to send request
-        var reqButton = makeInvitationButton(forUser);
+        var reqButton;
+
+        // Getting 
+        if (user.__requestSentList[forUser.__username] === "pending") {
+            reqButton = getInvitationSentButton(forUser.__username);
+        } else if (user.__requestSentList[forUser.__username] === "declined") {
+            reqButton = makeRequestDeclinedButton();
+        } else {
+            reqButton = makeInvitationButton(forUser);
+        }
+
 
         // Nesting DOM elements. All that goes in a row for each player
         div.append(usernameText);
@@ -149,14 +159,14 @@ function onReceivedPlayerList(playerList) {
                     notification.remove();
                     reqButton.replaceWith(getInvitationSentButton(forUser));
                 }).attr("class", "notification_button_general")
-                ,
+                        ,
                 nfBuilder.makeNotificationButton("13x13", function () {
                     sendGameRequest(forUser.__username, 13);
                     removeScreenLock();
                     notification.remove();
                     reqButton.replaceWith(getInvitationSentButton(forUser));
                 }).attr("class", "notification_button_general")
-                ,
+                        ,
                 nfBuilder.makeNotificationButton("19x19", function () {
                     sendGameRequest(forUser.__username, 19);
                     removeScreenLock();
@@ -221,13 +231,7 @@ function getInvitationSentButton(toUser) {
     requestSentButton = $(document.createElement('div'));
     requestSentButton.html("Invitation Sent");
     requestSentButton.attr("class", "button_requestSent");
-
-    socket.on('requestDeclined', function (fromUser) {
-        if (toUser.__username === fromUser) {
-            requestSentButton.replaceWith(makeRequestDeclinedButton());
-        }
-
-    });
+    requestSentButton.attr("toUser", toUser);
 
     return requestSentButton;
 }
@@ -239,11 +243,11 @@ function getInvitationSentButton(toUser) {
  * @returns {DOM object} div
  */
 function makeRequestDeclinedButton() {
-    var requestSentButton;
-    requestSentButton = $(document.createElement('div'));
-    requestSentButton.html("Request Declined");
-    requestSentButton.attr("class", "button_requestDecliend");
-    return requestSentButton;
+    var button;
+    button = $(document.createElement('div'));
+    button.html("Request Declined");
+    button.attr("class", "button_requestDecliend");
+    return button;
 }
 
 
@@ -254,10 +258,11 @@ function makeRequestDeclinedButton() {
  * @param {string} fromUser - username
  * @param {int} boardSize - size of the board
  */
-function onReceivedGameRequest(fromUser, boardSize) {
+function addGameRequest(fromUser, boardSize) {
 
     // Make received game request UI
     var gameRequest;
+    
 
     var title = "";
     var msg = "Game request form <b>" + fromUser + "</b><br>Board size: <b>" + boardSize + "x" + boardSize + "</b>";
@@ -265,6 +270,7 @@ function onReceivedGameRequest(fromUser, boardSize) {
 
     gameRequest = nfBuilder.makeNotification(title, msg, buttons);
     gameRequest.addClass("gameRequestsNotification");
+    gameRequest.attr("fromUser", fromUser);
 
     // Adding received game request
     $("#gameRequests-wrapper").append(gameRequest);
@@ -307,7 +313,42 @@ function onReceivedGameRequest(fromUser, boardSize) {
  * This function is called to update UI to show all requests that are not responded to
  */
 function showPendingGameRequests() {
-    console.log("pending game requests"); // todo show pending game requests here
+    for (var fromUser in user.__requestReceivedList) {
+        var boardSize = user.__requestReceivedList[fromUser];
+        addGameRequest(fromUser, boardSize);
+    }
+}
+
+/**
+ * This function is called when the opponent leaves a network game
+ */
+function showUserResignedNotification() {
+    $("#notification-screenLock").css("display", "block");
+
+    var title = "Your Opponent Has Resigned";
+
+    var msg = "You win";
+
+    function onClose() {
+        window.location.href = "/gameSelect.html";
+    }
+
+    function onReplay() {
+        // Removing the gray screen lock
+        $("#notification-screenLock").css("display", "none");
+        
+        // todo Travis 
+    }
+
+    var buttons = [
+        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button")
+//        ,
+//        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
+    ];
+
+    nf = nfBuilder.makeNotification(title, msg, buttons).attr("class", "leftGameInProgressNotification");
+
+    $("#notificationCenter").append(nf);
 }
 
 
@@ -345,6 +386,11 @@ function showPendingGameRequests() {
  * @param {int} boardSize - the size of the board
  */
 function sendGameRequest(toUser, boardSize) {
+    
+    // Adding request to local user data
+    user.__requestSentList[toUser] = "pending";
+
+    // Sending game request
     var data = {
         type: "sendRequest",
         toUser: toUser,
@@ -392,10 +438,10 @@ socket.on('userdata', function (data) {
     user = data;
     sessionStorage.sessionID = user.__socketid;
 
-    if (user.__isInGame) {
-        applyScreenLock();
-        var nf = nfBuilder.getInGameNotification();
-        $("#notificationCenter").append(nf);
+    if (user.__isInGame === true) {
+        socket.emit("userLeftGame", {toUser: user.__opponent, fromUser: user.__username});
+        user.__isInGame = false;
+        user.__opponent = null;
     }
 
     decorateProfile();
@@ -417,7 +463,7 @@ socket.on('playerList', function (data) {
 
 // The client received a game request
 socket.on('gameRequest', function (data) {
-    onReceivedGameRequest(data.fromUser, data.boardSize);
+    addGameRequest(data.fromUser, data.boardSize);
 });
 
 
@@ -427,17 +473,38 @@ socket.on('requestAccepted', function () {
     window.location.href = "/GameView.html";
 });
 
+socket.on('requestDeclined', function (fromUser) {
+    $("div[toUser='" + fromUser + "']").replaceWith(makeRequestDeclinedButton());
+});
 
 
 // Log Error if server sends an error message
 socket.on('_error', function (data) {
-    if (data === "notInMpLobby") {
 
-        console.log("user is not MpLobby");
+    if (data.type === "notInMpLobby") {
 
+        console.log("user is not MpLobby ");
+        
         // todo 1. notify user that the invited user has left the lobby
+        applyScreenLock();
+        
+        var title = "User is offline";
+        var msg = "<b>" + data.username + "</b> is no longer online";
+        var button = nfBuilder.makeNotificationButton("Ok", onClose);
+        button.attr("class", "notification_button_general");
+
+        notification = nfBuilder.makeNotification(title, msg, button, onClose);
+        notification.attr("class", "notification-userOffline");
+        $("#notificationCenter").append(notification);
+        
+        function onClose(){
+            notification.remove();
+            removeScreenLock();
+        }
 
         // todo 2. remove the game request
+        $("div[fromUser='" + data.username + "']").remove();
+        delete(user.__requestReceivedList[data.username]);
 
     } else if (data === "sessionExpired") {
 

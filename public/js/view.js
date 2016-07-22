@@ -11,11 +11,12 @@ class View {
      * __W			- width of the canvas
      * __H			- height of the canvas
      * __svg			- A SVG object under the canvas object.
-     * 
+     *
      * __scale		- A scaling factor. (Pixel between lines on the board)
      * __radius		- The radius of the stone. (Unit: px)
      * __offset		- Offset to account for borders of the board. (Unit: px)
      *
+     * __locked     - While True, blocks placing tokens and passing
      */
 
 
@@ -31,7 +32,7 @@ class View {
 
     /**
      * Sets the controller for this instance.
-     * 
+     *
      * @param {object} controller - A GameController object.
      */
     setController(controller){
@@ -40,7 +41,7 @@ class View {
 
     /**
      * This function initializes the View.
-     * 
+     *
      * Precondition: the setGameSpace() method must be called before calling
      * 		this method.
      */
@@ -66,6 +67,13 @@ class View {
         this.__p1Colour = "black";
         this.__p2Colour = "white";
         this.__currentPlayer = 1; //Player Who's Colour is to be Changed
+
+        //init player turn
+        this.indicatePlayer();
+        this.__locked = false;
+		
+		//Background Image Default
+		document.body.style.backgroundImage = "url(\"/img/backOne.jpg\")";
     }
 
     /**
@@ -86,7 +94,7 @@ class View {
         this.__svg.empty();
 
 		//
-		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "white");
+		var canvas = makeRectangle(this.__offset, this.__offset, (this.__W - 2 * this.__offset), (this.__H - 2 * this.__offset), "rgba(255, 255, 255, .6)");
 		this.__svg.append(canvas);
         // 3. Drawing lines (intersections)
         for (var i = 0; i < boardArray.length; i++) {
@@ -110,12 +118,12 @@ class View {
                 }
             }
         }
-		
-		this.indicatePlayer();
+
+		// this.indicatePlayer();
 
     }
-	
-	
+
+
 
 	indicatePlayer(){
 		if(this.__controller.__playerTurn === 1){
@@ -127,7 +135,19 @@ class View {
 			document.getElementById("c1").style.visibility = "visible";
 		}
 	}
-	
+
+
+    lockControls () {
+        this.__locked = true;
+    }
+
+    unlockControls () {
+        this.__locked = false;
+    }
+
+    isLocked () {
+        return this.__locked;
+    }
 
     /**
      * This method should be called when the view is clicked.
@@ -143,7 +163,7 @@ class View {
 
         // Placing the stone
 	this.__controller.placeToken(this.__controller.getPlayerTurn(), posx, posy);
-		
+
 	// Drawing the board
 	this.draw();
     }
@@ -154,13 +174,13 @@ class View {
             document.getElementById("colourButtonTable").style.visibility = "visible";
 			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
-			
+
 			document.getElementById("colourButtonTable").style.visibility = "hidden";
 			document.getElementById("backgroundTable").style.visibility = "hidden";
 			document.getElementById("showBar").style.visibility = "visible";
          }
 	}
-        
+
     changeColour(colour){
         if(this.__currentPlayer == 1){
                 this.__p1Colour = colour;
@@ -169,7 +189,7 @@ class View {
         }
         this.draw();
     }
-        
+
     setPlayer(player){
         this.__currentPlayer = player;
 		var playerOneButton = document.getElementById("playerOne");
@@ -180,7 +200,7 @@ class View {
 			playerTwoButton.style.backgroundColor = "BFC3BA";
 		}else{
 			playerOneButton.style.backgroundColor = "BFC3BA";
-			playerTwoButton.style.backgroundColor = "0F8B8D";	
+			playerTwoButton.style.backgroundColor = "0F8B8D";
 		}
     }
 	setPageBackround(){
@@ -200,12 +220,14 @@ class View {
 		var leftButton = document.getElementById('leftButton');
 		var rightButton = document.getElementById('rightButton');
 		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
-		rightButton.innerHTML = "";
+		rightButton.style.visibility = "hidden";
 	}
 	changeToControlButtons(){
 		console.log("Changing to control");
-		var buttonBar = document.getElementById('buttonBarWrapper');
-		buttonBar.innerHTML = "<div id=leftButton><br>Forward</div>\
-								<div id=rightButton><br>Backward</div>";
+		var leftButton = document.getElementById('leftButton');
+        var rightButton = document.getElementById('rightButton');
+		
+		leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+        rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
 	}
 }
