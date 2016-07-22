@@ -10,6 +10,8 @@ var user;
 
 
 if (sessionStorage.isGuest === "true") {
+    
+    $("#button_myAccount").css("display", "none");
 
     if (sessionStorage.username === undefined) {
         // Guest and first time landing on this page
