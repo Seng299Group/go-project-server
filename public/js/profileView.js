@@ -2,11 +2,14 @@ var socket = io();
 
 var user;
 
+// Reason for having this: the server will register the socket id
+socket.emit("userdataForUsername", sessionStorage.username);
+
 if (sessionStorage.isGuest === "false") {
     // user logged in using username and password
     // therefore, request user data
     userWL(sessionStorage.username);
-}
+} 
 
 function userWL(username) {
 
