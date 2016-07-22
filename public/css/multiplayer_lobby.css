@@ -1,6 +1,8 @@
 body {
     margin: 0px;
     font-family: 'Roboto', sans-serif;
+    background: url("/img/bg.jpg");
+    background-repeat: repeat;
 }
 
 .clearFloat{
@@ -16,6 +18,7 @@ body {
 .profile-wrapper {
     margin: 16px auto;
     padding: 16px;
+    background: white;
     box-shadow: 0px 0px 8px -0.5px grey;
     text-align: center;
     width: 500px;
@@ -37,6 +40,7 @@ body {
 .gameRequestsNotification {
     margin: 16px auto;
     width: 500px;
+    background: white;
     box-shadow: 0px 0px 8px -0.5px grey;
     padding: 8px 16px;
 }
@@ -94,6 +98,7 @@ body {
     margin: 16px auto;
     padding: 16px;
 
+    background: white;
     box-shadow: 0px 0px 8px -0.5px grey;
 }
 
@@ -160,11 +165,9 @@ body {
 
 /***************** Board Size Notification for Online Players *****************/
 
-
-
 .boardSizeNotification-forOnlinePlayers {
     width: 460px;
-    height: 170px;
+    height: 160px;
     /*
     * This height is set under the assumption that username is 32 chars long.
     * Big username will cause the title to overflow
@@ -212,7 +215,10 @@ body {
 }
 
 
-/************************/
+
+
+
+/************************* User Offline Notification **************************/
 
 .notification-userOffline {
     width: 460px;

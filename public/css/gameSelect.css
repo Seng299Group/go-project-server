@@ -31,7 +31,21 @@ img {
   float: right;
 }
 
+.emphasis-hotSeat {
+    color: #388E3C;
+    display: inline-block;
+    font-weight: bold;
+}
 
+.emphasis-ai {
+    color: #FFA000;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.emphasis-network {
+    // nothing
+}
 
 
 /******************* Board Size Notification for Game Modes *******************/
