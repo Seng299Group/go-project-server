@@ -40,6 +40,12 @@
 	float: left;
 	text-align: center;
 }
+
+.playerSelectBox{
+	height:50px;
+	display: table-cell;
+	
+}
 .backgroundButton{
     height: 10%;
     width: 30%;

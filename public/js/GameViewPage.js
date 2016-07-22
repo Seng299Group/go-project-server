@@ -95,7 +95,7 @@ function renderHotSeat() {
         var y = e.pageY - $(this).offset().top;
 
         view.onBoardClick(x, y);
-		gameController.__historySpot += 1;
+        gameController.__historySpot += 1;
     });
 
 
@@ -104,18 +104,18 @@ function renderHotSeat() {
         console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
-		var middleButton = document.getElementById('middleButton');
+        var middleButton = document.getElementById('middleButton');
 
         if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
-			leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
-			rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
-			rightButton.style.visibility = "visible";
-			middleButton.style.visibility = "visible";
-		}else if(myGameSpace.__gameOver){
+            leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+            rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+            rightButton.style.visibility = "visible";
+            middleButton.style.visibility = "visible";
+        } else if (myGameSpace.__gameOver) {
             gameController.rewind();
-        }else{
+        } else {
             gameController.pass();
-			gameController.__historySpot += 1;
+            gameController.__historySpot += 1;
         }
     });
     $("#rightButton").click(function () {
@@ -124,8 +124,8 @@ function renderHotSeat() {
         } else {
             gameController.resign();
             view.changeToControlButtons();
-			var middleButton = document.getElementById('middleButton');
-			middleButton.style.visibility = "visible";
+            var middleButton = document.getElementById('middleButton');
+            middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -169,7 +169,7 @@ function renderAI() {
         var y = e.pageY - $(this).offset().top;
 
         view.onBoardClick(x, y);
-		gameController.__historySpot += 1;
+        gameController.__historySpot += 1;
     });
 
 
@@ -178,18 +178,18 @@ function renderAI() {
         console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
-		var middleButton = document.getElementById('middleButton');
+        var middleButton = document.getElementById('middleButton');
 
         if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
-			leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
-			rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
-			rightButton.style.visibility = "visible";
-			middleButton.style.visibility = "visible";
-		}else if(myGameSpace.__gameOver){
+            leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+            rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+            rightButton.style.visibility = "visible";
+            middleButton.style.visibility = "visible";
+        } else if (myGameSpace.__gameOver) {
             gameController.rewind();
-        }else{
+        } else {
             gameController.pass();
-			gameController.__historySpot += 1;
+            gameController.__historySpot += 1;
         }
     });
     $("#rightButton").click(function () {
@@ -198,8 +198,8 @@ function renderAI() {
         } else {
             gameController.resign();
             view.changeToControlButtons();
-			var middleButton = document.getElementById('middleButton');
-			middleButton.style.visibility = "visible";
+            var middleButton = document.getElementById('middleButton');
+            middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -230,11 +230,7 @@ function renderNetwork() {
     });
 
     function render() {
-        // todo fixme
-        // change from hotseat to network
-
-        // fixme note: the "user" variable has __username and __opponent
-
+       
         // Model - The board
         console.log(user);
         var myGameSpace = new GameSpace(user.__boardSize);
@@ -242,7 +238,6 @@ function renderNetwork() {
 
         // Controller - Game controller
         var gameController = new NetworkGameController(socket);
-
 
         // View
         var view = new View();
@@ -263,51 +258,145 @@ function renderNetwork() {
         }
 
         $("#canvas").click(function (e) {
-        // Clicked coordinates
-        var x = e.pageX - $(this).offset().left;
-        var y = e.pageY - $(this).offset().top;
+            // Clicked coordinates
+            var x = e.pageX - $(this).offset().left;
+            var y = e.pageY - $(this).offset().top;
 
-        view.onBoardClick(x, y);
-			gameController.__historySpot += 1;
-		});
+            view.onBoardClick(x, y);
+            gameController.__historySpot += 1;
+        });
 
 
-		// todo this is repeating 3 times, move to global scope
-		$("#leftButton").click(function () {
-			console.log("left button");
-			var leftButton = document.getElementById('leftButton');
-			var rightButton = document.getElementById('rightButton');
-			var middleButton = document.getElementById('middleButton');
+        // todo this is repeating 3 times, move to global scope
+        $("#leftButton").click(function () {
+            console.log("left button");
+            var leftButton = document.getElementById('leftButton');
+            var rightButton = document.getElementById('rightButton');
+            var middleButton = document.getElementById('middleButton');
 
-			if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
-				leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
-				rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
-				rightButton.style.visibility = "visible";
-				middleButton.style.visibility = "visible";
-			}else if(myGameSpace.__gameOver){
-				gameController.rewind();
-			}else{
-				gameController.pass();
-				gameController.__historySpot += 1;
-			}
-		});
-		$("#rightButton").click(function () {
-        if (myGameSpace.__gameOver) {
-            gameController.replay();
-        } else {
-            gameController.resign();
-            view.changeToControlButtons();
-			var middleButton = document.getElementById('middleButton');
-			middleButton.style.visibility = "visible";
-        }
-    });
-		$("#middleButton").click(function () {
-			if (document.getElementById('middleButton').style.visibility == "visible") {
-				window.location.href = "/gameSelect.html";
-			}
-		});
+            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+                rightButton.style.visibility = "visible";
+                middleButton.style.visibility = "visible";
+            } else if (myGameSpace.__gameOver) {
+                gameController.rewind();
+            } else {
+                gameController.pass();
+                gameController.__historySpot += 1;
+            }
+        });
+        $("#rightButton").click(function () {
+            if (myGameSpace.__gameOver) {
+                gameController.replay();
+            } else {
+                gameController.resign();
+                view.changeToControlButtons();
+                var middleButton = document.getElementById('middleButton');
+                middleButton.style.visibility = "visible";
+            }
+        });
+        $("#middleButton").click(function () {
+            if (document.getElementById('middleButton').style.visibility == "visible") {
+                window.location.href = "/gameSelect.html";
+            }
+        });
 
     }
+//<<<<<<< HEAD
+//	
+//
+//	function renderNetwork() {
+//	
+//   	if(user.__playerNumber==1){
+//		document.getElementById("player1").innerHTML = user.__username + " - Black";
+//		document.getElementById("player2").innerHTML = user.__opponent + " - White";
+//	}
+//	else{
+//		document.getElementById("player1").innerHTML = user.__username + " - White";
+//		document.getElementById("player2").innerHTML = user.__opponent + " - Black";
+//		
+//	}
+//	
+//        console.log("network game acting like hotseat");
+//
+//        // requesting user data
+//        socket.emit("userdata", sessionStorage.sessionID);
+//
+//        // onReceive user data
+//        socket.on('userdata', function (data) {
+//            user = data;
+//            sessionStorage.sessionID = user.__socketid;
+//
+//            render();
+//        });
+//
+//        function render() {
+//            // todo fixme
+//            // change from hotseat to network
+//
+//            // fixme note: the "user" variable has __username and __opponent
+//
+//            // Model - The board
+//            console.log(user);
+//            var myGameSpace = new GameSpace(user.__boardSize);
+//            var player = 1;
+//
+//            // Controller - Game controller
+//            var gameController = new NetworkGameController(socket);
+//
+//
+//            // View
+//            var view = new View();
+//
+//            view.setGameSpace(myGameSpace);
+//            view.setController(gameController);
+//            view.init();
+//            view.draw(); // Draws the empty board
+//            view.drawButtons();
+//			setColourPallet(view);
+//
+//            gameController.setGameSpace(myGameSpace);
+//            gameController.setView(view);
+//
+//            $("#canvas").click(function (e) {
+//                // Clicked coordinates
+//                var x = e.pageX - $(this).offset().left;
+//                var y = e.pageY - $(this).offset().top;
+//
+//                view.onBoardClick(x, y);
+//            });
+//
+//            // todo this is repeating 3 times, move to global scope
+//            $("#leftButton").click(function () {
+//                var leftButton = document.getElementById('leftButton');
+//                var rightButton = document.getElementById('rightButton');
+//
+//                if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+//                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
+//                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
+//                gameController.startReplay();
+//                } else if (myGameSpace.__gameOver) {
+//                    gameController.rewind();
+//                } else {
+//                    gameController.pass();
+//                }
+//            });
+//            $("#rightButton").click(function () {
+//                if (myGameSpace.__gameOver) {
+//                    gameController.replay();
+//                } else {
+//                    gameController.resign();
+//                    view.changeToReplayButtons();
+//                }
+//            });
+//            $("#middleButton").click(function () {
+//                if(document.getElementById('middleButton').style.visibility == "visible"){
+//				window.location.href = "/gameSelect.html";
+//			}
+//            });
+//=======
+//>>>>>>> master
 
     // todo update __isOnline flag on the server when the game is over
 

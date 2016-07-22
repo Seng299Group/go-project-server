@@ -12,18 +12,21 @@
         <div id="notificationCenter"></div>
 
         <div id="notification-screenLock"></div>
+
         <div id="bodyWrapper">
+
+            <!--Indicator-->
             <svg height="200" width="300" id="c2" >
             <ellipse cx="100" cy="135" rx="100" ry="50" stroke="gray" stroke-width="3" fill="lightgray" />
-
             </svg>
+
             <div class="circle1" id="p2"></div>
 
+            <!--Indicator-->
             <svg height="200" width="300" id="c1">
-
             <ellipse cx="100" cy="135" rx="100" ry="50" stroke="gray" stroke-width="3" fill="lightgray" />
-
             </svg>
+
             <div class ="circle2" id="p1"></div>
 
             <div >
@@ -41,35 +44,42 @@
 
                 <div type="text" class="playerid" id="player1" readonly="readonly"></div><br>
 
-                <div type="text" class="playerid" id="player2" readonly="readonly" ></div><br>
+                <div type="text" class="playerid" id="player2" readonly="readonly" ></div><br>				
                 <div id="settingsBar">
                     <hr style="height: 0pt; visibility:hidden;" />
                     <img id="showBar" src="http://evergreenrv.mobi/evergreenrv.com/images/icons/menubar/gear512_108.png"/>
 
 
-                    <table id="colourButtonTable">
+                    <table id="colourButtonTable"  style= "visibility:hidden;">
                         <tr>
-                            <td><div class="colourButton" id="colourOne" style="background-color: #2EC4B6"></div></td>
-                            <td><div class="colourButton" id="colourTwo" style="background-color: #533A71"></div></td>
+                            <td class="playerSelectBox"><div class="playerButton" id="playerOne" style="background-color: BFC3BA">Select Player One Colour</div></td>
+                            <td class="playerSelectBox"><div class="playerButton" id="playerTwo" style="background-color: BFC3BA">Select Player Two Colour</div></td>
+                        </tr>
+
+                        <tr>
+                            <td><div class="colourButton" id="colourOne" style="background-color: 2EC4B6"></div></td>
+                            <td><div class="colourButton" id="colourTwo"style="background-color: 533A71"></div></td>
                         </tr>
                         <tr>
-                            <td><div class="colourButton" id="colourThree" style="background-color: #26547C"></div></td>
-                            <td><div class="colourButton" id="colourFour" style="background-color: #EF476F"></div></td>
+                            <td><div class="colourButton" id="colourThree" style="background-color: 26547C"></div></td>
+                            <td><div class="colourButton" id="colourFour" style="background-color: EF476F"></div></td>
                         </tr>
                         <tr>
-                            <td><div class="colourButton" id="colourFive" style="background-color: #918EF4"></div></td>
-                            <td><div class="colourButton" id="colourSix" style="background-color: #B09398"></div></td>
+                            <td><div class="colourButton" id="colourFive" style="background-color: 918EF4"></div></td>
+                            <td><div class="colourButton" id="colourSix" style="background-color: B09398"></div></td>
                         </tr>
                         <tr>
-                            <td><div class="colourButton" id="colourSeven" style="background-color: #A1E8AF"></div></td>
-                            <td><div class="colourButton" id="colourEight" style="background-color: #DBD56E"></div></td>
+                            <td><div class="colourButton" id="colourSeven" style="background-color: A1E8AF"></div></td>
+                            <td><div class="colourButton" id="colourEight"style="background-color: DBD56E"></div></td>
                         </tr>
-                        <tr>
-                            <td><div class="playerButton" id="playerOne" style="background-color: #BFC3BA">Player One</div></td>
-                            <td><div class="playerButton" id="playerTwo" style="background-color: #BFC3BA">Player Two</div></td>
-                        </tr>
-                    </table>
-                    <table id="backgroundTable" style="height: 15%">
+
+                    </table><br>
+                    <table id="backgroundTable" style="height: 20%; visibility:hidden">
+                        <tr height="20%">
+
+                            <td colspan="3" style="padding:0;"><div class="backgroundIntro">Select Background</div></td>
+
+                        </tr> 
                         <tr>
                             <td class="backgroundButton"><div id="backOne"></div></td>
                             <td class="backgroundButton"><div id="backTwo"></div></td>
