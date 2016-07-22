@@ -15,7 +15,7 @@ body{
     position: absolute;
     right: 0;
     box-shadow: 0px 0px 8px -0.5px #000000;
-    z-index: 1;
+    z-index: 500;
 
 }
 
@@ -23,7 +23,7 @@ body{
 
     height: 80%;
     width: 75%;
-    z-index: 2;
+    z-index: 600;
     position: absolute;
     right: 30px;
     top:140px;
@@ -36,14 +36,14 @@ body{
     top:10px;
 
 }
-#buttonBarWrapper{
+#buttonBarWrapper{ // todo class duplicate in buttonBar.css
     font-size:20pt;
     position: absolute;
     left: 260px;
     top: 625px;
     height:52px;
     margin:-1px;
-    z-index:0;
+    z-index:100; // assigned to the same z-index as the one in buttonBar.css
 }
 
 #c2{
@@ -177,5 +177,5 @@ td{
     box-shadow: 0px 0px 8px -0.5px grey;
     background: white;
 
-    z-index: 2;
+    z-index: 1550;
 }
