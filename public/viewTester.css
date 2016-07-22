@@ -161,8 +161,11 @@ td{
 
 /*************************** Game Over Notification ***************************/
 .gameOverNotification {
+    
+    font-family: 'Roboto', sans-serif;
+    
     width: 450px;
-    height: 180px;
+    height: 140px;
 
     padding: 16px;
     margin: auto;
@@ -178,4 +181,8 @@ td{
     background: white;
 
     z-index: 1550;
+}
+
+.gameOverNotification h1 {
+    font-size: 14pt;
 }
