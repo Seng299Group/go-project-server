@@ -104,8 +104,14 @@ function renderHotSeat() {
         console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
+		var middleButton = document.getElementById('middleButton');
 
-        if (myGameSpace.__gameOver) {
+        if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+			leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+			rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+			rightButton.style.visibility = "visible";
+			middleButton.style.visibility = "visible";
+		}else if(myGameSpace.__gameOver){
             gameController.rewind();
         }else{
             gameController.pass();
@@ -118,6 +124,8 @@ function renderHotSeat() {
         } else {
             gameController.resign();
             view.changeToControlButtons();
+			var middleButton = document.getElementById('middleButton');
+			middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -170,8 +178,14 @@ function renderAI() {
         console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
+		var middleButton = document.getElementById('middleButton');
 
-        if (myGameSpace.__gameOver) {
+        if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+			leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+			rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+			rightButton.style.visibility = "visible";
+			middleButton.style.visibility = "visible";
+		}else if(myGameSpace.__gameOver){
             gameController.rewind();
         }else{
             gameController.pass();
@@ -184,6 +198,8 @@ function renderAI() {
         } else {
             gameController.resign();
             view.changeToControlButtons();
+			var middleButton = document.getElementById('middleButton');
+			middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -242,7 +258,7 @@ function renderNetwork() {
         gameController.setView(view);
 
         //FIXME: This if shouldn't be here, but I see no other place to do it
-        if (gameController.__localPlayer === 2){
+        if (gameController.__localPlayer === 2) {
             view.lockControls();
         }
 
@@ -261,8 +277,14 @@ function renderNetwork() {
 			console.log("left button");
 			var leftButton = document.getElementById('leftButton');
 			var rightButton = document.getElementById('rightButton');
+			var middleButton = document.getElementById('middleButton');
 
-			if (myGameSpace.__gameOver) {
+			if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+				leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+				rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+				rightButton.style.visibility = "visible";
+				middleButton.style.visibility = "visible";
+			}else if(myGameSpace.__gameOver){
 				gameController.rewind();
 			}else{
 				gameController.pass();
@@ -270,13 +292,15 @@ function renderNetwork() {
 			}
 		});
 		$("#rightButton").click(function () {
-			if (myGameSpace.__gameOver) {
-				gameController.replay();
-			} else {
-				gameController.resign();
-				view.changeToControlButtons();
-			}
-		});
+        if (myGameSpace.__gameOver) {
+            gameController.replay();
+        } else {
+            gameController.resign();
+            view.changeToControlButtons();
+			var middleButton = document.getElementById('middleButton');
+			middleButton.style.visibility = "visible";
+        }
+    });
 		$("#middleButton").click(function () {
 			if (document.getElementById('middleButton').style.visibility == "visible") {
 				window.location.href = "/gameSelect.html";
@@ -363,27 +387,12 @@ function showWinnerNotification(data) {
     msg += "<br><br> The winner is: " + data.winner;
 
     function onClose() {
-        window.location.href = "/gameSelect.html";
-    }
-
-    function onReplay() {
         // Removing the gray screen lock
         $("#notification-screenLock").css("display", "none");
         nf.remove();
-		
-        // var leftButton = document.getElementById('leftButton');
-        // var rightButton = document.getElementById('rightButton');
-        // leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
-        // rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
-		// rightButton.style.visibility = "visible";
     }
 
-    var buttons = [
-        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button"),
-        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
-    ];
-
-    nf = nfBuilder.makeNotification(title, msg, buttons).attr("class", "leftGameInProgressNotification");
+    nf = nfBuilder.makeNotification(title, msg, null, onClose).attr("class", "gameOverNotification");
 
     $("#notificationCenter").append(nf);
 }
