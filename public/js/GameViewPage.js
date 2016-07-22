@@ -104,8 +104,14 @@ function renderHotSeat() {
         console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
+		var middleButton = document.getElementById('middleButton');
 
-        if (myGameSpace.__gameOver) {
+        if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+			leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+			rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+			rightButton.style.visibility = "visible";
+			middleButton.style.visibility = "visible";
+		}else if(myGameSpace.__gameOver){
             gameController.rewind();
         }else{
             gameController.pass();
@@ -118,6 +124,8 @@ function renderHotSeat() {
         } else {
             gameController.resign();
             view.changeToControlButtons();
+			var middleButton = document.getElementById('middleButton');
+			middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -170,8 +178,14 @@ function renderAI() {
         console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
+		var middleButton = document.getElementById('middleButton');
 
-        if (myGameSpace.__gameOver) {
+        if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+			leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+			rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+			rightButton.style.visibility = "visible";
+			middleButton.style.visibility = "visible";
+		}else if(myGameSpace.__gameOver){
             gameController.rewind();
         }else{
             gameController.pass();
@@ -184,6 +198,8 @@ function renderAI() {
         } else {
             gameController.resign();
             view.changeToControlButtons();
+			var middleButton = document.getElementById('middleButton');
+			middleButton.style.visibility = "visible";
         }
     });
     $("#middleButton").click(function () {
@@ -261,8 +277,14 @@ function renderNetwork() {
 			console.log("left button");
 			var leftButton = document.getElementById('leftButton');
 			var rightButton = document.getElementById('rightButton');
+			var middleButton = document.getElementById('middleButton');
 
-			if (myGameSpace.__gameOver) {
+			if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
+				leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
+				rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
+				rightButton.style.visibility = "visible";
+				middleButton.style.visibility = "visible";
+			}else if(myGameSpace.__gameOver){
 				gameController.rewind();
 			}else{
 				gameController.pass();
@@ -270,13 +292,15 @@ function renderNetwork() {
 			}
 		});
 		$("#rightButton").click(function () {
-			if (myGameSpace.__gameOver) {
-				gameController.replay();
-			} else {
-				gameController.resign();
-				view.changeToControlButtons();
-			}
-		});
+        if (myGameSpace.__gameOver) {
+            gameController.replay();
+        } else {
+            gameController.resign();
+            view.changeToControlButtons();
+			var middleButton = document.getElementById('middleButton');
+			middleButton.style.visibility = "visible";
+        }
+    });
 		$("#middleButton").click(function () {
 			if (document.getElementById('middleButton').style.visibility == "visible") {
 				window.location.href = "/gameSelect.html";
