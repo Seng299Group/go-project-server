@@ -41,7 +41,7 @@ img {
     background: white;
     box-shadow: 0px 0px 8px -0.5px grey;
 
-    z-index: 2;
+    z-index: 1600;
 }
 
 .boardSizeNotification-forGameMode h1{
