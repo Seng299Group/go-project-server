@@ -18,9 +18,14 @@ var Userdb = mongoose.model('Userdb', {username: String, password: String, secur
  */
 function authenticateUser(username, password, fn) {
     Userdb.findOne({username: username, password: password}, function (err, userObj) {
-    if (err)
+
+    if (err) {
+
       console.log(err);
+    }
+
     userObj ? fn(true) : fn(false)
+
   });
 }
 
@@ -87,25 +92,79 @@ function incrementLosses(username) {
 }
 
 function registerUser(username, password, security, fn) {
+
     var new_user = new Userdb({username: username, password: password, security: security, wins: 0, losses: 0});
 
     new_user.save(function (err, userObj) {
+
       if (err) {
+
         console.log(err);
         fn(false);
+
       } else {
+
         console.log('saved successfully:', userObj);
         fn(true);
+
       }
     });
 }
 // to do : all this down hurr
 function uniqueUser(username, fn) {
+
   Userdb.findOne({username: username}, function (err, userObj) {
+
     if(err)
+
       console.log(err);
+
       userObj ? fn(true) : fn(false)
+
   });
+}
+
+function getWinLoss(username, fn) {
+  Userdb.findOne({username: username}, 'wins losses', function(err, userObj) {
+    if(err) {
+
+        console.log(err);
+
+        fn(false, null);
+    }
+
+    else if(userObj){
+
+        var result = {wins: userObj.wins, losses: userObj.losses};
+
+        fn(true, result);
+
+    }
+  });
+}
+
+function updatePassword(newPassword, username, fn) {
+
+  var query = {username: username}
+
+  Userdb.findOne(query,  function (err, userObj) {
+
+      if (err){
+          console.log(err);
+      }
+
+      if (userObj) {
+
+          Userdb.update(query, { $set: { password: newPassword}}, function(){
+
+              console.log("updated password for: " + username);
+              fn(true);
+
+          });
+
+      }
+  });
+
 }
 /*
  * other functions to query the database as needed
@@ -122,8 +181,10 @@ module.exports = {
     authenticate: authenticateUser,
     getUserData: getUserData,
     register: registerUser,
+    winLoss: getWinLoss,
     addWin: incrementWins,
-    addLoss: incrementLosses // ,
+    addLoss: incrementLosses,
+    updatePass: updatePassword // ,
             // example : example
             // ...
 

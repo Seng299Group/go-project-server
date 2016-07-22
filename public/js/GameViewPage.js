@@ -95,6 +95,7 @@ function renderHotSeat() {
         var y = e.pageY - $(this).offset().top;
 
         view.onBoardClick(x, y);
+		gameController.__historySpot += 1;
     });
 
 
@@ -104,14 +105,11 @@ function renderHotSeat() {
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
 
-        if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
-            leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
-            rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\"><br>Forward</i>";
-            gameController.startReplay();
-        } else if (myGameSpace.__gameOver) {
+        if (myGameSpace.__gameOver) {
             gameController.rewind();
-        } else {
+        }else{
             gameController.pass();
+			gameController.__historySpot += 1;
         }
     });
     $("#rightButton").click(function () {
@@ -119,7 +117,7 @@ function renderHotSeat() {
             gameController.replay();
         } else {
             gameController.resign();
-            view.changeToReplayButtons();
+            view.changeToControlButtons();
         }
     });
     $("#middleButton").click(function () {
@@ -163,21 +161,21 @@ function renderAI() {
         var y = e.pageY - $(this).offset().top;
 
         view.onBoardClick(x, y);
+		gameController.__historySpot += 1;
     });
+
 
     // todo this is repeating 3 times, move to global scope
     $("#leftButton").click(function () {
+        console.log("left button");
         var leftButton = document.getElementById('leftButton');
         var rightButton = document.getElementById('rightButton');
 
-        if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
-            leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"><br>Reverse</i>";
-            rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right \" aria-hidden=\"true\"><br>Forward</i>";
-            gameController.startReplay();
-        } else if (myGameSpace.__gameOver) {
+        if (myGameSpace.__gameOver) {
             gameController.rewind();
-        } else {
+        }else{
             gameController.pass();
+			gameController.__historySpot += 1;
         }
     });
     $("#rightButton").click(function () {
@@ -185,7 +183,7 @@ function renderAI() {
             gameController.replay();
         } else {
             gameController.resign();
-            view.changeToReplayButtons();
+            view.changeToControlButtons();
         }
     });
     $("#middleButton").click(function () {
@@ -249,41 +247,41 @@ function renderNetwork() {
         }
 
         $("#canvas").click(function (e) {
-            // Clicked coordinates
-            var x = e.pageX - $(this).offset().left;
-            var y = e.pageY - $(this).offset().top;
+        // Clicked coordinates
+        var x = e.pageX - $(this).offset().left;
+        var y = e.pageY - $(this).offset().top;
 
-            view.onBoardClick(x, y);
-        });
+        view.onBoardClick(x, y);
+			gameController.__historySpot += 1;
+		});
 
-        // todo this is repeating 3 times, move to global scope
-        $("#leftButton").click(function () {
-            var leftButton = document.getElementById('leftButton');
-            var rightButton = document.getElementById('rightButton');
 
-            if (myGameSpace.__gameOver && leftButton.innerHTML == "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>") {
-                leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\">Reverse</i>";
-                rightButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-chevron-circle-right\" aria-hidden=\"true\">Forward</i>";
-                gameController.startReplay();
-            } else if (myGameSpace.__gameOver) {
-                gameController.rewind();
-            } else {
-                gameController.pass();
-            }
-        });
-        $("#rightButton").click(function () {
-            if (myGameSpace.__gameOver) {
-                gameController.replay();
-            } else {
-                gameController.resign();
-                view.changeToReplayButtons();
-            }
-        });
-        $("#middleButton").click(function () {
-            if (document.getElementById('middleButton').style.visibility == "visible") {
-                window.location.href = "/gameSelect.html";
-            }
-        });
+		// todo this is repeating 3 times, move to global scope
+		$("#leftButton").click(function () {
+			console.log("left button");
+			var leftButton = document.getElementById('leftButton');
+			var rightButton = document.getElementById('rightButton');
+
+			if (myGameSpace.__gameOver) {
+				gameController.rewind();
+			}else{
+				gameController.pass();
+				gameController.__historySpot += 1;
+			}
+		});
+		$("#rightButton").click(function () {
+			if (myGameSpace.__gameOver) {
+				gameController.replay();
+			} else {
+				gameController.resign();
+				view.changeToControlButtons();
+			}
+		});
+		$("#middleButton").click(function () {
+			if (document.getElementById('middleButton').style.visibility == "visible") {
+				window.location.href = "/gameSelect.html";
+			}
+		});
 
     }
 
@@ -365,28 +363,10 @@ function showWinnerNotification(data) {
     msg += "<br><br> The winner is: " + data.winner;
 
     function onClose() {
-//        window.location.href = "/gameSelect.html";
-
         // Removing the gray screen lock
         $("#notification-screenLock").css("display", "none");
         nf.remove();
     }
-
-//    function onReplay() { // todo arshi clean up
-//        // Removing the gray screen lock
-//        $("#notification-screenLock").css("display", "none");
-//        nf.remove();
-//
-//        var leftButton = document.getElementById('leftButton');
-//        var rightButton = document.getElementById('rightButton');
-//        leftButton.innerHTML = "<i style=\"font-size: 35px;\" class=\"fa fa-refresh\" aria-hidden=\"true\"><br>Start Replay</i>";
-//        rightButton.innerHTML = "";
-//    }
-//
-//    var buttons = [
-//        nfBuilder.makeNotificationButton("Return", onClose).attr("class", "leftGameInProgressNotification-button"),
-//        nfBuilder.makeNotificationButton("Replay", onReplay).attr("class", "leftGameInProgressNotification-button")
-//    ];
 
     nf = nfBuilder.makeNotification(title, msg, null, onClose).attr("class", "gameOverNotification");
 

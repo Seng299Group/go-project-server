@@ -269,6 +269,36 @@ function listen(io) {
             });
         });
 
+        socket.on('getWinLoss', function(data) {
+            db.winLoss(data.username, function(reqSuc, wlHistory) {
+              if(reqSuc) {
+                //request Successful
+                socket.emit("requestSuccess", wlHistory);
+              }
+              else {
+                //request Failed
+                console.log('User Win Loss history request failed for user:');
+                console.log(data);
+                socket.emit("requestFail");
+              }
+            });
+        });
+
+        socket.on('updatePassword', function(data) {
+
+          db.updatePass(data.password, data.username, function(updateSuc) {
+            if(updateSuc) {
+              socket.emit("updateSuc");
+            }
+            else {
+              console.log('Password update failed');
+              socket.emit("updateFail");
+            }
+          });
+
+
+        });
+
         /**
          * Currently used from the game selection page
          * Used to request data given an username
@@ -288,6 +318,8 @@ function listen(io) {
             }
 
         });
+
+
 
 
 
