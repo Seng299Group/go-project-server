@@ -25,7 +25,7 @@ class AIGameController extends GameController {
             var moveAccepted = this.__gameSpace.placeToken(this.__playerTurn, x, y);
 
             if (moveAccepted){
-
+				this.__historySpot += 1;
                 this.__view.lockControls();
 
                 this.swapTurn()
