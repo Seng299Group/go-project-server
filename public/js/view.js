@@ -170,11 +170,12 @@ class View {
 
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
+			document.getElementById('text').style.visibility = "visible";
             document.getElementById("sideBar").style.visibility = "visible";
             document.getElementById("colourButtonTable").style.visibility = "visible";
 			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
-
+			document.getElementById('text').style.visibility = "hidden";
 			document.getElementById("colourButtonTable").style.visibility = "hidden";
 			document.getElementById("backgroundTable").style.visibility = "hidden";
 			document.getElementById("showBar").style.visibility = "visible";
