@@ -196,11 +196,11 @@ class View {
 		var playerTwoButton = document.getElementById("playerTwo");
 
 		if(player == 1){
-			playerOneButton.style.backgroundColor = "0F8B8D";
-			playerTwoButton.style.backgroundColor = "BFC3BA";
+			playerOneButton.style.backgroundImage = "url(\"/img/playerOne.png\")";
+			playerTwoButton.style.backgroundImage = "url(\"/img/playerTwoFade.png\")";
 		}else{
-			playerOneButton.style.backgroundColor = "BFC3BA";
-			playerTwoButton.style.backgroundColor = "0F8B8D";
+			playerOneButton.style.backgroundImage = "url(\"/img/playerOneFade.png\")";
+			playerTwoButton.style.backgroundImage = "url(\"/img/playerTwo.png\")";
 		}
     }
 	setPageBackround(){
