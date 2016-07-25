@@ -405,29 +405,139 @@ function renderNetwork() {
 }
 
 function setColourPallet(view) {
+	var playerOneText = document.getElementById('player1');
+	var playerTwoText = document.getElementById('player2');
+	
+	var text1 = playerOneText.innerHTML;
+	var text2 = playerTwoText.innerHTML;
+
     $("#colourOne").click(function () {
         view.changeColour("2EC4B6");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Turqoise";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Turqoise";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Turqoise";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Turqoise";
+			}
+		}
     });
     $("#colourTwo").click(function () {
         view.changeColour("533A71");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Purple";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Purple";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Purple";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Purple";
+			}
+		}
     });
     $("#colourThree").click(function () {
         view.changeColour("26547C");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Dark Blue";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Dark Blue";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Dark Blue";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Dark Blue";
+			}
+		}
     });
     $("#colourFour").click(function () {
         view.changeColour("EF476F");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Pink";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Pink";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Pink";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Pink";
+			}
+		}
     });
     $("#colourFive").click(function () {
         view.changeColour("918EF4");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Fushcia";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Fushcia";
+			}
+		}else if(text2.indexOf("Computer") > 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Fushcia";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Fushcia";
+			}
+		}
     });
     $("#colourSix").click(function () {
         view.changeColour("B09398");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Brown";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Brown";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Brown";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Brown";
+			}
+		}
     });
     $("#colourSeven").click(function () {
         view.changeColour("A1E8AF");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Green";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Green";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Green";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Green";
+			}
+		}
     });
     $("#colourEight").click(function () {
         view.changeColour("DBD56E");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Yellow";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Yellow";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Yellow";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Yellow";
+			}
+		}
     });
     $("#playerOne").click(function () {
         view.setPlayer(1);

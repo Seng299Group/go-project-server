@@ -7,7 +7,7 @@ body{
 }
 
 #sideBar{
-    background: #EEEEEE;
+	background-color: rgba(255, 255, 255, .5);
     width: 300px;
     height: 100%;
     position: absolute;
@@ -23,7 +23,6 @@ body{
         padding:0;
 } */
 #settingsBar {
-
     height: 80%;
     width: 75%;
     z-index: 600;
