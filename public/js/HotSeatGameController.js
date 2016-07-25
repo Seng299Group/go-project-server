@@ -66,22 +66,23 @@ class HotSeatGameController extends GameController {
         var scores = this.__gameSpace.getScores();
 
         var displayPackage = {
-            p1Username: 'Black',
-            p2Username: 'White',
+            p1Username: 'Player One',
+            p2Username: 'Player Two',
             p1Score: scores.p1Score,
             p2Score: scores.p2Score,
             winnner: winner
         };
 		if(winner === "none"){
-			displayPackage.winner = scores.winner === 1 ? 'black' : 'white';
+			displayPackage.winner = scores.winner === 1 ? 'Player One' : 'Player Two';
+
 		}else{
 			if(displayPackage.winner == 1){
-				displayPackage.winner = "white";
+				displayPackage.winner = "Player One";
 			}else{
-				displayPackage.winner = "black";
+				displayPackage.winner = "Player Two";
 			}
 		}
-		
+
         showWinnerNotification(displayPackage);
     }
 

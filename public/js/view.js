@@ -170,11 +170,12 @@ class View {
 
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
+			document.getElementById('text').style.visibility = "visible";
             document.getElementById("sideBar").style.visibility = "visible";
             document.getElementById("colourButtonTable").style.visibility = "visible";
 			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
-
+			document.getElementById('text').style.visibility = "hidden";
 			document.getElementById("colourButtonTable").style.visibility = "hidden";
 			document.getElementById("backgroundTable").style.visibility = "hidden";
 			document.getElementById("showBar").style.visibility = "visible";
@@ -196,11 +197,11 @@ class View {
 		var playerTwoButton = document.getElementById("playerTwo");
 
 		if(player == 1){
-			playerOneButton.style.backgroundColor = "0F8B8D";
-			playerTwoButton.style.backgroundColor = "BFC3BA";
+			playerOneButton.style.backgroundImage = "url(\"/img/playerOne.png\")";
+			playerTwoButton.style.backgroundImage = "url(\"/img/playerTwoFade.png\")";
 		}else{
-			playerOneButton.style.backgroundColor = "BFC3BA";
-			playerTwoButton.style.backgroundColor = "0F8B8D";
+			playerOneButton.style.backgroundImage = "url(\"/img/playerOneFade.png\")";
+			playerTwoButton.style.backgroundImage = "url(\"/img/playerTwo.png\")";
 		}
     }
 	setPageBackround(){
