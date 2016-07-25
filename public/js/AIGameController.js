@@ -25,7 +25,7 @@ class AIGameController extends GameController {
             var moveAccepted = this.__gameSpace.placeToken(this.__playerTurn, x, y);
 
             if (moveAccepted){
-
+				this.__historySpot += 1;
                 this.__view.lockControls();
 
                 this.swapTurn()
@@ -113,7 +113,10 @@ class AIGameController extends GameController {
 	}
 
 	resign(){
-		console.log("unimplemented method call");
+		this.__gameSpace.__gameOver = true;
+		this.swapTurn();
+		console.log("Resigining");
+		this.declareWinner((this.__playerTurn));
 	}
 
 	end(){
@@ -131,7 +134,7 @@ class AIGameController extends GameController {
             winnner: null
         };
 
-        displayPackage.winner = scores.winner === 1 ? 'Player' : 'Computer';
+        displayPackage.winner = scores.winner ='Computer';
 
         showWinnerNotification(displayPackage);
     }

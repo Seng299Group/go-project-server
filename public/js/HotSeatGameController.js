@@ -39,7 +39,7 @@ class HotSeatGameController extends GameController {
 	*/
 	pass(){
 		if(this.__pass){
-			this.declareWinner();
+			this.declareWinner("none");
 			this.__view.changeToReplayButtons();
 			this.__gameSpace.__gameOver = true;
 			//window.location.href = "winnerPage.html";//TODO: Change to Game Selection
@@ -53,14 +53,16 @@ class HotSeatGameController extends GameController {
 
 	resign(){
 		this.__gameSpace.__gameOver = true;
-		console.log("unimplemented method call: RESIGN"); // todo
+		this.swapTurn();
+		console.log("Resigining");
+		this.declareWinner((this.__playerTurn));
 	}
 
 	end(){
 		console.log("unimplemented method call"); // todo
 	}
 
-    declareWinner () {
+    declareWinner (winner) {
         var scores = this.__gameSpace.getScores();
 
         var displayPackage = {
@@ -68,10 +70,18 @@ class HotSeatGameController extends GameController {
             p2Username: 'Player Two',
             p1Score: scores.p1Score,
             p2Score: scores.p2Score,
-            winnner: null
+            winnner: winner
         };
+		if(winner === "none"){
+			displayPackage.winner = scores.winner === 1 ? 'Player One' : 'Player Two';
 
-        displayPackage.winner = scores.winner === 1 ? 'Player One' : 'Player Two';
+		}else{
+			if(displayPackage.winner == 1){
+				displayPackage.winner = "Player One";
+			}else{
+				displayPackage.winner = "Player Two";
+			}
+		}
 
         showWinnerNotification(displayPackage);
     }
