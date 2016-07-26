@@ -7946,7 +7946,7 @@ class AIGameController extends GameController {
             var moveAccepted = this.__gameSpace.placeToken(this.__playerTurn, x, y);
 
             if (moveAccepted){
-
+				this.__historySpot += 1;
                 this.__view.lockControls();
 
                 this.swapTurn()
@@ -8034,7 +8034,10 @@ class AIGameController extends GameController {
 	}
 
 	resign(){
-		console.log("unimplemented method call");
+		this.__gameSpace.__gameOver = true;
+		this.swapTurn();
+		console.log("Resigining");
+		this.declareWinner((this.__playerTurn));
 	}
 
 	end(){
@@ -8052,7 +8055,7 @@ class AIGameController extends GameController {
             winnner: null
         };
 
-        displayPackage.winner = scores.winner === 1 ? 'Player' : 'Computer';
+        displayPackage.winner = scores.winner ='Computer';
 
         showWinnerNotification(displayPackage);
     }
@@ -8141,7 +8144,7 @@ class HotSeatGameController extends GameController {
 	*/
 	pass(){
 		if(this.__pass){
-			this.declareWinner();
+			this.declareWinner("none");
 			this.__view.changeToReplayButtons();
 			this.__gameSpace.__gameOver = true;
 			//window.location.href = "winnerPage.html";//TODO: Change to Game Selection
@@ -8155,25 +8158,35 @@ class HotSeatGameController extends GameController {
 
 	resign(){
 		this.__gameSpace.__gameOver = true;
-		console.log("unimplemented method call: RESIGN"); // todo
+		this.swapTurn();
+		console.log("Resigining");
+		this.declareWinner((this.__playerTurn));
 	}
 
 	end(){
 		console.log("unimplemented method call"); // todo
 	}
 
-    declareWinner () {
+    declareWinner (winner) {
         var scores = this.__gameSpace.getScores();
 
         var displayPackage = {
-            p1Username: 'Black',
-            p2Username: 'White',
+            p1Username: 'Player One',
+            p2Username: 'Player Two',
             p1Score: scores.p1Score,
             p2Score: scores.p2Score,
-            winnner: null
+            winnner: winner
         };
+		if(winner === "none"){
+			displayPackage.winner = scores.winner === 1 ? 'Player One' : 'Player Two';
 
-        displayPackage.winner = scores.winner === 1 ? 'black' : 'white';
+		}else{
+			if(displayPackage.winner == 1){
+				displayPackage.winner = "Player One";
+			}else{
+				displayPackage.winner = "Player Two";
+			}
+		}
 
         showWinnerNotification(displayPackage);
     }
@@ -9131,11 +9144,12 @@ class View {
 
     showBar(){
         if(document.getElementById("colourButtonTable").style.visibility == "hidden"){
+			document.getElementById('text').style.visibility = "visible";
             document.getElementById("sideBar").style.visibility = "visible";
             document.getElementById("colourButtonTable").style.visibility = "visible";
 			document.getElementById("backgroundTable").style.visibility = "visible";
 		}else{
-
+			document.getElementById('text').style.visibility = "hidden";
 			document.getElementById("colourButtonTable").style.visibility = "hidden";
 			document.getElementById("backgroundTable").style.visibility = "hidden";
 			document.getElementById("showBar").style.visibility = "visible";
@@ -9157,11 +9171,11 @@ class View {
 		var playerTwoButton = document.getElementById("playerTwo");
 
 		if(player == 1){
-			playerOneButton.style.backgroundColor = "0F8B8D";
-			playerTwoButton.style.backgroundColor = "BFC3BA";
+			playerOneButton.style.backgroundImage = "url(\"/img/playerOne.png\")";
+			playerTwoButton.style.backgroundImage = "url(\"/img/playerTwoFade.png\")";
 		}else{
-			playerOneButton.style.backgroundColor = "BFC3BA";
-			playerTwoButton.style.backgroundColor = "0F8B8D";
+			playerOneButton.style.backgroundImage = "url(\"/img/playerOneFade.png\")";
+			playerTwoButton.style.backgroundImage = "url(\"/img/playerTwo.png\")";
 		}
     }
 	setPageBackround(){
@@ -9600,29 +9614,139 @@ function renderNetwork() {
 }
 
 function setColourPallet(view) {
+	var playerOneText = document.getElementById('player1');
+	var playerTwoText = document.getElementById('player2');
+	
+	var text1 = playerOneText.innerHTML;
+	var text2 = playerTwoText.innerHTML;
+
     $("#colourOne").click(function () {
         view.changeColour("2EC4B6");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Turqoise";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Turqoise";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Turqoise";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Turqoise";
+			}
+		}
     });
     $("#colourTwo").click(function () {
         view.changeColour("533A71");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Purple";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Purple";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Purple";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Purple";
+			}
+		}
     });
     $("#colourThree").click(function () {
         view.changeColour("26547C");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Dark Blue";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Dark Blue";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Dark Blue";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Dark Blue";
+			}
+		}
     });
     $("#colourFour").click(function () {
         view.changeColour("EF476F");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Pink";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Pink";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Pink";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Pink";
+			}
+		}
     });
     $("#colourFive").click(function () {
         view.changeColour("918EF4");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Fushcia";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Fushcia";
+			}
+		}else if(text2.indexOf("Computer") > 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Fushcia";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Fushcia";
+			}
+		}
     });
     $("#colourSix").click(function () {
         view.changeColour("B09398");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Brown";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Brown";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Brown";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Brown";
+			}
+		}
     });
     $("#colourSeven").click(function () {
         view.changeColour("A1E8AF");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Green";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Green";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Green";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Green";
+			}
+		}
     });
     $("#colourEight").click(function () {
         view.changeColour("DBD56E");
+		if((text2.indexOf("Player") >= 0)){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player 1 - " + "Yellow";
+			}else{
+				playerTwoText.innerHTML = "Player 2 - " + "Yellow";
+			}
+		}else if(text2.indexOf("Computer") >= 0){
+			if(view.__currentPlayer === 1 ){
+				playerOneText.innerHTML = "Player - " + "Yellow";
+			}else{
+				playerTwoText.innerHTML = "Computer - " + "Yellow";
+			}
+		}
     });
     $("#playerOne").click(function () {
         view.setPlayer(1);
