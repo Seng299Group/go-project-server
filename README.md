@@ -23,17 +23,22 @@ This section outlines steps to start our web application.
 
 
 
-### Windows
 On a Windows machine:
+
+- <b>First time</b>: Before starting the database,
+you must ensure that `C:\data\db` exists.
+Please manually create all required folders.
+
 
 1. Start the database by running `mongod.exe` on a command prompt.
 	- This ".exe" file is found in the MongoDB installation directory: `C:\Program Files\MongoDB\Server\3.2\bin`.
-	- <b>First time</b>: Before starting the database, you must ensure that `C:\data\db` exists. Please manually create all required folders.
+	
+2. Before running our server, install all dependencies by running `npm install`.
+    
+3. Start our server by running the `server.js` file.
+	- From a separate command prompt window, run `node server.js` from the `go-project-server` folder.
 
-2. Start our server by running the `server.js` file.
-	- From a separate command prompt window, run `node server.js`
-
-3. From a browser of your choice, browse `localhost:30154`
+4. From a browser of your choice, browse `localhost:30154`
 
 
 
@@ -42,14 +47,6 @@ You can also save the following commands saved in a `.bat` file and run from the
 start cmd /k "C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe"
 node server.js
 ```
-
-
-
-### Mac
-
-
-
-
 
 
 
